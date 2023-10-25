@@ -83,14 +83,14 @@ export default class ObsidianIcalPlugin extends Plugin {
     //   console.log("click", evt);
     // });
 
+    // TODO: Trigger a save every now and then
+    // TODO: Make the interval a setting
     // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-    this.registerInterval(
-      window.setInterval(() => {
-        // TODO: Trigger a save every now and then
-        // TODO: Make the interval a setting
-        console.log("setInterval");
-      }, 5 * 60 * 1000)
-    );
+    // this.registerInterval(
+    //   window.setInterval(() => {
+    //     console.log("setInterval");
+    //   }, 5 * 60 * 1000)
+    // );
 
     this.main = new Main(this.app, this.settings);
     await this.main.start();
