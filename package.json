@@ -17,9 +17,9 @@
   "keywords": [],
   "license": "MIT",
   "scripts": {
-    "dev": "node esbuild.config.mjs",
-    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-    "version": "node version-bump.mjs && git add manifest.json versions.json"
+    "dev": "bun esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && bun esbuild.config.mjs production",
+    "version": "bun version-bump.mjs && git add manifest.json versions.json"
   },
   "dependencies": {
     "@octokit/rest": "^20.0.2",
