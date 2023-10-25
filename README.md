@@ -6,9 +6,10 @@ This is a plugin for [Obsidian](https://obsidian.md) that searches your Obsidian
 
 Periodically, the plugin will:
 
-1. Find all tasks in your vault (A valid task is a Markdown checkbox (either checked or not) that contains a date in the format YYYY-MM-DD)
-2. Generate an iCal calendar file that contains all of these tasks
-3. Upload the iCal calendar to GitHub Gist
+1. Find all tasks in your vault (A valid task is a Markdown checkbox (either checked or not) that contains a date in the format YYYY-MM-DD),
+2. Generate an iCal calendar file that contains all of these tasks,
+3. Completed tasks are appended with a ✅ and incomplete tasks are appended with a 🔲,
+4. Upload the iCal calendar to GitHub Gist.
 
 You can then use the URL to your Gist in your preferred calendar application.
 
