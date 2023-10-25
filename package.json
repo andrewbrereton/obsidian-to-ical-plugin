@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@octokit/rest": "^20.0.2",
+    "@types/luxon": "^3.3.3",
     "luxon": "^3.4.3"
   }
 }
