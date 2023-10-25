@@ -136,8 +136,6 @@ class SettingTab extends PluginSettingTab {
 
     containerEl.empty();
 
-    containerEl.createEl('h1', { text: 'Obsidian to iCal'});
-
     containerEl.createEl('p', { text: 'This plugin finds all of the tasks in your vault that contain a date and generates a calendar in iCal format. The calendar is stored in a Gist on GitHub so that it can be added to your iCal calendar of choice. Perhaps in the future this plugin should support additional storage providers (like S3).' });
 
     containerEl.createEl('p', { text: 'Perform the following steps to get your Personal Access Token and Gist ID:' });
