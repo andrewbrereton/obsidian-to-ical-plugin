@@ -1,0 +1,28 @@
+{
+  "name": "obsidian-to-ical-plugin",
+  "version": "1.0.0",
+  "author": "https://github.com/andrewbrereton",
+  "main": "main.js",
+  "devDependencies": {
+    "@types/node": "^16.11.6",
+    "@typescript-eslint/eslint-plugin": "5.29.0",
+    "@typescript-eslint/parser": "5.29.0",
+    "builtin-modules": "3.3.0",
+    "esbuild": "0.17.3",
+    "obsidian": "latest",
+    "tslib": "2.4.0",
+    "typescript": "4.7.4"
+  },
+  "description": "Scans your vault for tasks. Creates an iCal file and stores it on Gist. You can then show this calendar in any iCal compatible client such as Outlook, Google Calendar, Apple Calendar, etc.",
+  "keywords": [],
+  "license": "MIT",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "version": "node version-bump.mjs && git add manifest.json versions.json"
+  },
+  "dependencies": {
+    "@octokit/rest": "^20.0.2",
+    "luxon": "^3.4.3"
+  }
+}
