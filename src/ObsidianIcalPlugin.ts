@@ -147,7 +147,7 @@ class SettingTab extends PluginSettingTab {
     containerEl.append(ol);
 
     new Setting(containerEl)
-      .setName("GitHub Personal Access Token")
+      .setName("GitHub personal access token")
       .setDesc("Used to privately store your calendar on Github")
       .addText((text) =>
         text
@@ -178,7 +178,7 @@ class SettingTab extends PluginSettingTab {
       );
 
       new Setting(containerEl)
-        .setName("GitHub Username")
+        .setName("GitHub username")
         .setDesc("This is only used to generate the URL to your calendar")
         .addText((text) =>
           text
@@ -205,7 +205,7 @@ class SettingTab extends PluginSettingTab {
           const url = `https://gist.githubusercontent.com/${this.plugin.settings.githubUsername}/${this.plugin.settings.githubGistId}/raw/${this.plugin.settings.filename}`;
 
           new Setting(containerEl)
-            .setName("Your Calendar URL")
+            .setName("Your calendar URL")
             .setDesc(createFragment((fragment) => {
               fragment.createEl('a', { text: url, href: url, cls: 'search-result'});
             }))
