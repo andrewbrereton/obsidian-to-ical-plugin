@@ -25,7 +25,10 @@ export class TaskFinder {
     const taskStatus = match?.groups?.taskStatus === 'x' ? TaskStatus.Done : TaskStatus.ToDo;
     const summary = match?.groups?.summary ?? '';
     const dateMatch = [...summary.matchAll(this.dateRegExp)][0]; // If there are multiple dates, just get the first one
-    const date = new Date(dateMatch?.groups?.year, parseInt(dateMatch?.groups?.month, 10) - 1, dateMatch?.groups?.day);
+    const year = parseInt(dateMatch?.groups?.year ?? '', 10);
+    const monthIndex = parseInt(dateMatch?.groups?.month ?? '', 10) - 1;
+    const day = parseInt(dateMatch?.groups?.day ?? '', 10);
+    const date = new Date(year, monthIndex, day);
 
     return new Task(taskStatus, summary, date);
   }
