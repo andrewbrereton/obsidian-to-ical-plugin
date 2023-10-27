@@ -1,6 +1,6 @@
 import { TaskStatus } from "./TaskStatus";
 import "crypto";
-import { DateTime } from "luxon";
+import { moment } from "obsidian";
 
 export class Task {
   public status: TaskStatus;
@@ -22,12 +22,11 @@ export class Task {
   }
 
   public getDateTimeStamp(): string {
-    return DateTime.fromJSDate(this.date).toFormat("yyyyLLdd'T'HHmmss");
+    return moment(this.date).format("YYYYMMDDTHHmmss");
   }
 
   public getDateStart(): string {
-    return DateTime.fromJSDate(this.date).toFormat("yyyyLLdd");
-
+    return moment(this.date).format("YYYYMMDD");
   }
 
   public getSummary(): string {
