@@ -1,7 +1,6 @@
-import { App, TFile } from "obsidian";
+import { App } from "obsidian";
 import { IcalService } from "./IcalService";
 import { TaskFinder } from "./TaskFinder";
-import { TaskStatus } from "./Model/TaskStatus";
 import { Settings } from "./Model/Settings";
 import { Task } from "./Model/Task";
 import { GithubClient } from "./GithubClient";
