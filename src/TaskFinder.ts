@@ -1,35 +1,28 @@
-import { Task } from "./Model/Task";
-import { TaskStatus } from "./Model/TaskStatus";
+import { ListItemCache, TFile, Vault } from "obsidian";
+import { Task, createTaskFromLine } from "./Model/Task";
 
 export class TaskFinder {
-  private tasks: Task[];
-  private taskRegExp = /^\s*(\*|-)\s*\[(?<taskStatus>\s|x)?\]\s*(?<summary>.*)$/gim;
-  private dateRegExp = /\b(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\b/gim;
+  private vault: Vault;
 
-  constructor() {
-    this.tasks = [];
+  constructor(vault: Vault) {
+    this.vault = vault;
   }
 
-  findTasks(markdown: string): Task[] {
-    return [...markdown.matchAll(this.taskRegExp)]
-      .filter((taskMatch) => {
-        // Skip the tasks that don't have a date
-        return new RegExp(this.dateRegExp).test(taskMatch?.groups?.summary ?? '');
-      })
-      .map((taskMatch) => {
-        return this.createTask(taskMatch);
-      });
-  }
+  async findTasks(file: TFile, listItemsCache: ListItemCache[]): Promise<Task[]> {
+    const fileCachedContent: string = await this.vault.cachedRead(file);
+    const lines: string[] = fileCachedContent.split('\n');
 
-  private createTask(match: RegExpMatchArray): Task {
-    const taskStatus = match?.groups?.taskStatus === 'x' ? TaskStatus.Done : TaskStatus.ToDo;
-    const summary = match?.groups?.summary ?? '';
-    const dateMatch = [...summary.matchAll(this.dateRegExp)][0]; // If there are multiple dates, just get the first one
-    const year = parseInt(dateMatch?.groups?.year ?? '', 10);
-    const monthIndex = parseInt(dateMatch?.groups?.month ?? '', 10) - 1;
-    const day = parseInt(dateMatch?.groups?.day ?? '', 10);
-    const date = new Date(year, monthIndex, day);
+    const tasks: Task[] = listItemsCache
+        // Get the position of each list item
+        .map((listItemCache: ListItemCache) => listItemCache.position.start.line)
+        // Get the line
+        .map((idx) => lines[idx])
+        // Create a Task from the line
+        .map((line: string) => createTaskFromLine(line))
+        // Filter out the nulls
+        .filter((task: Task | null) => task !== null) as Task[]
+        ;
 
-    return new Task(taskStatus, summary, date);
+    return tasks;
   }
 }

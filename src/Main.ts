@@ -12,7 +12,8 @@ export class Main {
   iCalService: IcalService;
   githubClient: GithubClient;
   tasks: Task[];
-
+  taskFinder: TaskFinder;
+  
   constructor(app: App, settings: Settings) {
     this.app = app;
     this.settings = settings;
@@ -20,15 +21,23 @@ export class Main {
     this.githubClient = new GithubClient();
     this.githubClient.setup(this.settings.githubPersonalAccessToken, this.settings.githubGistId, this.settings.filename);
     this.tasks = [];
+    this.taskFinder = new TaskFinder(this.app.vault);
   }
 
   async start() {
-    const markdownFiles = this.findMarkdownFiles();
+    const markdownFiles = this.app.vault.getMarkdownFiles();
     const taskPromises = [];
 
+    // Iterate over all of the Markdown files in this vault
     for (const file of markdownFiles) {
-      const tasks = this.findTasks(file);
-      taskPromises.push(tasks);
+      // Use cache to get the list items in each Markdown file
+      const listItemsCache = this.app.metadataCache.getFileCache(file)?.listItems ?? [];
+
+      // If there are cached list items in this Markdown file then interrogate it further to extract the Tasks
+      if (listItemsCache.length) {
+        const tasks = await this.taskFinder.findTasks(file, listItemsCache);
+        taskPromises.push(tasks);
+      }
     }
 
     const allTasks = await Promise.all(taskPromises);
@@ -40,18 +49,6 @@ export class Main {
     });
 
     this.saveCalendar();
-  }
-
-  private findMarkdownFiles(): TFile[] {
-    return this.app.vault.getMarkdownFiles();
-  }
-
-  private async findTasks(file: TFile): Promise<Task[]> {
-    const taskParser = new TaskFinder();
-    const markdown = await this.app.vault.read(file);
-    const tasks = taskParser.findTasks(markdown);
-
-    return tasks;
   }
 
   async saveCalendar() {
