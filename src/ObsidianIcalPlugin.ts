@@ -10,6 +10,7 @@ import { Settings, DEFAULT_SETTINGS } from "src/Model/Settings";
 export default class ObsidianIcalPlugin extends Plugin {
   settings: Settings;
   main: Main;
+  periodicSaveInterval: number|null;
 
   async onload() {
     await this.loadSettings();
@@ -79,17 +80,10 @@ export default class ObsidianIcalPlugin extends Plugin {
     //   console.log("click", evt);
     // });
 
-    // TODO: Trigger a save every now and then
-    // TODO: Make the interval a setting
-    // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-    // this.registerInterval(
-    //   window.setInterval(() => {
-    //     console.log("setInterval");
-    //   }, 5 * 60 * 1000)
-    // );
-
     this.main = new Main(this.app, this.settings);
     await this.main.start();
+
+    this.configurePeriodicSave()
   }
 
   onunload() {}
@@ -100,6 +94,23 @@ export default class ObsidianIcalPlugin extends Plugin {
 
   async saveSettings() {
     await this.saveData(this.settings);
+  }
+
+  // Trigger a save every now and then
+  configurePeriodicSave() {
+    if (this.settings.isPeriodicSaveEnabled) {
+      this.periodicSaveInterval = window.setInterval(async () => {
+        await this.main.start();
+      }, this.settings.periodicSaveInterval * 1000 * 60);
+
+      // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
+      this.registerInterval(this.periodicSaveInterval);
+    } else {
+      if (this.periodicSaveInterval ?? 0 > 0) {
+        window.clearInterval(this.periodicSaveInterval ?? 0);
+        this.periodicSaveInterval = null;
+      }
+    }
   }
 }
 
@@ -145,7 +156,6 @@ class SettingTab extends PluginSettingTab {
       .setDesc("Used to privately store your calendar on Github")
       .addText((text) =>
         text
-          // .setPlaceholder("ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
           .setValue(this.plugin.settings.githubPersonalAccessToken)
           .onChange(async (value) => {
             try {
@@ -214,6 +224,35 @@ class SettingTab extends PluginSettingTab {
                   }, 500);
                 })
             });
+
+        new Setting(containerEl)
+          .setName("Periodically save to Gist")
+          .setDesc("Do you want the plugin to periodically process your tasks and save them to GitHub Gist?")
+          .addToggle((text) =>
+            text
+              .setValue(this.plugin.settings.isPeriodicSaveEnabled)
+              .onChange(async (value) => {
+                this.plugin.settings.isPeriodicSaveEnabled = value;
+                await this.plugin.saveSettings();
+                this.plugin.configurePeriodicSave();
+              })
+          );
+
+        new Setting(containerEl)
+          .setName("How often should we save to Gist? (minutes)")
+          .setDesc("How often do you want to periodically scan for tasks and save them to GitHub Gist?")
+          .addText((text) =>
+            text
+              .setValue(this.plugin.settings.periodicSaveInterval.toString())
+              .onChange(async (value) => {
+                let minutes: number = parseInt(value, 10);
+                if (minutes < 1) minutes = 1;
+                if (minutes > 1440) minutes = 1440;
+                this.plugin.settings.periodicSaveInterval = minutes;
+                await this.plugin.saveSettings();
+                this.plugin.configurePeriodicSave();
+              })
+          );
 
       // containerEl
       //   .createEl('div', { cls: 'setting-item-name', text: 'URL to your calendar'})
