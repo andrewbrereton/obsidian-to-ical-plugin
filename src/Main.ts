@@ -12,7 +12,7 @@ export class Main {
   githubClient: GithubClient;
   tasks: Task[];
   taskFinder: TaskFinder;
-  
+
   constructor(app: App, settings: Settings) {
     this.app = app;
     this.settings = settings;
@@ -40,6 +40,8 @@ export class Main {
     }
 
     const allTasks = await Promise.all(taskPromises);
+
+    this.tasks = [];
 
     allTasks.forEach((tasks) => {
       tasks.forEach((task) => {

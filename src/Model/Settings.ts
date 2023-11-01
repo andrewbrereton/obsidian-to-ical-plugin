@@ -3,6 +3,8 @@ export interface Settings {
   githubGistId: string;
   githubUsername: string;
   filename: string;
+  isPeriodicSaveEnabled: boolean;
+  periodicSaveInterval: number;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -10,4 +12,6 @@ export const DEFAULT_SETTINGS: Settings = {
   githubGistId: '',
   githubUsername: '',
   filename: 'obsidian.ics',
+  isPeriodicSaveEnabled: true,
+  periodicSaveInterval: 5
 };
