@@ -1,32 +1,46 @@
-import { TaskStatus } from "./TaskStatus";
+import { TaskStatus, getTaskStatusFromMarkdown, getTaskStatusEmoji } from "./TaskStatus";
 import "crypto";
 import { moment } from "obsidian";
+import { TaskDate, TaskDateName, getSummaryFromMarkdown, getTaskDatesFromMarkdown } from "./TaskDate";
 
 export class Task {
   public status: TaskStatus;
+  dates: TaskDate[];
   public summary: string;
-  public date: Date;
 
   constructor(
     status: TaskStatus,
-    summary: string,
-    date: Date
+    dates: TaskDate[],
+    summary: string
   ) {
     this.status = status;
+    this.dates = dates;
     this.summary = summary;
-    this.date = date;
   }
 
   public getId(): string {
     return crypto.randomUUID();
   }
 
-  public getDateTimeStamp(): string {
-    return moment(this.date).format("YYYYMMDDTHHmmss");
+  public hasA(taskDateName: TaskDateName): boolean {
+    return this.dates.some((taskDate: TaskDate) => {
+      return taskDate.name === taskDateName;
+    });
   }
 
-  public getDateStart(): string {
-    return moment(this.date).format("YYYYMMDD");
+  public getDate(taskDateName: TaskDateName | null, format: string): string {
+    // HACK: If taskDateName is null then just use the first date that we know about
+    if (taskDateName === null) {
+      taskDateName = this.dates[0].name;
+    }
+
+    const matchingTaskDate = this.dates.find((taskDate: TaskDate) => {
+      if (taskDate.name === taskDateName) {
+        return taskDate.date;
+      }
+    });
+
+    return matchingTaskDate ? moment(matchingTaskDate.date).format(format) : '';
   }
 
   public getSummary(): string {
@@ -36,12 +50,14 @@ export class Task {
       .replace(/;/gm, "\\;")
       .replace(/,/gm, "\\,");
 
-    return (this.status === TaskStatus.ToDo ? '🔲' : '✅') + ' ' + summary;
+    const emoji = getTaskStatusEmoji(this.status);
+
+    return `${emoji} ${summary}`;
   }
 }
 
 export function createTaskFromLine(line: string): Task|null {
-  const taskRegExp = /(\*|-)\s*\[(?<taskStatus>\s|x)?\]\s*(?<summary>.*)\s*/gi;
+  const taskRegExp = /(\*|-)\s*(?<taskStatus>\[.?])\s*(?<summary>.*)\s*/gi;
   const dateRegExp = /\b(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\b/gi;
 
   const taskMatch = [...line.matchAll(taskRegExp)][0] ?? null;
@@ -59,12 +75,9 @@ export function createTaskFromLine(line: string): Task|null {
   }
 
   // Extract the Task data points from the matches
-  const taskStatus = taskMatch?.groups?.taskStatus === 'x' ? TaskStatus.Done : TaskStatus.ToDo;
-  const summary = taskMatch?.groups?.summary?.replace(dateRegExp, '').trim() ?? '';
-  const year = parseInt(dateMatch?.groups?.year ?? '', 10);
-  const monthIndex = parseInt(dateMatch?.groups?.month ?? '', 10) - 1;
-  const day = parseInt(dateMatch?.groups?.day ?? '', 10);
-  const date = new Date(year, monthIndex, day);
+  const taskStatus = getTaskStatusFromMarkdown(taskMatch?.groups?.taskStatus ?? '');
+  const taskDates = getTaskDatesFromMarkdown(line);
+  const summary = getSummaryFromMarkdown(taskMatch?.groups?.summary ?? '');
 
-  return new Task(taskStatus, summary, date);
+  return new Task(taskStatus, taskDates, summary);
 }
