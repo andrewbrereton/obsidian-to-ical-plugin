@@ -1,4 +1,5 @@
 import { Task } from "./Model/Task";
+import { TaskDateName } from "./Model/TaskDate";
 
 export class IcalService {
   getCalendar(tasks: Task[]): string {
@@ -7,7 +8,7 @@ export class IcalService {
     let calendar = '' +
       'BEGIN:VCALENDAR\r\n' +
       'VERSION:2.0\r\n' +
-      'PRODID:-//Andrew Brereton//obsidian-ical-plugin v1.2.0//EN\r\n' +
+      'PRODID:-//Andrew Brereton//obsidian-ical-plugin v1.3.0//EN\r\n' +
       'X-WR-CALNAME:Obsidian Calendar\r\n' +
       'NAME:Obsidian Calendar\r\n' +
       'CALSCALE:GREGORIAN\r\n' +
@@ -29,13 +30,25 @@ export class IcalService {
   }
 
   private getEvent(task: Task): string {
-    return '' +
+    let event = '' +
       'BEGIN:VEVENT\r\n' +
       'UID:' + task.getId() + '\r\n' +
-      'DTSTAMP:' + task.getDateTimeStamp() + '\r\n' +
-      'DTSTART:' + task.getDateStart() + '\r\n' +
+      'DTSTAMP:' + task.getDate(null, 'YYYYMMDDTHHmmss') + '\r\n';
+
+    if (task.hasA(TaskDateName.Start) && task.hasA(TaskDateName.Due)) {
+      event += '' +
+        'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDDTHHmmss') + '\r\n' +
+        'DTEND:' + task.getDate(TaskDateName.Due, 'YYYYMMDDTHHmmss') + '\r\n';
+    } else {
+      event += '' +
+        'DTSTART:' + task.getDate(TaskDateName.Unknown, 'YYYYMMDD') + '\r\n';
+    }
+
+    event += '' +
       'SUMMARY:' + task.getSummary() + '\r\n' +
       'END:VEVENT\r\n';
+
+      return event;
   }
 
   private pretty(calendar: string): string {
