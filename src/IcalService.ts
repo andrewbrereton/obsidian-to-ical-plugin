@@ -30,6 +30,7 @@ export class IcalService {
   }
 
   private getEvent(task: Task): string {
+    // console.log({task});
     let event = '' +
       'BEGIN:VEVENT\r\n' +
       'UID:' + task.getId() + '\r\n' +
@@ -39,6 +40,12 @@ export class IcalService {
       event += '' +
         'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDDTHHmmss') + '\r\n' +
         'DTEND:' + task.getDate(TaskDateName.Due, 'YYYYMMDDTHHmmss') + '\r\n';
+    } else if (task.hasA(TaskDateName.Start)) {
+      event += '' +
+        'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDD') + '\r\n';
+    } else if (task.hasA(TaskDateName.Due)) {
+      event += '' +
+        'DTSTART:' + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
     } else {
       event += '' +
         'DTSTART:' + task.getDate(TaskDateName.Unknown, 'YYYYMMDD') + '\r\n';
