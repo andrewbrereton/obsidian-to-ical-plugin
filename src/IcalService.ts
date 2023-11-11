@@ -48,7 +48,7 @@ export class IcalService {
         'DTSTART:' + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
     } else {
       event += '' +
-        'DTSTART:' + task.getDate(TaskDateName.Unknown, 'YYYYMMDD') + '\r\n';
+        'DTSTART:' + task.getDate(null, 'YYYYMMDD') + '\r\n';
     }
 
     event += '' +
