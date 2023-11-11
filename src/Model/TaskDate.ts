@@ -70,7 +70,7 @@ export function getTaskDatesFromMarkdown(markdown: string): TaskDate[] {
 }
 
 export function getSummaryFromMarkdown(markdown: string): string {
-  const recurringRegExp = /🔁.*\s+[➕|⏳|🛫|📅|✅]?/gi;
+  const recurringRegExp = /🔁(.*?)(?=\s(?:➕|⏳|🛫|📅|✅)|\s\d{4}-\d{2}-\d{2}|$)/gi;
   const emojiDateRegExp = /\s*➕|⏳|🛫|📅|✅\s?\d{4}-\d{2}-\d{1,2}\s*/gi;
   const dateRegExp = /\s*\d{4}-\d{2}-\d{1,2}/gi;
 
