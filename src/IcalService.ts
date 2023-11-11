@@ -8,7 +8,7 @@ export class IcalService {
     let calendar = '' +
       'BEGIN:VCALENDAR\r\n' +
       'VERSION:2.0\r\n' +
-      'PRODID:-//Andrew Brereton//obsidian-ical-plugin v1.4.0//EN\r\n' +
+      'PRODID:-//Andrew Brereton//obsidian-ical-plugin v1.5.0//EN\r\n' +
       'X-WR-CALNAME:Obsidian Calendar\r\n' +
       'NAME:Obsidian Calendar\r\n' +
       'CALSCALE:GREGORIAN\r\n' +
@@ -48,11 +48,12 @@ export class IcalService {
         'DTSTART:' + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
     } else {
       event += '' +
-        'DTSTART:' + task.getDate(TaskDateName.Unknown, 'YYYYMMDD') + '\r\n';
+        'DTSTART:' + task.getDate(null, 'YYYYMMDD') + '\r\n';
     }
 
     event += '' +
       'SUMMARY:' + task.getSummary() + '\r\n' +
+      'LOCATION:ALTREP="' + task.getLocation() + '":' + task.getLocation() + '\r\n' +
       'END:VEVENT\r\n';
 
       return event;

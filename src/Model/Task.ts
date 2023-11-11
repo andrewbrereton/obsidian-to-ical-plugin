@@ -7,15 +7,18 @@ export class Task {
   public status: TaskStatus;
   dates: TaskDate[];
   public summary: string;
+  fileUri: string;
 
   constructor(
     status: TaskStatus,
     dates: TaskDate[],
-    summary: string
+    summary: string,
+    fileUri: string
   ) {
     this.status = status;
     this.dates = dates;
     this.summary = summary;
+    this.fileUri = fileUri;
   }
 
   public getId(): string {
@@ -54,9 +57,13 @@ export class Task {
 
     return `${emoji} ${summary}`;
   }
+
+  public getLocation(): string {
+    return this.fileUri;
+  }
 }
 
-export function createTaskFromLine(line: string): Task|null {
+export function createTaskFromLine(line: string, fileUri: string): Task|null {
   const taskRegExp = /(\*|-)\s*(?<taskStatus>\[.?])\s*(?<summary>.*)\s*/gi;
   const dateRegExp = /\b(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\b/gi;
 
@@ -79,5 +86,5 @@ export function createTaskFromLine(line: string): Task|null {
   const taskDates = getTaskDatesFromMarkdown(line);
   const summary = getSummaryFromMarkdown(taskMatch?.groups?.summary ?? '');
 
-  return new Task(taskStatus, taskDates, summary);
+  return new Task(taskStatus, taskDates, summary, fileUri);
 }
