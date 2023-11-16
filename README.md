@@ -10,7 +10,7 @@ Periodically, the plugin will:
 2. Generate an iCal calendar file that contains all of these tasks,
 3. Tasks are appended with an emoji to quickly see their status (✅ completed, 🔲 to do, 🏃 in progress, 🚫 canceled),
 4. Optionally, calendar can be saved to your filesystem, and/or
-5. Optionally Calendar can be stored on GitHub Gist.
+5. Optionally, calendar can be stored on GitHub Gist.
 
 If you choose to store your calendar on Gist, you can then use the URL to your Gist in your preferred calendar application.
 
