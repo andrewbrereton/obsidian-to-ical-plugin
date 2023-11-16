@@ -64,7 +64,7 @@ export function getTaskDatesFromMarkdown(markdown: string): TaskDate[] {
       return new TaskDate(date, taskDateName);
     });
 
-  console.log({taskDates});
+  // console.log({taskDates});
 
   return taskDates;
 }

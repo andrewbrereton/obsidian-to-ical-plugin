@@ -5,7 +5,7 @@ export class GithubClient {
   githubGistId: string
   filename: string;
 
-  async setup(githubPersonalAccessToken: string, githubGistId: string, filename: string) {
+  constructor(githubPersonalAccessToken: string, githubGistId: string, filename: string) {
     this.octokit = new Octokit({
       auth: githubPersonalAccessToken
     });
@@ -14,9 +14,9 @@ export class GithubClient {
   }
 
   async save(calendar: string) {
-    console.log('gist_id', this.githubGistId);
-    console.log('this.filename', this.filename);
-    console.log('calendar', calendar);
+    // console.log('gist_id', this.githubGistId);
+    // console.log('this.filename', this.filename);
+    // console.log('calendar', calendar);
     const f = this.filename;
     const options = {
       gist_id: this.githubGistId,
@@ -26,8 +26,8 @@ export class GithubClient {
         }
       }
     };
-    console.log('options', options);
+    // console.log('options', options);
     const t = await this.octokit.rest.gists.update(options);
-    console.log(t);
+    // console.log(t);
   }
 }
