@@ -5,6 +5,11 @@ export interface Settings {
   filename: string;
   isPeriodicSaveEnabled: boolean;
   periodicSaveInterval: number;
+  isSaveToGistEnabled: boolean;
+  isSaveToFileEnabled: boolean;
+  savePath: string;
+  saveFileName: string;
+  saveFileExtension: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -13,5 +18,10 @@ export const DEFAULT_SETTINGS: Settings = {
   githubUsername: '',
   filename: 'obsidian.ics',
   isPeriodicSaveEnabled: true,
-  periodicSaveInterval: 5
+  periodicSaveInterval: 5,
+  isSaveToGistEnabled: false,
+  isSaveToFileEnabled: false,
+  savePath: '',
+  saveFileName: '',
+  saveFileExtension: '.ical'
 };

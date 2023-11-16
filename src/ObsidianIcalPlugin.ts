@@ -1,9 +1,11 @@
 import {
   App,
+  FileSystemAdapter,
   Plugin,
   PluginSettingTab,
   Setting
 } from "obsidian";
+import * as path from "path";
 import { Main } from "src/Main";
 import { Settings, DEFAULT_SETTINGS } from "src/Model/Settings";
 
@@ -143,81 +145,212 @@ class SettingTab extends PluginSettingTab {
 
     containerEl.empty();
 
-    containerEl.createEl('p', { text: 'This plugin finds all of the tasks in your vault that contain a date and generates a calendar in iCal format. The calendar is stored in a Gist on GitHub so that it can be added to your iCal calendar of choice. Perhaps in the future this plugin should support additional storage providers (like S3).' });
-
-    containerEl.createEl('p', { text: 'Perform the following steps to get your Personal Access Token and Gist ID:' });
-    const ol = containerEl.createEl('ol');
-    ol.createEl('li', { text: 'Go to https://github.com/settings/tokens/new and create a new personal access token. It only needs Gist scope.' });
-    ol.createEl('li', { text: 'Go to https://gist.github.com/ and create a new secret Gist.' });
-    containerEl.append(ol);
+    containerEl.createEl('p', { cls: 'setting-item-description', text: 'This plugin finds all of the tasks in your vault that contain a date and generates a calendar in iCalendar format. The calendar can be saved to a file and/or saved in a Gist on GitHub so that it can be added to your iCalendar calendar of choice.' });
 
     new Setting(containerEl)
-      .setName("GitHub personal access token")
-      .setDesc("Used to privately store your calendar on Github")
-      .addText((text) =>
+      .setName("Save calendar to GitHub Gist?")
+      .addToggle((text) =>
         text
-          .setValue(this.plugin.settings.githubPersonalAccessToken)
+          .setValue(this.plugin.settings.isSaveToGistEnabled)
           .onChange(async (value) => {
-            try {
-              this.validateGithubPersonalAccessToken(value);
-              this.plugin.settings.githubPersonalAccessToken = value;
-              await this.plugin.saveSettings();
-            } catch(error) {
-              // Show the error and set the style
-            }
-          })
-      );
-
-    new Setting(containerEl)
-      .setName("GitHub Gist ID")
-      .setDesc("This is the unique ID to the Gist that you created in GitHub")
-      .addText((text) =>
-        text
-          // .setPlaceholder("Enter your GitHub Gist ID")
-          .setValue(this.plugin.settings.githubGistId)
-          .onChange(async (value) => {
-            this.plugin.settings.githubGistId = value;
+            this.plugin.settings.isSaveToGistEnabled = value;
             await this.plugin.saveSettings();
+            this.display();
           })
-      );
+        );
 
+    new Setting(containerEl)
+      .setName("Save calendar to disk?")
+      .addToggle((text) =>
+        text
+          .setValue(this.plugin.settings.isSaveToFileEnabled)
+          .onChange(async (value) => {
+            this.plugin.settings.isSaveToFileEnabled = value;
+            await this.plugin.saveSettings();
+            this.display();
+          })
+        );
+
+    new Setting(containerEl)
+      .setName("Periodically save your calendar")
+      .setDesc("Do you want the plugin to periodically process your tasks? If you choose not to then a calendar will only be built when Obsidian is loaded.")
+      .addToggle((text) =>
+        text
+          .setValue(this.plugin.settings.isPeriodicSaveEnabled)
+          .onChange(async (value) => {
+            this.plugin.settings.isPeriodicSaveEnabled = value;
+            await this.plugin.saveSettings();
+            this.plugin.configurePeriodicSave();
+            this.display();
+          })
+        );
+
+    if (this.plugin.settings.isPeriodicSaveEnabled) {
       new Setting(containerEl)
-        .setName("GitHub username")
-        .setDesc("This is only used to generate the URL to your calendar")
+        .setName("How often should we parse and save your calendar? (minutes)")
+        .setDesc("How often do you want to periodically scan for tasks?")
         .addText((text) =>
           text
-            .setValue(this.plugin.settings.githubUsername)
+            .setValue(this.plugin.settings.periodicSaveInterval.toString())
             .onChange(async (value) => {
-              this.plugin.settings.githubUsername = value;
+              let minutes: number = parseInt(value, 10);
+              if (minutes < 1) minutes = 1;
+              if (minutes > 1440) minutes = 1440;
+              this.plugin.settings.periodicSaveInterval = minutes;
+              await this.plugin.saveSettings();
+              this.plugin.configurePeriodicSave();
+            })
+        );
+      }
+
+    if (this.plugin.settings.isSaveToGistEnabled) {
+      containerEl.createEl('h1', { text: 'Save calendar to GitHub Gist' });
+
+      containerEl.createEl('p', { cls: 'setting-item-description', text: 'Perform the following steps to get your Personal Access Token and Gist ID:' });
+      const ol = containerEl.createEl('ol');
+      ol.createEl('li', { cls: 'setting-item-description', text: 'Go to https://github.com/settings/tokens/new and create a new personal access token. It only needs Gist scope.' });
+      ol.createEl('li', { cls: 'setting-item-description', text: 'Go to https://gist.github.com/ and create a new secret Gist.' });
+      containerEl.append(ol);
+
+      new Setting(containerEl)
+        .setName("GitHub personal access token")
+        .setDesc("Used to privately store your calendar on Github")
+        .addText((text) =>
+          text
+            .setValue(this.plugin.settings.githubPersonalAccessToken)
+            .onChange(async (value) => {
+              try {
+                this.validateGithubPersonalAccessToken(value);
+                this.plugin.settings.githubPersonalAccessToken = value;
+                await this.plugin.saveSettings();
+              } catch(error) {
+                // Show the error and set the style
+              }
+            })
+        );
+
+      new Setting(containerEl)
+        .setName("GitHub Gist ID")
+        .setDesc("This is the unique ID to the Gist that you created in GitHub")
+        .addText((text) =>
+          text
+            // .setPlaceholder("Enter your GitHub Gist ID")
+            .setValue(this.plugin.settings.githubGistId)
+            .onChange(async (value) => {
+              this.plugin.settings.githubGistId = value;
               await this.plugin.saveSettings();
             })
         );
 
         new Setting(containerEl)
-          .setName("Filename")
-          .setDesc("Give your calendar a file name")
+          .setName("GitHub username")
+          .setDesc("This is only used to generate the URL to your calendar")
           .addText((text) =>
             text
-              .setValue(this.plugin.settings.filename)
-              .setPlaceholder('obsidian.ics')
+              .setValue(this.plugin.settings.githubUsername)
               .onChange(async (value) => {
-                this.plugin.settings.filename = value;
+                this.plugin.settings.githubUsername = value;
                 await this.plugin.saveSettings();
               })
           );
 
-          const url = `https://gist.githubusercontent.com/${this.plugin.settings.githubUsername}/${this.plugin.settings.githubGistId}/raw/${this.plugin.settings.filename}`;
+          new Setting(containerEl)
+            .setName("Filename")
+            .setDesc("Give your calendar a file name")
+            .addText((text) =>
+              text
+                .setValue(this.plugin.settings.filename)
+                .setPlaceholder('obsidian.ics')
+                .onChange(async (value) => {
+                  this.plugin.settings.filename = value;
+                  await this.plugin.saveSettings();
+                })
+            );
+
+            const url = `https://gist.githubusercontent.com/${this.plugin.settings.githubUsername}/${this.plugin.settings.githubGistId}/raw/${this.plugin.settings.filename}`;
+
+            new Setting(containerEl)
+              .setName("Your calendar URL")
+              .setDesc(createFragment((fragment) => {
+                fragment.createEl('a', { text: url, href: url, cls: 'search-result'});
+              }))
+              .addButton((button) => {
+                button
+                  .setButtonText('📋 Copy to clipboard')
+                  .onClick((event) => {
+                    navigator.clipboard.writeText(url);
+                    button.setButtonText('✅ Copied!')
+                    window.setTimeout(() => {
+                      button.setButtonText('📋 Copy to clipboard');
+                    }, 500);
+                  })
+              });
+      }
+
+
+    if (this.plugin.settings.isSaveToFileEnabled) {
+      containerEl.createEl('h1', { text: 'Save calendar to disk' });
+
+      if (this.plugin.settings.saveFileName === DEFAULT_SETTINGS.saveFileName) {
+        this.plugin.settings.saveFileName = this.app.vault.getName();
+        await this.plugin.saveSettings();
+      }
+
+      new Setting(containerEl)
+        .setName("Path")
+        .setDesc("Which directory/folder do you want to save your calendar to? An empty string means to the current vault root path. The path must be inside the vault.")
+        .addText((text) =>
+          text
+            .setValue(this.plugin.settings.savePath)
+            .onChange(async (value) => {
+              this.plugin.settings.savePath = value;
+              await this.plugin.saveSettings();
+            })
+        );
+
+      new Setting(containerEl)
+        .setName("Filename")
+        .setDesc("What do you want to call the file of your calendar? An empty string means " + this.app.vault.getName())
+        .addText((text) =>
+          text
+          .setPlaceholder(this.app.vault.getName())
+          .setValue(this.plugin.settings.saveFileName ?? this.app.vault.getName())
+            .onChange(async (value) => {
+              this.plugin.settings.saveFileName = value;
+              await this.plugin.saveSettings();
+            })
+        );
+
+        new Setting(containerEl)
+          .setName("File extension")
+          .setDesc("The file extension must be one of .ical or .ics or .ifb or .icalendar")
+          .addDropdown((text) =>
+            text
+              .addOptions({
+                '.ics': '.ics',
+                '.ical': '.ical',
+                '.ifb': '.ifb',
+                '.icalendar': '.icalendar',
+              })
+              .setValue(this.plugin.settings.saveFileExtension)
+              .onChange(async (value) => {
+                this.plugin.settings.saveFileExtension = value;
+                await this.plugin.saveSettings();
+              })
+          );
+
+          const savePath = `${this.plugin.settings.savePath ?? this.plugin.settings.savePath + path.sep}${this.plugin.settings.saveFileName}${this.plugin.settings.saveFileExtension}`
 
           new Setting(containerEl)
-            .setName("Your calendar URL")
+            .setName("Your calendar path")
             .setDesc(createFragment((fragment) => {
-              fragment.createEl('a', { text: url, href: url, cls: 'search-result'});
+              fragment.createEl('a', { text: savePath, href: `file:///${savePath}`, cls: 'search-result'});
             }))
             .addButton((button) => {
               button
                 .setButtonText('📋 Copy to clipboard')
                 .onClick((event) => {
-                  navigator.clipboard.writeText(url);
+                  navigator.clipboard.writeText(savePath);
                   button.setButtonText('✅ Copied!')
                   window.setTimeout(() => {
                     button.setButtonText('📋 Copy to clipboard');
@@ -225,41 +358,7 @@ class SettingTab extends PluginSettingTab {
                 })
             });
 
-        new Setting(containerEl)
-          .setName("Periodically save to Gist")
-          .setDesc("Do you want the plugin to periodically process your tasks and save them to GitHub Gist?")
-          .addToggle((text) =>
-            text
-              .setValue(this.plugin.settings.isPeriodicSaveEnabled)
-              .onChange(async (value) => {
-                this.plugin.settings.isPeriodicSaveEnabled = value;
-                await this.plugin.saveSettings();
-                this.plugin.configurePeriodicSave();
-              })
-          );
-
-        new Setting(containerEl)
-          .setName("How often should we save to Gist? (minutes)")
-          .setDesc("How often do you want to periodically scan for tasks and save them to GitHub Gist?")
-          .addText((text) =>
-            text
-              .setValue(this.plugin.settings.periodicSaveInterval.toString())
-              .onChange(async (value) => {
-                let minutes: number = parseInt(value, 10);
-                if (minutes < 1) minutes = 1;
-                if (minutes > 1440) minutes = 1440;
-                this.plugin.settings.periodicSaveInterval = minutes;
-                await this.plugin.saveSettings();
-                this.plugin.configurePeriodicSave();
-              })
-          );
-
-      // containerEl
-      //   .createEl('div', { cls: 'setting-item-name', text: 'URL to your calendar'})
-      //   .createEl('button', { text: '📋 Copy'});
-      // containerEl
-      //   .createEl('div', { cls: 'setting-item-description' })
-      //   .createEl('a', { text: url, href: url});
+    }
   }
 
   validateGithubPersonalAccessToken(value: string): void {

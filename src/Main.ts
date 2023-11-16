@@ -4,12 +4,15 @@ import { TaskFinder } from "./TaskFinder";
 import { Settings } from "./Model/Settings";
 import { Task } from "./Model/Task";
 import { GithubClient } from "./GithubClient";
+import { FileClient } from "./FileClient";
+import { log } from "./Logger";
 
 export class Main {
   app: App;
   settings: Settings;
   iCalService: IcalService;
   githubClient: GithubClient;
+  fileClient: FileClient;
   tasks: Task[];
   taskFinder: TaskFinder;
 
@@ -17,8 +20,8 @@ export class Main {
     this.app = app;
     this.settings = settings;
     this.iCalService = new IcalService();
-    this.githubClient = new GithubClient();
-    this.githubClient.setup(this.settings.githubPersonalAccessToken, this.settings.githubGistId, this.settings.filename);
+    this.githubClient = new GithubClient(this.settings.githubPersonalAccessToken, this.settings.githubGistId, this.settings.filename);
+    this.fileClient = new FileClient(this.app.vault, this.settings.savePath, this.settings.saveFileName, this.settings.saveFileExtension);
     this.tasks = [];
     this.taskFinder = new TaskFinder(this.app.vault);
   }
@@ -26,6 +29,8 @@ export class Main {
   async start() {
     const markdownFiles = this.app.vault.getMarkdownFiles();
     const taskPromises = [];
+
+    log(`Found ${markdownFiles.length} Markdown files`);
 
     // Iterate over all of the Markdown files in this vault
     for (const file of markdownFiles) {
@@ -39,6 +44,7 @@ export class Main {
       }
     }
 
+    // Process all of the tasks that were discovered
     const allTasks = await Promise.all(taskPromises);
 
     this.tasks = [];
@@ -49,11 +55,31 @@ export class Main {
       });
     });
 
-    this.saveCalendar();
+    log(`Found ${this.tasks.length} Tasks`);
+
+    // Build the calendar
+    const calendar = this.iCalService.getCalendar(this.tasks);
+
+    // Save to Gist
+    if (this.settings.isSaveToGistEnabled) {
+      log(`Saving to Gist...`);
+      await this.saveToGist(calendar);
+      log(`Done`);
+    }
+
+    // Save to file
+    if (this.settings.isSaveToFileEnabled) {
+      log(`Saving to File...`);
+      await this.saveToFile(calendar);
+      log(`Done`);
+    }
   }
 
-  async saveCalendar() {
-    const calendar = this.iCalService.getCalendar(this.tasks);
+  async saveToGist(calendar: string) {
     await this.githubClient.save(calendar);
+  }
+
+  async saveToFile(calendar: string) {
+    await this.fileClient.save(calendar);
   }
 }
