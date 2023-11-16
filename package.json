@@ -14,7 +14,7 @@
     "tslib": "2.4.0",
     "typescript": "4.7.4"
   },
-  "description": "Scans your vault for tasks. Creates an iCal file and stores it on Gist. You can then show this calendar in any iCal compatible client such as Outlook, Google Calendar, Apple Calendar, etc.",
+  "description": "Scans your vault for tasks. Creates an iCal file which can be saved to disk and/or stored on Gist. You can then show this calendar in any iCal compatible client such as Outlook, Google Calendar, Apple Calendar, etc.",
   "keywords": [],
   "license": "MIT",
   "scripts": {
