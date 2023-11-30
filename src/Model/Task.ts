@@ -1,7 +1,8 @@
 import { TaskStatus, getTaskStatusFromMarkdown, getTaskStatusEmoji } from "./TaskStatus";
 import "crypto";
 import { moment } from "obsidian";
-import { TaskDate, TaskDateName, getSummaryFromMarkdown, getTaskDatesFromMarkdown } from "./TaskDate";
+import { TaskDate, TaskDateName, getTaskDatesFromMarkdown } from "./TaskDate";
+import { getSummaryFromMarkdown } from "./TaskSummary";
 
 export class Task {
   public status: TaskStatus;
@@ -13,7 +14,7 @@ export class Task {
     status: TaskStatus,
     dates: TaskDate[],
     summary: string,
-    fileUri: string
+    fileUri: string,
   ) {
     this.status = status;
     this.dates = dates;
@@ -63,7 +64,7 @@ export class Task {
   }
 }
 
-export function createTaskFromLine(line: string, fileUri: string): Task|null {
+export function createTaskFromLine(line: string, fileUri: string, howToParseInternalLinks: string): Task|null {
   const taskRegExp = /(\*|-)\s*(?<taskStatus>\[.?])\s*(?<summary>.*)\s*/gi;
   const dateRegExp = /\b(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\b/gi;
 
@@ -84,7 +85,7 @@ export function createTaskFromLine(line: string, fileUri: string): Task|null {
   // Extract the Task data points from the matches
   const taskStatus = getTaskStatusFromMarkdown(taskMatch?.groups?.taskStatus ?? '');
   const taskDates = getTaskDatesFromMarkdown(line);
-  const summary = getSummaryFromMarkdown(taskMatch?.groups?.summary ?? '');
+  const summary = getSummaryFromMarkdown(taskMatch?.groups?.summary ?? '', howToParseInternalLinks);
 
   return new Task(taskStatus, taskDates, summary, fileUri);
 }

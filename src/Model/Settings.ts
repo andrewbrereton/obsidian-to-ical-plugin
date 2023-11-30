@@ -1,3 +1,8 @@
+export const HOW_TO_PARSE_INTERNAL_LINKS = {
+  DoNotModifyThem: 'Do not modify them',
+  RemoveThem: 'Remove them',
+};
+
 export interface Settings {
   githubPersonalAccessToken: string;
   githubGistId: string;
@@ -10,6 +15,7 @@ export interface Settings {
   savePath: string;
   saveFileName: string;
   saveFileExtension: string;
+  howToParseInternalLinks: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -23,5 +29,6 @@ export const DEFAULT_SETTINGS: Settings = {
   isSaveToFileEnabled: false,
   savePath: '',
   saveFileName: '',
-  saveFileExtension: '.ical'
+  saveFileExtension: '.ical',
+  howToParseInternalLinks: HOW_TO_PARSE_INTERNAL_LINKS.DoNotModifyThem
 };
