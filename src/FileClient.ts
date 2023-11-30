@@ -1,5 +1,4 @@
-import { FileSystemAdapter, TFile, Vault } from "obsidian";
-import * as path from "path";
+import { TFile, Vault } from "obsidian";
 
 export class FileClient {
   vault: Vault;
@@ -15,7 +14,7 @@ export class FileClient {
   }
 
   async save(calendar: string) {
-    const fileRelativePath = `${this.filePath ?? this.filePath + path.sep}${this.fileName}${this.fileExtension}`;
+    const fileRelativePath = `${this.filePath ?? this.filePath + '/'}${this.fileName}${this.fileExtension}`;
     const file = this.vault.getAbstractFileByPath(fileRelativePath);
 
     if (file instanceof TFile) {
