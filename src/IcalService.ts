@@ -53,7 +53,7 @@ export class IcalService {
 
     event += '' +
       'SUMMARY:' + task.getSummary() + '\r\n' +
-      'LOCATION:ALTREP="' + task.getLocation() + '":' + task.getLocation() + '\r\n' +
+      'LOCATION:ALTREP="' + encodeURI(task.getLocation()) + '":' + encodeURI(task.getLocation()) + '\r\n' +
       'END:VEVENT\r\n';
 
       return event;
