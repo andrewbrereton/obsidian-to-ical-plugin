@@ -1,5 +1,6 @@
 export const HOW_TO_PARSE_INTERNAL_LINKS = {
   DoNotModifyThem: 'Do not modify them',
+  KeepTitle: 'Keep the title',
   RemoveThem: 'Remove them',
 };
 
