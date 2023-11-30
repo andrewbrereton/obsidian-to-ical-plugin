@@ -1,13 +1,16 @@
 import {
   App,
-  FileSystemAdapter,
+  ButtonComponent,
+  DropdownComponent,
   Plugin,
   PluginSettingTab,
-  Setting
+  Setting,
+  TextComponent,
+  ToggleComponent
 } from "obsidian";
 import * as path from "path";
 import { Main } from "src/Main";
-import { Settings, DEFAULT_SETTINGS } from "src/Model/Settings";
+import { Settings, DEFAULT_SETTINGS, HOW_TO_PARSE_INTERNAL_LINKS } from "src/Model/Settings";
 
 export default class ObsidianIcalPlugin extends Plugin {
   settings: Settings;
@@ -148,9 +151,23 @@ class SettingTab extends PluginSettingTab {
     containerEl.createEl('p', { cls: 'setting-item-description', text: 'This plugin finds all of the tasks in your vault that contain a date and generates a calendar in iCalendar format. The calendar can be saved to a file and/or saved in a Gist on GitHub so that it can be added to your iCalendar calendar of choice.' });
 
     new Setting(containerEl)
+      .setName("Processing internal links")
+      .setDesc("How should [[wikilinks]] and [markdown links](markdown links) be processed if they are encountered in a task?")
+      .addDropdown((dropdown: DropdownComponent) =>
+        dropdown
+          .addOptions(HOW_TO_PARSE_INTERNAL_LINKS)
+          .setValue(this.plugin.settings.howToParseInternalLinks)
+          .onChange(async (value) => {
+            this.plugin.settings.howToParseInternalLinks = value;
+            await this.plugin.saveSettings();
+            this.display();
+          })
+        );
+
+    new Setting(containerEl)
       .setName("Save calendar to GitHub Gist?")
-      .addToggle((text) =>
-        text
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
           .setValue(this.plugin.settings.isSaveToGistEnabled)
           .onChange(async (value) => {
             this.plugin.settings.isSaveToGistEnabled = value;
@@ -161,8 +178,8 @@ class SettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Save calendar to disk?")
-      .addToggle((text) =>
-        text
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
           .setValue(this.plugin.settings.isSaveToFileEnabled)
           .onChange(async (value) => {
             this.plugin.settings.isSaveToFileEnabled = value;
@@ -174,8 +191,8 @@ class SettingTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName("Periodically save your calendar")
       .setDesc("Do you want the plugin to periodically process your tasks? If you choose not to then a calendar will only be built when Obsidian is loaded.")
-      .addToggle((text) =>
-        text
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
           .setValue(this.plugin.settings.isPeriodicSaveEnabled)
           .onChange(async (value) => {
             this.plugin.settings.isPeriodicSaveEnabled = value;
@@ -215,7 +232,7 @@ class SettingTab extends PluginSettingTab {
       new Setting(containerEl)
         .setName("GitHub personal access token")
         .setDesc("Used to privately store your calendar on Github")
-        .addText((text) =>
+        .addText((text: TextComponent) =>
           text
             .setValue(this.plugin.settings.githubPersonalAccessToken)
             .onChange(async (value) => {
@@ -232,7 +249,7 @@ class SettingTab extends PluginSettingTab {
       new Setting(containerEl)
         .setName("GitHub Gist ID")
         .setDesc("This is the unique ID to the Gist that you created in GitHub")
-        .addText((text) =>
+        .addText((text: TextComponent) =>
           text
             // .setPlaceholder("Enter your GitHub Gist ID")
             .setValue(this.plugin.settings.githubGistId)
@@ -245,7 +262,7 @@ class SettingTab extends PluginSettingTab {
         new Setting(containerEl)
           .setName("GitHub username")
           .setDesc("This is only used to generate the URL to your calendar")
-          .addText((text) =>
+          .addText((text: TextComponent) =>
             text
               .setValue(this.plugin.settings.githubUsername)
               .onChange(async (value) => {
@@ -257,7 +274,7 @@ class SettingTab extends PluginSettingTab {
           new Setting(containerEl)
             .setName("Filename")
             .setDesc("Give your calendar a file name")
-            .addText((text) =>
+            .addText((text: TextComponent) =>
               text
                 .setValue(this.plugin.settings.filename)
                 .setPlaceholder('obsidian.ics')
@@ -274,7 +291,7 @@ class SettingTab extends PluginSettingTab {
               .setDesc(createFragment((fragment) => {
                 fragment.createEl('a', { text: url, href: url, cls: 'search-result'});
               }))
-              .addButton((button) => {
+              .addButton((button: ButtonComponent) => {
                 button
                   .setButtonText('📋 Copy to clipboard')
                   .onClick((event) => {
@@ -299,7 +316,7 @@ class SettingTab extends PluginSettingTab {
       new Setting(containerEl)
         .setName("Path")
         .setDesc("Which directory/folder do you want to save your calendar to? An empty string means to the current vault root path. The path must be inside the vault.")
-        .addText((text) =>
+        .addText((text: TextComponent) =>
           text
             .setValue(this.plugin.settings.savePath)
             .onChange(async (value) => {
@@ -311,21 +328,21 @@ class SettingTab extends PluginSettingTab {
       new Setting(containerEl)
         .setName("Filename")
         .setDesc("What do you want to call the file of your calendar? An empty string means " + this.app.vault.getName())
-        .addText((text) =>
+        .addText((text: TextComponent) =>
           text
-          .setPlaceholder(this.app.vault.getName())
-          .setValue(this.plugin.settings.saveFileName ?? this.app.vault.getName())
-            .onChange(async (value) => {
-              this.plugin.settings.saveFileName = value;
-              await this.plugin.saveSettings();
-            })
+            .setPlaceholder(this.app.vault.getName())
+            .setValue(this.plugin.settings.saveFileName ?? this.app.vault.getName())
+              .onChange(async (value) => {
+                this.plugin.settings.saveFileName = value;
+                await this.plugin.saveSettings();
+              })
         );
 
         new Setting(containerEl)
           .setName("File extension")
           .setDesc("The file extension must be one of .ical or .ics or .ifb or .icalendar")
-          .addDropdown((text) =>
-            text
+          .addDropdown((dropdown: DropdownComponent) =>
+            dropdown
               .addOptions({
                 '.ics': '.ics',
                 '.ical': '.ical',
@@ -346,7 +363,7 @@ class SettingTab extends PluginSettingTab {
             .setDesc(createFragment((fragment) => {
               fragment.createEl('a', { text: savePath, href: `file:///${savePath}`, cls: 'search-result'});
             }))
-            .addButton((button) => {
+            .addButton((button: ButtonComponent) => {
               button
                 .setButtonText('📋 Copy to clipboard')
                 .onClick((event) => {
