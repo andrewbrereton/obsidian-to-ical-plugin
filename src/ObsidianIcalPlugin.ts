@@ -165,6 +165,19 @@ class SettingTab extends PluginSettingTab {
         );
 
     new Setting(containerEl)
+      .setName("Ignore completed tasks")
+      .setDesc("Choose if you want your calendar to ignore tasks that have been completed.")
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(this.plugin.settings.ignoreCompletedTasks)
+          .onChange(async (value) => {
+            this.plugin.settings.ignoreCompletedTasks = value;
+            await this.plugin.saveSettings();
+            this.display();
+          })
+        );
+
+    new Setting(containerEl)
       .setName("Save calendar to GitHub Gist?")
       .addToggle((toggle: ToggleComponent) =>
         toggle

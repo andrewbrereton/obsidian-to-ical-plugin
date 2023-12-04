@@ -17,6 +17,7 @@ export interface Settings {
   saveFileName: string;
   saveFileExtension: string;
   howToParseInternalLinks: string;
+  ignoreCompletedTasks: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -31,5 +32,6 @@ export const DEFAULT_SETTINGS: Settings = {
   savePath: '',
   saveFileName: '',
   saveFileExtension: '.ical',
-  howToParseInternalLinks: HOW_TO_PARSE_INTERNAL_LINKS.DoNotModifyThem
+  howToParseInternalLinks: HOW_TO_PARSE_INTERNAL_LINKS.DoNotModifyThem,
+  ignoreCompletedTasks: false,
 };
