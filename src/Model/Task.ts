@@ -64,7 +64,7 @@ export class Task {
   }
 }
 
-export function createTaskFromLine(line: string, fileUri: string, howToParseInternalLinks: string): Task|null {
+export function createTaskFromLine(line: string, fileUri: string, howToParseInternalLinks: string, ignoreCompletedTasks: boolean): Task|null {
   const taskRegExp = /(\*|-)\s*(?<taskStatus>\[.?])\s*(?<summary>.*)\s*/gi;
   const dateRegExp = /\b(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\b/gi;
 
@@ -84,6 +84,12 @@ export function createTaskFromLine(line: string, fileUri: string, howToParseInte
 
   // Extract the Task data points from the matches
   const taskStatus = getTaskStatusFromMarkdown(taskMatch?.groups?.taskStatus ?? '');
+
+  // Task is done and user wants to ignore completed tasks. Bail.
+  if (taskStatus === TaskStatus.Done && ignoreCompletedTasks === true) {
+    return null;
+  }
+
   const taskDates = getTaskDatesFromMarkdown(line);
   const summary = getSummaryFromMarkdown(taskMatch?.groups?.summary ?? '', howToParseInternalLinks);
 
