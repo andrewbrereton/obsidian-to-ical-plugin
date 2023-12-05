@@ -11,6 +11,7 @@ import {
 import * as path from "path";
 import { Main } from "src/Main";
 import { Settings, DEFAULT_SETTINGS, HOW_TO_PARSE_INTERNAL_LINKS } from "src/Model/Settings";
+import { logger, log } from './Logger';
 
 export default class ObsidianIcalPlugin extends Plugin {
   settings: Settings;
@@ -19,6 +20,9 @@ export default class ObsidianIcalPlugin extends Plugin {
 
   async onload() {
     await this.loadSettings();
+
+    logger(this.settings.isDebug);
+    log(`Logger initialised`);
 
     // // This creates an icon in the left ribbon.
     // const ribbonIconEl = this.addRibbonIcon(
@@ -102,15 +106,18 @@ export default class ObsidianIcalPlugin extends Plugin {
   }
 
   // Trigger a save every now and then
-  configurePeriodicSave() {
+configurePeriodicSave() {
     if (this.settings.isPeriodicSaveEnabled) {
+      log(`Periodic save enabled and will run every ${this.settings.periodicSaveInterval} minute(s)`);
       this.periodicSaveInterval = window.setInterval(async () => {
+        log(`Periodic save triggers every ${this.settings.periodicSaveInterval} minute(s)`);
         await this.main.start();
       }, this.settings.periodicSaveInterval * 1000 * 60);
 
       // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
       this.registerInterval(this.periodicSaveInterval);
     } else {
+      log(`Periodic save disabled`);
       if (this.periodicSaveInterval ?? 0 > 0) {
         window.clearInterval(this.periodicSaveInterval ?? 0);
         this.periodicSaveInterval = null;
@@ -388,6 +395,18 @@ class SettingTab extends PluginSettingTab {
                 })
             });
 
+    new Setting(containerEl)
+      .setName("Debug mode")
+      .setDesc('Turning this on will write logs to console.')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(this.plugin.settings.isDebug)
+          .onChange(async (value) => {
+            this.plugin.settings.isDebug = value;
+            await this.plugin.saveSettings();
+            this.display();
+          })
+        );
     }
   }
 

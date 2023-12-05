@@ -18,6 +18,7 @@ export interface Settings {
   saveFileExtension: string;
   howToParseInternalLinks: string;
   ignoreCompletedTasks: boolean;
+  isDebug: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -34,4 +35,13 @@ export const DEFAULT_SETTINGS: Settings = {
   saveFileExtension: '.ical',
   howToParseInternalLinks: HOW_TO_PARSE_INTERNAL_LINKS.DoNotModifyThem,
   ignoreCompletedTasks: false,
+  isDebug: false,
 };
+
+export function settingsWithoutSecrets(settings: any): string {
+  return Object.assign({}, settings, { 
+    githubPersonalAccessToken: '<redacted>', 
+    githubGistId: '<redacted>',
+    githubUsername: '<redacted>',
+  });
+}

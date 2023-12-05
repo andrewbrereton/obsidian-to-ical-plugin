@@ -1,7 +1,7 @@
 import { App } from "obsidian";
 import { IcalService } from "./IcalService";
 import { TaskFinder } from "./TaskFinder";
-import { Settings } from "./Model/Settings";
+import { Settings, settingsWithoutSecrets } from "./Model/Settings";
 import { Task } from "./Model/Task";
 import { GithubClient } from "./GithubClient";
 import { FileClient } from "./FileClient";
@@ -30,7 +30,10 @@ export class Main {
     const markdownFiles = this.app.vault.getMarkdownFiles();
     const taskPromises = [];
 
-    log(`Found ${markdownFiles.length} Markdown files`);
+    log(`Performing a scan`);
+    log(`Settings`, { settings: settingsWithoutSecrets(this.settings) });
+
+    log(`Found ${markdownFiles.length} Markdown files`, markdownFiles);
 
     // Iterate over all of the Markdown files in this vault
     for (const file of markdownFiles) {
@@ -55,23 +58,28 @@ export class Main {
       });
     });
 
-    log(`Found ${this.tasks.length} Tasks`);
+    log(`Found ${this.tasks.length} tasks`, this.tasks);
 
     // Build the calendar
     const calendar = this.iCalService.getCalendar(this.tasks);
+    log(`Calendar has been built`, {calendar});
 
     // Save to Gist
     if (this.settings.isSaveToGistEnabled) {
-      log(`Saving to Gist...`);
+      log(`Saving calendar to Gist...`);
       await this.saveToGist(calendar);
       log(`Done`);
+    } else {
+      log(`Skip saving calendar to Gist`);
     }
 
     // Save to file
     if (this.settings.isSaveToFileEnabled) {
-      log(`Saving to File...`);
+      log(`Saving calendar to file...`);
       await this.saveToFile(calendar);
       log(`Done`);
+    } else {
+      log(`Skip saving calendar to file`);
     }
   }
 
