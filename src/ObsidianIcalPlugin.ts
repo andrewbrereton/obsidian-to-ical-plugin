@@ -236,6 +236,7 @@ class SettingTab extends PluginSettingTab {
               this.plugin.settings.periodicSaveInterval = minutes;
               await this.plugin.saveSettings();
               this.plugin.configurePeriodicSave();
+              this.display();
             })
         );
       }
@@ -263,6 +264,7 @@ class SettingTab extends PluginSettingTab {
               } catch(error) {
                 // Show the error and set the style
               }
+              this.display();
             })
         );
 
@@ -276,6 +278,7 @@ class SettingTab extends PluginSettingTab {
             .onChange(async (value) => {
               this.plugin.settings.githubGistId = value;
               await this.plugin.saveSettings();
+              this.display();
             })
         );
 
@@ -288,6 +291,7 @@ class SettingTab extends PluginSettingTab {
               .onChange(async (value) => {
                 this.plugin.settings.githubUsername = value;
                 await this.plugin.saveSettings();
+                this.display();
               })
           );
 
@@ -301,6 +305,7 @@ class SettingTab extends PluginSettingTab {
                 .onChange(async (value) => {
                   this.plugin.settings.filename = value;
                   await this.plugin.saveSettings();
+                  this.display();
                 })
             );
 
@@ -331,6 +336,7 @@ class SettingTab extends PluginSettingTab {
       if (this.plugin.settings.saveFileName === DEFAULT_SETTINGS.saveFileName) {
         this.plugin.settings.saveFileName = this.app.vault.getName();
         await this.plugin.saveSettings();
+        this.display();
       }
 
       new Setting(containerEl)
@@ -342,6 +348,7 @@ class SettingTab extends PluginSettingTab {
             .onChange(async (value) => {
               this.plugin.settings.savePath = value;
               await this.plugin.saveSettings();
+              this.display();
             })
         );
 
@@ -355,6 +362,7 @@ class SettingTab extends PluginSettingTab {
               .onChange(async (value) => {
                 this.plugin.settings.saveFileName = value;
                 await this.plugin.saveSettings();
+                this.display();
               })
         );
 
@@ -373,6 +381,7 @@ class SettingTab extends PluginSettingTab {
               .onChange(async (value) => {
                 this.plugin.settings.saveFileExtension = value;
                 await this.plugin.saveSettings();
+                this.display();
               })
           );
 
