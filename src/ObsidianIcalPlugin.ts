@@ -92,7 +92,7 @@ export default class ObsidianIcalPlugin extends Plugin {
     this.main = new Main(this.app, this.settings);
     await this.main.start();
 
-    this.configurePeriodicSave()
+    this.configurePeriodicSave();
   }
 
   onunload() {}
