@@ -256,17 +256,21 @@ class SettingTab extends PluginSettingTab {
         .addText((text: TextComponent) =>
           text
             .setValue(this.plugin.settings.githubPersonalAccessToken)
-            .onChange(async (value) => {
+            .onChange(async (value: string) => {
               try {
                 this.validateGithubPersonalAccessToken(value);
+                githubPersonalAccessTokenErrorElement.innerText = "";
                 this.plugin.settings.githubPersonalAccessToken = value;
                 await this.plugin.saveSettings();
-              } catch(error) {
-                // Show the error and set the style
+                this.display();
+              } catch(error: any) {
+                log("Error!", error);
+                githubPersonalAccessTokenErrorElement.innerText = `${error.message ?? 'Unknown error'}`;
               }
-              this.display();
             })
         );
+      const githubPersonalAccessTokenErrorElement = containerEl.createEl('p', { text: '', cls: ['setting-message', 'cm-negative'] });
+      containerEl.append(githubPersonalAccessTokenErrorElement);
 
       new Setting(containerEl)
         .setName("GitHub Gist ID")
@@ -420,7 +424,7 @@ class SettingTab extends PluginSettingTab {
   }
 
   validateGithubPersonalAccessToken(value: string): void {
-    const githubClassicPersonalAccessTokenRegex = /^ghp_[a-zA-Z0-9]{255}$/;
+    const githubClassicPersonalAccessTokenRegex = /^ghp_[a-zA-Z0-9]{36}$/;
     const githubFineGrainedPersonalAccessTokenRegex = /^github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59}$/;
 
     if (new RegExp(githubClassicPersonalAccessTokenRegex).test(value) || new RegExp(githubFineGrainedPersonalAccessTokenRegex).test(value)) {
