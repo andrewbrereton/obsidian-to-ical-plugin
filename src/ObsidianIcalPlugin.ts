@@ -89,6 +89,14 @@ export default class ObsidianIcalPlugin extends Plugin {
     //   console.log("click", evt);
     // });
 
+    // I've run into an issue when calling Main.start() here
+    // It is as though the vault is not ready because it always finds 0 Markdown files
+    // Therefore, Main.start() is called during onLayoutReady to give Obsidian some time to be ready
+    this.app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
+  }
+
+  // Once the Obsidian layout is ready, kick off a scan and configure periodic save
+  async onLayoutReady(): Promise<void> {
     this.main = new Main(this.app, this.settings);
     await this.main.start();
 
