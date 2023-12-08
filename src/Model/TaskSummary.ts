@@ -1,39 +1,115 @@
+import { log } from "src/Logger";
+
 export function getSummaryFromMarkdown(markdown: string, howToParseInternalLinks: string): string {
-    const recurringRegExp = /🔁(.*?)(?=\s(?:➕|⏳|🛫|📅|✅)|\s\d{4}-\d{2}-\d{2}|$)/gi;
-    const emojiDateRegExp = /\s*➕|⏳|🛫|📅|✅\s?\d{4}-\d{2}-\d{1,2}\s*/gi;
-    const dateRegExp = /\s*\d{4}-\d{2}-\d{1,2}/gi;
+  // Remove recurring task information
+  // TODO: Maybe instead of removing the recurring task information, this should support recurring tasks
+  markdown = removeRecurringDates(markdown);
 
-    // Remove recurring task information
-    // TODO: Maybe instead of removing the recurring task information, this should support recurring tasks
-    markdown = markdown.replace(recurringRegExp, '');
-
-    // Depending on user settings, keep just the title for [[wikilinks|TITLE]] and [TITLE](markdown links)
-    if (howToParseInternalLinks === 'KeepTitle') {
-        const wikilinksRegExp = /\[\[[^\]]*\|+([^\]]+)\]\]/gi;
-        markdown = markdown.replace(wikilinksRegExp, '$1');
-
-        const markdownLinksRegExp = /\[([^\]]+)\]\([^\)]+\)/gi;
-        markdown = markdown.replace(markdownLinksRegExp, '$1');
-    }
-
-    // Depending on user settings, remove [[wikilinks]] and [markdown links](markdown links)
-    // Also do this for KeepTitle so that we clean up and dangling internal links
-    if (howToParseInternalLinks === 'KeepTitle' || howToParseInternalLinks === 'RemoveThem') {
-        const wikilinksRegExp = /\[{2}.*\]{2}/gi;
-        markdown = markdown.replace(wikilinksRegExp, '');
-
-        const markdownLinksRegExp = /\[.*\]\(.*\)/gi;
-        markdown = markdown.replace(markdownLinksRegExp, '');
-    }
-
-    // Remove emoji dates
-    markdown = markdown.replace(emojiDateRegExp, '');
-
-    // Remove dates
-    markdown = markdown.replace(dateRegExp, '');
-
-    // Trim whitespace
-    markdown = markdown.trim();
-
-    return markdown;
+  // Internal Links:
+  // 1. Bare wikilink:        [[link to document]]
+  // 2. Wikilink with title:  [[link to document|Link text]]
+  // 3. Markdown:             [Link text](link to document)
+  switch (howToParseInternalLinks) {
+    case 'KeepTitle':
+      markdown = extractWikilinkTitles(markdown);
+      markdown = removeBareWikilinks(markdown);
+      markdown = extractMarkdownLinkTitles(markdown);
+      break;
+    case 'PreferTitle':
+      markdown = extractWikilinkTitles(markdown);
+      markdown = extractWikilinkLinks(markdown);
+      markdown = extractMarkdownLinkTitles(markdown);
+      break;
+    case 'RemoveThem':
+      markdown = removeWikilinks(markdown);
+      markdown = removeMarkdownLinks(markdown);
+      break;
+    case 'DoNotModifyThem':
+    default:
+      // Do nothing
   }
+
+  // Remove emoji dates
+  markdown = removeEmojiDates(markdown);
+
+  // Remove any leftover dates
+  markdown = removeDates(markdown);
+
+  // Trim whitespace
+  markdown = trimWhitespace(markdown);
+
+  return markdown;
+}
+
+function extractWikilinkTitles(markdown: string): string {
+  const regExp = /\[\[[^\]]*\|+([^\]]+)\]\]/gi;
+  markdown = markdown.replace(regExp, '$1');
+
+  return markdown;
+}
+
+function removeBareWikilinks(markdown: string): string {
+  const regExp = /\[{2}([^|\]]+)\]{2}/gi;
+  markdown = markdown.replace(regExp, '');
+
+  return markdown;
+}
+
+function extractMarkdownLinkTitles(markdown: string): string {
+  const regExp = /\[([^\]]+)\]\([^\)]+\)/gi;
+  markdown = markdown.replace(regExp, '$1');
+
+  return markdown;
+}
+
+function extractWikilinkLinks(markdown: string): string {
+  const regExp = /\[{2}(.*)\]{2}/gi;
+  markdown = markdown.replace(regExp, '$1');
+  return markdown;
+}
+
+function removeWikilinks(markdown: string): string {
+  const regExp = /\[{2}.*\]{2}/gi;
+  markdown = markdown.replace(regExp, '');
+
+  return markdown;
+}
+
+function removeMarkdownLinks(markdown: string): string {
+  const regExp = /\[.*\]\(.*\)/gi;
+  markdown = markdown.replace(regExp, '');
+
+  return markdown;
+}
+
+function removeRecurringDates(markdown: string): string {
+  const regExp = /🔁(.*?)(?=\s(?:➕|⏳|🛫|📅|✅)|\s\d{4}-\d{2}-\d{2}|$)/gi;
+  markdown = markdown.replace(regExp, '');
+
+  return markdown;
+}
+
+function removeEmojiDates(markdown: string): string {
+  const regExp = /\s*➕|⏳|🛫|📅|✅\s?\d{4}-\d{2}-\d{1,2}\s*/gi;
+  markdown = markdown.replace(regExp, '');
+
+  return markdown;
+}
+
+function removeDates(markdown: string): string {
+  const regExp = /\s*\d{4}-\d{2}-\d{1,2}/gi;
+  markdown = markdown.replace(regExp, '');
+
+  return markdown;
+}
+
+function trimWhitespace(markdown: string): string {
+  const regExp = /\s{2,}}/gi;
+  // Replace duplicate whitespace characters with just one
+  markdown = markdown.replace(regExp, ' ');
+
+  // Trim any leading or trailing whitespace
+  markdown = markdown.trim();
+
+  return markdown;
+}

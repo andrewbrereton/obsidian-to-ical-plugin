@@ -28,7 +28,7 @@ iCal has various settings which I will try to explain.
 
 Obsidian supports two types of [internal link](https://help.obsidian.md/Linking+notes+and+files/Internal+links): wikilinks and markdown.
 
-Wikilinks can look like: `[[Link to document]]` or `[[Link to document|Custom link title]]`. Markdown links look like `[Custom link title](Link to document)`.
+Wikilinks can look like: `[[Link to document]]` or `[[Link to document|Link title]]`. Markdown links look like `[Link title](Link to document)`.
 
 #### Do not modify them
 
@@ -36,7 +36,11 @@ This option will keep the links in your event just as they appear.
 
 #### Keep the title
 
-This option will keep just the `Custom link title` and remove the link option.
+This option will keep just the `Link title` and remove the link. If the wikilink does not have a title then it will be removed.
+
+#### Prefer the title
+
+This option will take the `Link title` however if that does not exist, then it will use `Link to document`.
 
 #### Remove them
 
