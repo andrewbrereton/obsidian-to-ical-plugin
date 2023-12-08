@@ -1,6 +1,7 @@
 export const HOW_TO_PARSE_INTERNAL_LINKS = {
   DoNotModifyThem: 'Do not modify them',
   KeepTitle: 'Keep the title',
+  PreferTitle: 'Prefer the title',
   RemoveThem: 'Remove them',
 };
 
@@ -39,8 +40,8 @@ export const DEFAULT_SETTINGS: Settings = {
 };
 
 export function settingsWithoutSecrets(settings: any): string {
-  return Object.assign({}, settings, { 
-    githubPersonalAccessToken: '<redacted>', 
+  return Object.assign({}, settings, {
+    githubPersonalAccessToken: '<redacted>',
     githubGistId: '<redacted>',
     githubUsername: '<redacted>',
   });
