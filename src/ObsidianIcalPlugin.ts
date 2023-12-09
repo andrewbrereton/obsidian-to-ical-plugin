@@ -6,12 +6,15 @@ import {
   PluginSettingTab,
   Setting,
   TextComponent,
-  ToggleComponent
+  ToggleComponent,
+  WorkspaceLeaf
 } from "obsidian";
 import * as path from "path";
 import { Main } from "src/Main";
 import { Settings, DEFAULT_SETTINGS, HOW_TO_PARSE_INTERNAL_LINKS } from "src/Model/Settings";
 import { logger, log } from './Logger';
+import { SidebarView, VIEW_TYPE_ICAL } from "./SidebarView";
+import { EVENT_ICAL_NORMALISED_TASKS_UPDATED, events, on } from "./Events";
 
 export default class ObsidianIcalPlugin extends Plugin {
   settings: Settings;
@@ -24,15 +27,28 @@ export default class ObsidianIcalPlugin extends Plugin {
     logger(this.settings.isDebug);
     log(`Logger initialised`);
 
-    // // This creates an icon in the left ribbon.
-    // const ribbonIconEl = this.addRibbonIcon(
-    //   "calendar-days",
-    //   "Obsidian to iCal",
-    //   (evt: MouseEvent) => {
-    //     // Called when the user clicks the icon.
-    //     new Notice("This is a notice!");
-    //   }
-    // );
+    events();
+    log(`Events initialised`);
+
+    // test
+    on(EVENT_ICAL_NORMALISED_TASKS_UPDATED, (data: any) => {
+      log('icaltest triggered and handled', {data});
+    })
+
+    // Register the sidebar view
+    this.registerView(
+      VIEW_TYPE_ICAL,
+      (leaf) => new SidebarView(leaf)
+    );
+
+    // Create a button for the sidebar view
+    this.addRibbonIcon(
+      "calendar-days",
+      "View my tasks",
+      () => {
+        this.activateView();
+      }
+    );
 
     // // Perform additional things with the ribbon
     // ribbonIconEl.addClass("my-plugin-ribbon-class");
@@ -114,7 +130,7 @@ export default class ObsidianIcalPlugin extends Plugin {
   }
 
   // Trigger a save every now and then
-configurePeriodicSave() {
+  configurePeriodicSave() {
     if (this.settings.isPeriodicSaveEnabled) {
       log(`Periodic save enabled and will run every ${this.settings.periodicSaveInterval} minute(s)`);
       this.periodicSaveInterval = window.setInterval(async () => {
@@ -131,6 +147,26 @@ configurePeriodicSave() {
         this.periodicSaveInterval = null;
       }
     }
+  }
+
+  async activateView() {
+    const { workspace } = this.app;
+
+    let leaf: WorkspaceLeaf | null = null;
+    const leaves = workspace.getLeavesOfType(VIEW_TYPE_ICAL);
+
+    if (leaves.length > 0) {
+      // A leaf with our view already exists, use that
+      leaf = leaves[0];
+    } else {
+      // Our view could not be found in the workspace, create a new leaf
+      // in the right sidebar for it
+      leaf = workspace.getRightLeaf(false);
+      await leaf.setViewState({ type: VIEW_TYPE_ICAL });
+    }
+
+    // "Reveal" the leaf in case it is in a collapsed sidebar
+    workspace.revealLeaf(leaf);
   }
 }
 

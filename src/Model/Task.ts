@@ -62,6 +62,13 @@ export class Task {
   public getLocation(): string {
     return this.fileUri;
   }
+
+  public isInThePast(): boolean {
+    const taskDate = this.getDate(TaskDateName.Due, 'YYYY-MM-DD')
+    const now = moment().format('YYYY-MM-DD');
+
+    return taskDate <= now;
+  }
 }
 
 export function createTaskFromLine(line: string, fileUri: string, howToParseInternalLinks: string, ignoreCompletedTasks: boolean): Task|null {

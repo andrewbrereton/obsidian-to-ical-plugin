@@ -1,4 +1,4 @@
-import { App } from "obsidian";
+import { App, Events } from "obsidian";
 import { IcalService } from "./IcalService";
 import { TaskFinder } from "./TaskFinder";
 import { Settings, settingsWithoutSecrets } from "./Model/Settings";
@@ -6,6 +6,9 @@ import { Task } from "./Model/Task";
 import { GithubClient } from "./GithubClient";
 import { FileClient } from "./FileClient";
 import { log } from "./Logger";
+import { TaskDateName } from "./Model/TaskDate";
+import { NormalisedTask } from "./Model/NormalisedTask";
+import { EVENT_ICAL_NORMALISED_TASKS_UPDATED, trigger } from "./Events";
 
 export class Main {
   app: App;
@@ -81,6 +84,8 @@ export class Main {
     } else {
       log(`Skip saving calendar to file`);
     }
+
+    this.normaliseTasks();
   }
 
   async saveToGist(calendar: string) {
@@ -89,5 +94,34 @@ export class Main {
 
   async saveToFile(calendar: string) {
     await this.fileClient.save(calendar);
+  }
+
+  // The tasks are normalised and then an event is triggered
+  // SidebarView handles this event so that it can render the task agenda
+  // They are normalised so that we store just the bare minimum
+  // Tasks from the past are ignored
+  // Tasks are sorted in chronological order
+  async normaliseTasks() {
+    const normalisedTasks: NormalisedTask[] = [];
+
+    // Normalise
+    this.tasks.forEach((task: Task) => {
+      // Skip tasks in the past
+      if (task.isInThePast() === false) {
+        normalisedTasks.push({
+          key: task.getDate(null, 'YYYYMMDDTHHmmss'),
+          date: task.getDate(null, 'YYYY-MM-DD'),
+          summary: task.getSummary(),
+          link: task.getLocation(),
+        });
+      }
+    });
+
+    // Sort by key so we're showing the next task first
+    normalisedTasks.sort((a: NormalisedTask, b: NormalisedTask) => a.key.localeCompare(b.key));
+
+    // Trigger the custom event to share the news with everyone
+    // At this stage the only event handler is SidebarView
+    trigger(EVENT_ICAL_NORMALISED_TASKS_UPDATED, normalisedTasks);
   }
 }
