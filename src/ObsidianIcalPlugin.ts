@@ -244,7 +244,6 @@ class SettingTab extends PluginSettingTab {
               this.plugin.settings.periodicSaveInterval = minutes;
               await this.plugin.saveSettings();
               this.plugin.configurePeriodicSave();
-              this.display();
             })
         );
       }
@@ -270,7 +269,6 @@ class SettingTab extends PluginSettingTab {
                 githubPersonalAccessTokenErrorElement.innerText = "";
                 this.plugin.settings.githubPersonalAccessToken = value;
                 await this.plugin.saveSettings();
-                this.display();
               } catch(error: any) {
                 log("Error!", error);
                 githubPersonalAccessTokenErrorElement.innerText = `${error.message ?? 'Unknown error'}`;
@@ -290,7 +288,6 @@ class SettingTab extends PluginSettingTab {
             .onChange(async (value) => {
               this.plugin.settings.githubGistId = value;
               await this.plugin.saveSettings();
-              this.display();
             })
         );
 
@@ -303,7 +300,6 @@ class SettingTab extends PluginSettingTab {
               .onChange(async (value) => {
                 this.plugin.settings.githubUsername = value;
                 await this.plugin.saveSettings();
-                this.display();
               })
           );
 
@@ -317,7 +313,6 @@ class SettingTab extends PluginSettingTab {
                 .onChange(async (value) => {
                   this.plugin.settings.filename = value;
                   await this.plugin.saveSettings();
-                  this.display();
                 })
             );
 
@@ -360,7 +355,6 @@ class SettingTab extends PluginSettingTab {
             .onChange(async (value) => {
               this.plugin.settings.savePath = value;
               await this.plugin.saveSettings();
-              this.display();
             })
         );
 
@@ -374,7 +368,6 @@ class SettingTab extends PluginSettingTab {
               .onChange(async (value) => {
                 this.plugin.settings.saveFileName = value;
                 await this.plugin.saveSettings();
-                this.display();
               })
         );
 
