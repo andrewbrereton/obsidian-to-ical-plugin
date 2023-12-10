@@ -39,7 +39,7 @@ export const DEFAULT_SETTINGS: Settings = {
   isDebug: false,
 };
 
-export function settingsWithoutSecrets(settings: any): string {
+export function settingsWithoutSecrets(settings: Settings): Settings {
   return Object.assign({}, settings, {
     githubPersonalAccessToken: '<redacted>',
     githubGistId: '<redacted>',

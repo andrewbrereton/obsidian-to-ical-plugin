@@ -19,7 +19,8 @@ class Logger {
     return Logger.instance;
   }
 
-  public log(message: any, object?: any) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public log(message: string, object?: any) {
     if (this.isDebug) {
       console.log('[' + moment().format('YYYY-MM-DD HH:mm:ss') + '] [iCal] ' + message);
       if (object) {
@@ -33,6 +34,7 @@ export function logger(isDebug?: boolean) {
   return Logger.getInstance(isDebug);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function log(message: string, object?: any) {
   return Logger.getInstance().log(message, object);
 }

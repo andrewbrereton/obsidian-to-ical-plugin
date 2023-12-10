@@ -269,7 +269,7 @@ class SettingTab extends PluginSettingTab {
                 githubPersonalAccessTokenErrorElement.innerText = "";
                 this.plugin.settings.githubPersonalAccessToken = value;
                 await this.plugin.saveSettings();
-              } catch(error: any) {
+              } catch(error) {
                 log("Error!", error);
                 githubPersonalAccessTokenErrorElement.innerText = `${error.message ?? 'Unknown error'}`;
               }

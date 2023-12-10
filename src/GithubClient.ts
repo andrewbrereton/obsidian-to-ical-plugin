@@ -14,9 +14,6 @@ export class GithubClient {
   }
 
   async save(calendar: string) {
-    // console.log('gist_id', this.githubGistId);
-    // console.log('this.filename', this.filename);
-    // console.log('calendar', calendar);
     const f = this.filename;
     const options = {
       gist_id: this.githubGistId,
@@ -26,8 +23,6 @@ export class GithubClient {
         }
       }
     };
-    // console.log('options', options);
-    const t = await this.octokit.rest.gists.update(options);
-    // console.log(t);
+    await this.octokit.rest.gists.update(options);
   }
 }

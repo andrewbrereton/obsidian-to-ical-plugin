@@ -1,5 +1,3 @@
-import { log } from "src/Logger";
-
 export function getSummaryFromMarkdown(markdown: string, howToParseInternalLinks: string): string {
   // Remove recurring task information
   // TODO: Maybe instead of removing the recurring task information, this should support recurring tasks

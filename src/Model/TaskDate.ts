@@ -6,7 +6,7 @@ export class TaskDate {
     this.date = date;
     this.name = name;
   }
-};
+}
 
 export enum TaskDateName {
   Created = 'Created',
@@ -15,7 +15,7 @@ export enum TaskDateName {
   Due = 'Due',
   Done = 'Done',
   Unknown = 'Unknown'
-};
+}
 
 const TaskDateEmojiMap: Record<TaskDateName, string> = {
   [TaskDateName.Created]: "➕",
@@ -34,9 +34,10 @@ const EmojiToTaskDateNameMap: Record<string, TaskDateName> = Object.entries(Task
   {} as Record<string, TaskDateName>
 )
 
-function getEmojiFromTaskName(taskDateName: TaskDateName): string {
-  return TaskDateEmojiMap[taskDateName] || '';
-}
+// Unused. UNcomment if needed in the future
+// function getEmojiFromTaskName(taskDateName: TaskDateName): string {
+//   return TaskDateEmojiMap[taskDateName] || '';
+// }
 
 function getTaskNameFromEmoji(emoji: string): TaskDateName {
   return EmojiToTaskDateNameMap[emoji] ?? TaskDateName.Unknown;
