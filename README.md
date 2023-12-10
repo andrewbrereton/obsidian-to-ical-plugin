@@ -129,10 +129,10 @@ A GitHub Personal Access Token is a long random string that allows iCal to write
 To generate one, do the following:
 
 1. Go to https://github.com/settings/tokens/new
-   1. `Note`: Enter something like "Obsidian iCal".
-   2. `Expiration`: Best practice is to expire tokens periodically but that would be frustrating. Choose `no expiration` if you want to.
-   3. `Select scopes`: Choose `gist` only.
-   4. Click `Generate token`
+    1. `Note`: Enter something like "Obsidian iCal".
+    2. `Expiration`: Best practice is to expire tokens periodically but that would be frustrating. Choose `no expiration` if you want to.
+    3. `Select scopes`: Choose `gist` only.
+    4. Click `Generate token`
 2. Copy the personal access token (It starts in `ghp_`)
 3. Paste it into the [GitHub personal access token](README.md#github-personal-access-token) setting.
 
@@ -141,10 +141,10 @@ If your personal access token is leaked, go to the [GitHub tokens page](https://
 ## How to generate a GitHub Gist ID
 
 1. Go to here to create a new Gist: https://gist.github.com/
-1.1 `Gist description`: Enter anything you like. Eg: My calendar that is generated from my Obsidian vault
-1.2 `Filename including extension`: You could use `obsidian.ics` or your vault name. Whatever you enter here, you will need to enter it in the iCal settings so it knows which file to write to.
-1.3 For the contents of the Gist, just put anything in there. The iCal plugin will overwrite it.
-1.4 Click `Create secret gist`
+    1. `Gist description`: Enter anything you like. Eg: My calendar that is generated from my Obsidian vault
+    2.  `Filename including extension`: You could use `obsidian.ics` or your vault name. Whatever you enter here, you will need to enter it in the iCal settings so it knows which file to write to.
+    3. For the contents of the Gist, just put anything in there. The iCal plugin will overwrite it.
+    4. Click `Create secret gist`
 
 After you create the Gist, you will see the URL is something like:
 
@@ -155,9 +155,9 @@ https://gist.github.com/andrewbrereton/11c399ce6c0d89c5f8101edb9a2b76d6
                            Username                 Gist ID
 ```
 
-Take the `Username` part and enter it in [GitHub username](README.md#github-username) setting.
+2. Take the `Username` part and enter it in [GitHub username](README.md#github-username) setting.
 
-Take the `Gist ID` part and enter it in [GitHub Gist ID](README.md#github-gist-id) setting.
+3. Take the `Gist ID` part and enter it in [GitHub Gist ID](README.md#github-gist-id) setting.
 
 ## Compatible calendars
 
