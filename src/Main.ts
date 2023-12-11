@@ -1,11 +1,11 @@
-import { App } from "obsidian";
-import { IcalService } from "./IcalService";
-import { TaskFinder } from "./TaskFinder";
-import { Settings, settingsWithoutSecrets } from "./Model/Settings";
-import { Task } from "./Model/Task";
-import { GithubClient } from "./GithubClient";
-import { FileClient } from "./FileClient";
-import { log } from "./Logger";
+import { App } from 'obsidian';
+import { IcalService } from './IcalService';
+import { TaskFinder } from './TaskFinder';
+import { Settings, settingsWithoutSecrets } from './Model/Settings';
+import { Task } from './Model/Task';
+import { GithubClient } from './GithubClient';
+import { FileClient } from './FileClient';
+import { log } from './Logger';
 
 export class Main {
   app: App;
@@ -30,8 +30,8 @@ export class Main {
     const markdownFiles = this.app.vault.getMarkdownFiles();
     const taskPromises = [];
 
-    log(`Performing a scan`);
-    log(`Settings`, { settings: settingsWithoutSecrets(this.settings) });
+    log('Performing a scan');
+    log('Settings', { settings: settingsWithoutSecrets(this.settings) });
 
     log(`Found ${markdownFiles.length} Markdown files`, markdownFiles);
 
@@ -62,24 +62,24 @@ export class Main {
 
     // Build the calendar
     const calendar = this.iCalService.getCalendar(this.tasks);
-    log(`Calendar has been built`, {calendar});
+    log('Calendar has been built', {calendar});
 
     // Save to Gist
     if (this.settings.isSaveToGistEnabled) {
-      log(`Saving calendar to Gist...`);
+      log('Saving calendar to Gist...');
       await this.saveToGist(calendar);
-      log(`Done`);
+      log('Done');
     } else {
-      log(`Skip saving calendar to Gist`);
+      log('Skip saving calendar to Gist');
     }
 
     // Save to file
     if (this.settings.isSaveToFileEnabled) {
-      log(`Saving calendar to file...`);
+      log('Saving calendar to file...');
       await this.saveToFile(calendar);
-      log(`Done`);
+      log('Done');
     } else {
-      log(`Skip saving calendar to file`);
+      log('Skip saving calendar to file');
     }
   }
 

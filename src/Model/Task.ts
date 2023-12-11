@@ -1,8 +1,8 @@
-import { TaskStatus, getTaskStatusFromMarkdown, getTaskStatusEmoji } from "./TaskStatus";
-import "crypto";
-import { moment } from "obsidian";
-import { TaskDate, TaskDateName, getTaskDatesFromMarkdown } from "./TaskDate";
-import { getSummaryFromMarkdown } from "./TaskSummary";
+import { TaskStatus, getTaskStatusFromMarkdown, getTaskStatusEmoji } from './TaskStatus';
+import 'crypto';
+import { moment } from 'obsidian';
+import { TaskDate, TaskDateName, getTaskDatesFromMarkdown } from './TaskDate';
+import { getSummaryFromMarkdown } from './TaskSummary';
 
 export class Task {
   public status: TaskStatus;
@@ -49,10 +49,10 @@ export class Task {
 
   public getSummary(): string {
     const summary = this.summary
-      .replace(/\\/gm, "\\\\")
-      .replace(/\r?\n/gm, "\\n")
-      .replace(/;/gm, "\\;")
-      .replace(/,/gm, "\\,");
+      .replace(/\\/gm, '\\\\')
+      .replace(/\r?\n/gm, '\\n')
+      .replace(/;/gm, '\\;')
+      .replace(/,/gm, '\\,');
 
     const emoji = getTaskStatusEmoji(this.status);
 

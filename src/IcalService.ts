@@ -1,5 +1,5 @@
-import { Task } from "./Model/Task";
-import { TaskDateName } from "./Model/TaskDate";
+import { Task } from './Model/Task';
+import { TaskDateName } from './Model/TaskDate';
 
 export class IcalService {
   getCalendar(tasks: Task[]): string {
@@ -56,7 +56,7 @@ export class IcalService {
       'LOCATION:ALTREP="' + encodeURI(task.getLocation()) + '":' + encodeURI(task.getLocation()) + '\r\n' +
       'END:VEVENT\r\n';
 
-      return event;
+    return event;
   }
 
   private pretty(calendar: string): string {

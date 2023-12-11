@@ -1,5 +1,5 @@
-import { ListItemCache, TFile, Vault } from "obsidian";
-import { Task, createTaskFromLine } from "./Model/Task";
+import {ListItemCache, TFile, Vault} from 'obsidian';
+import {Task, createTaskFromLine} from './Model/Task';
 
 export class TaskFinder {
   private vault: Vault;
@@ -19,13 +19,13 @@ export class TaskFinder {
 
     const tasks: Task[] = listItemsCache
         // Get the position of each list item
-        .map((listItemCache: ListItemCache) => listItemCache.position.start.line)
+      .map((listItemCache: ListItemCache) => listItemCache.position.start.line)
         // Get the line
-        .map((idx) => lines[idx])
+      .map((idx) => lines[idx])
         // Create a Task from the line
-        .map((line: string) => createTaskFromLine(line, fileUri, this.howToParseInternalLinks, this.ignoreCompletedTasks))
+      .map((line: string) => createTaskFromLine(line, fileUri, this.howToParseInternalLinks, this.ignoreCompletedTasks))
         // Filter out the nulls
-        .filter((task: Task | null) => task !== null) as Task[]
+      .filter((task: Task | null) => task !== null) as Task[]
         ;
 
     return tasks;

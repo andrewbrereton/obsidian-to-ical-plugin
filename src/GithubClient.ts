@@ -1,8 +1,8 @@
-import { Octokit } from "@octokit/rest";
+import { Octokit } from '@octokit/rest';
 
 export class GithubClient {
   octokit: Octokit;
-  githubGistId: string
+  githubGistId: string;
   filename: string;
 
   constructor(githubPersonalAccessToken: string, githubGistId: string, filename: string) {

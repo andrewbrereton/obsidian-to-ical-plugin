@@ -1,6 +1,6 @@
 export class TaskDate {
-  date: Date
-  name: TaskDateName
+  date: Date;
+  name: TaskDateName;
 
   constructor(date: Date, name: TaskDateName) {
     this.date = date;
@@ -18,13 +18,13 @@ export enum TaskDateName {
 }
 
 const TaskDateEmojiMap: Record<TaskDateName, string> = {
-  [TaskDateName.Created]: "➕",
-  [TaskDateName.Scheduled]: "⏳",
-  [TaskDateName.Start]: "🛫",
-  [TaskDateName.Due]: "📅",
-  [TaskDateName.Done]: "✅",
-  [TaskDateName.Unknown]: "",
-}
+  [TaskDateName.Created]: '➕',
+  [TaskDateName.Scheduled]: '⏳',
+  [TaskDateName.Start]: '🛫',
+  [TaskDateName.Due]: '📅',
+  [TaskDateName.Done]: '✅',
+  [TaskDateName.Unknown]: '',
+};
 
 const EmojiToTaskDateNameMap: Record<string, TaskDateName> = Object.entries(TaskDateEmojiMap).reduce(
   (acc, [key, emoji]) => {
@@ -32,9 +32,9 @@ const EmojiToTaskDateNameMap: Record<string, TaskDateName> = Object.entries(Task
     return acc;
   },
   {} as Record<string, TaskDateName>
-)
+);
 
-// Unused. UNcomment if needed in the future
+// Unused. Uncomment if needed in the future
 // function getEmojiFromTaskName(taskDateName: TaskDateName): string {
 //   return TaskDateEmojiMap[taskDateName] || '';
 // }
@@ -52,7 +52,7 @@ export function getTaskDatesFromMarkdown(markdown: string): TaskDate[] {
       // Validate (emoji is optional)
       return  dateMatch?.groups?.day &&
         dateMatch?.groups?.month &&
-        dateMatch?.groups?.year
+        dateMatch?.groups?.year;
     })
     .map((dateMatch) => {
       // Create TaskDate
@@ -64,8 +64,6 @@ export function getTaskDatesFromMarkdown(markdown: string): TaskDate[] {
 
       return new TaskDate(date, taskDateName);
     });
-
-  // console.log({taskDates});
 
   return taskDates;
 }

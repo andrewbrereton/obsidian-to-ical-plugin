@@ -1,4 +1,4 @@
-import { moment } from "obsidian";
+import { moment } from 'obsidian';
 
 // Logger class in instantiated using a singleton pattern so isDebug only needs to be set once.
 

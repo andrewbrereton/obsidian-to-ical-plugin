@@ -7,10 +7,10 @@ import {
   Setting,
   TextComponent,
   ToggleComponent
-} from "obsidian";
-import * as path from "path";
-import { Main } from "src/Main";
-import { Settings, DEFAULT_SETTINGS, HOW_TO_PARSE_INTERNAL_LINKS } from "src/Model/Settings";
+} from 'obsidian';
+import * as path from 'path';
+import { Main } from 'src/Main';
+import { Settings, DEFAULT_SETTINGS, HOW_TO_PARSE_INTERNAL_LINKS } from 'src/Model/Settings';
 import { logger, log } from './Logger';
 
 export default class ObsidianIcalPlugin extends Plugin {
@@ -22,7 +22,7 @@ export default class ObsidianIcalPlugin extends Plugin {
     await this.loadSettings();
 
     logger(this.settings.isDebug);
-    log(`Logger initialised`);
+    log('Logger initialised');
 
     // // This creates an icon in the left ribbon.
     // const ribbonIconEl = this.addRibbonIcon(
@@ -114,7 +114,7 @@ export default class ObsidianIcalPlugin extends Plugin {
   }
 
   // Trigger a save every now and then
-configurePeriodicSave() {
+  configurePeriodicSave() {
     if (this.settings.isPeriodicSaveEnabled) {
       log(`Periodic save enabled and will run every ${this.settings.periodicSaveInterval} minute(s)`);
       this.periodicSaveInterval = window.setInterval(async () => {
@@ -125,7 +125,7 @@ configurePeriodicSave() {
       // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
       this.registerInterval(this.periodicSaveInterval);
     } else {
-      log(`Periodic save disabled`);
+      log('Periodic save disabled');
       if (this.periodicSaveInterval ?? 0 > 0) {
         window.clearInterval(this.periodicSaveInterval ?? 0);
         this.periodicSaveInterval = null;
@@ -166,8 +166,8 @@ class SettingTab extends PluginSettingTab {
     containerEl.createEl('p', { cls: 'setting-item-description', text: 'This plugin finds all of the tasks in your vault that contain a date and generates a calendar in iCalendar format. The calendar can be saved to a file and/or saved in a Gist on GitHub so that it can be added to your iCalendar calendar of choice.' });
 
     new Setting(containerEl)
-      .setName("Processing internal links")
-      .setDesc("How should [[wikilinks]] and [markdown links](markdown links) be processed if they are encountered in a task?")
+      .setName('Processing internal links')
+      .setDesc('How should [[wikilinks]] and [markdown links](markdown links) be processed if they are encountered in a task?')
       .addDropdown((dropdown: DropdownComponent) =>
         dropdown
           .addOptions(HOW_TO_PARSE_INTERNAL_LINKS)
@@ -177,11 +177,11 @@ class SettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
             this.display();
           })
-        );
+      );
 
     new Setting(containerEl)
-      .setName("Ignore completed tasks")
-      .setDesc("Choose if you want your calendar to ignore tasks that have been completed.")
+      .setName('Ignore completed tasks')
+      .setDesc('Choose if you want your calendar to ignore tasks that have been completed.')
       .addToggle((toggle: ToggleComponent) =>
         toggle
           .setValue(this.plugin.settings.ignoreCompletedTasks)
@@ -190,10 +190,10 @@ class SettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
             this.display();
           })
-        );
+      );
 
     new Setting(containerEl)
-      .setName("Save calendar to GitHub Gist?")
+      .setName('Save calendar to GitHub Gist?')
       .addToggle((toggle: ToggleComponent) =>
         toggle
           .setValue(this.plugin.settings.isSaveToGistEnabled)
@@ -202,10 +202,10 @@ class SettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
             this.display();
           })
-        );
+      );
 
     new Setting(containerEl)
-      .setName("Save calendar to disk?")
+      .setName('Save calendar to disk?')
       .addToggle((toggle: ToggleComponent) =>
         toggle
           .setValue(this.plugin.settings.isSaveToFileEnabled)
@@ -214,11 +214,11 @@ class SettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
             this.display();
           })
-        );
+      );
 
     new Setting(containerEl)
-      .setName("Periodically save your calendar")
-      .setDesc("Do you want the plugin to periodically process your tasks? If you choose not to then a calendar will only be built when Obsidian is loaded.")
+      .setName('Periodically save your calendar')
+      .setDesc('Do you want the plugin to periodically process your tasks? If you choose not to then a calendar will only be built when Obsidian is loaded.')
       .addToggle((toggle: ToggleComponent) =>
         toggle
           .setValue(this.plugin.settings.isPeriodicSaveEnabled)
@@ -228,12 +228,12 @@ class SettingTab extends PluginSettingTab {
             this.plugin.configurePeriodicSave();
             this.display();
           })
-        );
+      );
 
     if (this.plugin.settings.isPeriodicSaveEnabled) {
       new Setting(containerEl)
-        .setName("How often should we parse and save your calendar? (minutes)")
-        .setDesc("How often do you want to periodically scan for tasks?")
+        .setName('How often should we parse and save your calendar? (minutes)')
+        .setDesc('How often do you want to periodically scan for tasks?')
         .addText((text) =>
           text
             .setValue(this.plugin.settings.periodicSaveInterval.toString())
@@ -246,7 +246,7 @@ class SettingTab extends PluginSettingTab {
               this.plugin.configurePeriodicSave();
             })
         );
-      }
+    }
 
     if (this.plugin.settings.isSaveToGistEnabled) {
       containerEl.createEl('h1', { text: 'Save calendar to GitHub Gist' });
@@ -258,19 +258,19 @@ class SettingTab extends PluginSettingTab {
       containerEl.append(ol);
 
       new Setting(containerEl)
-        .setName("GitHub personal access token")
-        .setDesc("Used to privately store your calendar on Github")
+        .setName('GitHub personal access token')
+        .setDesc('Used to privately store your calendar on Github')
         .addText((text: TextComponent) =>
           text
             .setValue(this.plugin.settings.githubPersonalAccessToken)
             .onChange(async (value: string) => {
               try {
                 this.validateGithubPersonalAccessToken(value);
-                githubPersonalAccessTokenErrorElement.innerText = "";
+                githubPersonalAccessTokenErrorElement.innerText = '';
                 this.plugin.settings.githubPersonalAccessToken = value;
                 await this.plugin.saveSettings();
               } catch(error) {
-                log("Error!", error);
+                log('Error!', error);
                 githubPersonalAccessTokenErrorElement.innerText = `${error.message ?? 'Unknown error'}`;
               }
             })
@@ -279,8 +279,8 @@ class SettingTab extends PluginSettingTab {
       containerEl.append(githubPersonalAccessTokenErrorElement);
 
       new Setting(containerEl)
-        .setName("GitHub Gist ID")
-        .setDesc("This is the unique ID to the Gist that you created in GitHub")
+        .setName('GitHub Gist ID')
+        .setDesc('This is the unique ID to the Gist that you created in GitHub')
         .addText((text: TextComponent) =>
           text
             // .setPlaceholder("Enter your GitHub Gist ID")
@@ -291,50 +291,51 @@ class SettingTab extends PluginSettingTab {
             })
         );
 
-        new Setting(containerEl)
-          .setName("GitHub username")
-          .setDesc("This is only used to generate the URL to your calendar")
-          .addText((text: TextComponent) =>
-            text
-              .setValue(this.plugin.settings.githubUsername)
-              .onChange(async (value) => {
-                this.plugin.settings.githubUsername = value;
-                await this.plugin.saveSettings();
-              })
-          );
+      new Setting(containerEl)
+        .setName('GitHub username')
+        .setDesc('This is only used to generate the URL to your calendar')
+        .addText((text: TextComponent) =>
+          text
+            .setValue(this.plugin.settings.githubUsername)
+            .onChange(async (value) => {
+              this.plugin.settings.githubUsername = value;
+              await this.plugin.saveSettings();
+            })
+        );
 
-          new Setting(containerEl)
-            .setName("Filename")
-            .setDesc("Give your calendar a file name")
-            .addText((text: TextComponent) =>
-              text
-                .setValue(this.plugin.settings.filename)
-                .setPlaceholder('obsidian.ics')
-                .onChange(async (value) => {
-                  this.plugin.settings.filename = value;
-                  await this.plugin.saveSettings();
-                })
-            );
+      new Setting(containerEl)
+        .setName('Filename')
+        .setDesc('Give your calendar a file name')
+        .addText((text: TextComponent) =>
+          text
+            .setValue(this.plugin.settings.filename)
+            .setPlaceholder('obsidian.ics')
+            .onChange(async (value) => {
+              this.plugin.settings.filename = value;
+              await this.plugin.saveSettings();
+            })
+        );
 
-            const url = `https://gist.githubusercontent.com/${this.plugin.settings.githubUsername}/${this.plugin.settings.githubGistId}/raw/${this.plugin.settings.filename}`;
+      const url = `https://gist.githubusercontent.com/${this.plugin.settings.githubUsername}/${this.plugin.settings.githubGistId}/raw/${this.plugin.settings.filename}`;
 
-            new Setting(containerEl)
-              .setName("Your calendar URL")
-              .setDesc(createFragment((fragment) => {
-                fragment.createEl('a', { text: url, href: url, cls: 'search-result'});
-              }))
-              .addButton((button: ButtonComponent) => {
-                button
-                  .setButtonText('📋 Copy to clipboard')
-                  .onClick((event) => {
-                    navigator.clipboard.writeText(url);
-                    button.setButtonText('✅ Copied!')
-                    window.setTimeout(() => {
-                      button.setButtonText('📋 Copy to clipboard');
-                    }, 500);
-                  })
-              });
-      }
+      new Setting(containerEl)
+        .setName('Your calendar URL')
+      // eslint-disable-next-line no-undef
+        .setDesc(createFragment((fragment) => {
+          fragment.createEl('a', { text: url, href: url, cls: 'search-result'});
+        }))
+        .addButton((button: ButtonComponent) => {
+          button
+            .setButtonText('📋 Copy to clipboard')
+            .onClick(() => {
+              navigator.clipboard.writeText(url);
+              button.setButtonText('✅ Copied!');
+              window.setTimeout(() => {
+                button.setButtonText('📋 Copy to clipboard');
+              }, 500);
+            });
+        });
+    }
 
 
     if (this.plugin.settings.isSaveToFileEnabled) {
@@ -347,8 +348,8 @@ class SettingTab extends PluginSettingTab {
       }
 
       new Setting(containerEl)
-        .setName("Path")
-        .setDesc("Which directory/folder do you want to save your calendar to? An empty string means to the current vault root path. The path must be inside the vault.")
+        .setName('Path')
+        .setDesc('Which directory/folder do you want to save your calendar to? An empty string means to the current vault root path. The path must be inside the vault.')
         .addText((text: TextComponent) =>
           text
             .setValue(this.plugin.settings.savePath)
@@ -359,67 +360,68 @@ class SettingTab extends PluginSettingTab {
         );
 
       new Setting(containerEl)
-        .setName("Filename")
-        .setDesc("What do you want to call the file of your calendar? An empty string means " + this.app.vault.getName())
+        .setName('Filename')
+        .setDesc('What do you want to call the file of your calendar? An empty string means ' + this.app.vault.getName())
         .addText((text: TextComponent) =>
           text
             .setPlaceholder(this.app.vault.getName())
             .setValue(this.plugin.settings.saveFileName ?? this.app.vault.getName())
-              .onChange(async (value) => {
-                this.plugin.settings.saveFileName = value;
-                await this.plugin.saveSettings();
-              })
+            .onChange(async (value) => {
+              this.plugin.settings.saveFileName = value;
+              await this.plugin.saveSettings();
+            })
         );
 
-        new Setting(containerEl)
-          .setName("File extension")
-          .setDesc("The file extension must be one of .ical or .ics or .ifb or .icalendar")
-          .addDropdown((dropdown: DropdownComponent) =>
-            dropdown
-              .addOptions({
-                '.ics': '.ics',
-                '.ical': '.ical',
-                '.ifb': '.ifb',
-                '.icalendar': '.icalendar',
-              })
-              .setValue(this.plugin.settings.saveFileExtension)
-              .onChange(async (value) => {
-                this.plugin.settings.saveFileExtension = value;
-                await this.plugin.saveSettings();
-                this.display();
-              })
-          );
+      new Setting(containerEl)
+        .setName('File extension')
+        .setDesc('The file extension must be one of .ical or .ics or .ifb or .icalendar')
+        .addDropdown((dropdown: DropdownComponent) =>
+          dropdown
+            .addOptions({
+              '.ics': '.ics',
+              '.ical': '.ical',
+              '.ifb': '.ifb',
+              '.icalendar': '.icalendar',
+            })
+            .setValue(this.plugin.settings.saveFileExtension)
+            .onChange(async (value) => {
+              this.plugin.settings.saveFileExtension = value;
+              await this.plugin.saveSettings();
+              this.display();
+            })
+        );
 
-          const savePath = `${this.plugin.settings.savePath ?? this.plugin.settings.savePath + path.sep}${this.plugin.settings.saveFileName}${this.plugin.settings.saveFileExtension}`
+      const savePath = `${this.plugin.settings.savePath ?? this.plugin.settings.savePath + path.sep}${this.plugin.settings.saveFileName}${this.plugin.settings.saveFileExtension}`;
 
-          new Setting(containerEl)
-            .setName("Your calendar path")
-            .setDesc(createFragment((fragment) => {
-              fragment.createEl('a', { text: savePath, href: `file:///${savePath}`, cls: 'search-result'});
-            }))
-            .addButton((button: ButtonComponent) => {
-              button
-                .setButtonText('📋 Copy to clipboard')
-                .onClick((event) => {
-                  navigator.clipboard.writeText(savePath);
-                  button.setButtonText('✅ Copied!')
-                  window.setTimeout(() => {
-                    button.setButtonText('📋 Copy to clipboard');
-                  }, 500);
-                })
+      new Setting(containerEl)
+        .setName('Your calendar path')
+      // eslint-disable-next-line no-undef
+        .setDesc(createFragment((fragment) => {
+          fragment.createEl('a', { text: savePath, href: `file:///${savePath}`, cls: 'search-result'});
+        }))
+        .addButton((button: ButtonComponent) => {
+          button
+            .setButtonText('📋 Copy to clipboard')
+            .onClick(() => {
+              navigator.clipboard.writeText(savePath);
+              button.setButtonText('✅ Copied!');
+              window.setTimeout(() => {
+                button.setButtonText('📋 Copy to clipboard');
+              }, 500);
             });
+        });
 
-    new Setting(containerEl)
-      .setName("Debug mode")
-      .setDesc('Turning this on will write logs to console.')
-      .addToggle((toggle: ToggleComponent) =>
-        toggle
-          .setValue(this.plugin.settings.isDebug)
-          .onChange(async (value) => {
-            this.plugin.settings.isDebug = value;
-            await this.plugin.saveSettings();
-            this.display();
-          })
+      new Setting(containerEl)
+        .setName('Debug mode')
+        .setDesc('Turning this on will write logs to console.')
+        .addToggle((toggle: ToggleComponent) =>
+          toggle
+            .setValue(this.plugin.settings.isDebug)
+            .onChange(async (value) => {
+              this.plugin.settings.isDebug = value;
+              await this.plugin.saveSettings();
+              this.display();
+            })
         );
     }
   }
