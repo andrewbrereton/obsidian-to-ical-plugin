@@ -18,15 +18,15 @@ export class TaskFinder {
     const fileUri: string = 'obsidian://open?vault=' + file.vault.getName() + '&file=' + file.path;
 
     const tasks: Task[] = listItemsCache
-        // Get the position of each list item
+      // Get the position of each list item
       .map((listItemCache: ListItemCache) => listItemCache.position.start.line)
-        // Get the line
+      // Get the line
       .map((idx) => lines[idx])
-        // Create a Task from the line
+      // Create a Task from the line
       .map((line: string) => createTaskFromLine(line, fileUri, this.howToParseInternalLinks, this.ignoreCompletedTasks))
-        // Filter out the nulls
+      // Filter out the nulls
       .filter((task: Task | null) => task !== null) as Task[]
-        ;
+      ;
 
     return tasks;
   }
