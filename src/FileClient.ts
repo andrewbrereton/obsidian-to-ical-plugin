@@ -1,5 +1,5 @@
 import { TFile, Vault } from 'obsidian';
-import { log} from './Logger';
+import { log } from './Logger';
 
 export class FileClient {
   vault: Vault;

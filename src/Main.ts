@@ -1,11 +1,11 @@
 import { App } from 'obsidian';
+import { FileClient } from './FileClient';
+import { GithubClient } from './GithubClient';
 import { IcalService } from './IcalService';
-import { TaskFinder } from './TaskFinder';
+import { log } from './Logger';
 import { Settings, settingsWithoutSecrets } from './Model/Settings';
 import { Task } from './Model/Task';
-import { GithubClient } from './GithubClient';
-import { FileClient } from './FileClient';
-import { log } from './Logger';
+import { TaskFinder } from './TaskFinder';
 
 export class Main {
   app: App;

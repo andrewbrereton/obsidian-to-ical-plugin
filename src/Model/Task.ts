@@ -1,7 +1,7 @@
-import { TaskStatus, getTaskStatusFromMarkdown, getTaskStatusEmoji } from './TaskStatus';
 import 'crypto';
 import { moment } from 'obsidian';
 import { TaskDate, TaskDateName, getTaskDatesFromMarkdown } from './TaskDate';
+import { TaskStatus, getTaskStatusEmoji, getTaskStatusFromMarkdown } from './TaskStatus';
 import { getSummaryFromMarkdown } from './TaskSummary';
 
 export class Task {

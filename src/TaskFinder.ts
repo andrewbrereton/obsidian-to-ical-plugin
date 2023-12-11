@@ -1,5 +1,5 @@
-import {ListItemCache, TFile, Vault} from 'obsidian';
-import {Task, createTaskFromLine} from './Model/Task';
+import { ListItemCache, TFile, Vault } from 'obsidian';
+import { Task, createTaskFromLine } from './Model/Task';
 
 export class TaskFinder {
   private vault: Vault;
