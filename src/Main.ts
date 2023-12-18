@@ -37,6 +37,12 @@ export class Main {
 
     // Iterate over all of the Markdown files in this vault
     for (const file of markdownFiles) {
+      // Skip SyncThing sync conflict files
+      if (this.isSyncthingConflictFile(file.name)) {
+        log('SyncThing sync conflict file. Skipping', file);
+        continue;
+      }
+
       // Use cache to get the list items in each Markdown file
       const listItemsCache = this.app.metadataCache.getFileCache(file)?.listItems ?? [];
 
@@ -89,5 +95,11 @@ export class Main {
 
   async saveToFile(calendar: string) {
     await this.fileClient.save(calendar);
+  }
+
+  isSyncthingConflictFile(filename: string) {
+    const regExp = /.+\.sync-conflict-.+\.md/gi;
+
+    return regExp.test(filename);
   }
 }
