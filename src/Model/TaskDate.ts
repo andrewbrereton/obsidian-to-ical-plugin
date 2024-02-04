@@ -43,7 +43,48 @@ function getTaskNameFromEmoji(emoji: string): TaskDateName {
   return EmojiToTaskDateNameMap[emoji] ?? TaskDateName.Unknown;
 }
 
+// Fixes #42
+// If dates are stored in [Dataview Format](https://publish.obsidian.md/tasks/Reference/Task+Formats/Dataview+Format)
+// then let's convert it to emoji format before continuing
+function convertDataviewToEmoji(markdown: string): string {
+  const dataviewFormatCreated = /\[created::\s?(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\s?\]/gi;
+  const dataviewFormatScheduled = /\[scheduled::\s?(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\s?\]/gi;
+  const dataviewFormatStart = /\[start::\s?(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\s?\]/gi;
+  const dataviewFormatDue = /\[due::\s?(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\s?\]/gi;
+  const dataviewFormatDone = /\[completion::\s?(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\s?\]/gi;
+  const dataviewFormatCancelled = /\[cancelled::\s?(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\s?\]/gi;
+
+  markdown = markdown.replace(dataviewFormatCreated, (match, year, month, day) => {
+    return `➕ ${year}-${month}-${day}`;
+  });
+
+  markdown = markdown.replace(dataviewFormatScheduled, (match, year, month, day) => {
+    return `⏳ ${year}-${month}-${day}`;
+  });
+
+  markdown = markdown.replace(dataviewFormatStart, (match, year, month, day) => {
+    return `🛫 ${year}-${month}-${day}`;
+  });
+
+  markdown = markdown.replace(dataviewFormatDue, (match, year, month, day) => {
+    return `📅 ${year}-${month}-${day}`;
+  });
+
+  markdown = markdown.replace(dataviewFormatDone, (match, year, month, day) => {
+    return `✅ ${year}-${month}-${day}`;
+  });
+
+  markdown = markdown.replace(dataviewFormatCancelled, (match, year, month, day) => {
+    return `❌ ${year}-${month}-${day}`;
+  });
+
+  return markdown;
+}
+
 export function getTaskDatesFromMarkdown(markdown: string): TaskDate[] {
+  // Convert Dataview Format to Emoji Format
+  markdown = convertDataviewToEmoji(markdown);
+
   const dateRegExp = /(?<emoji>➕|⏳|🛫|📅|✅)?\s?(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\b/gi;
   const dateMatches = [...markdown.matchAll(dateRegExp)] ?? null;
 
