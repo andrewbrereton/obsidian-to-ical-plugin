@@ -23,7 +23,7 @@ export class Main {
     this.githubClient = new GithubClient(this.settings.githubPersonalAccessToken, this.settings.githubGistId, this.settings.filename);
     this.fileClient = new FileClient(this.app.vault, this.settings.savePath, this.settings.saveFileName, this.settings.saveFileExtension);
     this.tasks = [];
-    this.taskFinder = new TaskFinder(this.app.vault, this.settings.howToParseInternalLinks, this.settings.ignoreCompletedTasks);
+    this.taskFinder = new TaskFinder(this.app.vault, this.settings.howToParseInternalLinks, this.settings.ignoreCompletedTasks, this.settings.ignoreOldTasks, this.settings.oldTaskInDays);
   }
 
   async start() {

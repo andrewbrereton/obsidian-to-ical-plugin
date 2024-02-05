@@ -42,7 +42,7 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName('Ignore completed tasks')
+      .setName('Ignore completed tasks?')
       .setDesc('Choose if you want your calendar to ignore tasks that have been completed.')
       .addToggle((toggle: ToggleComponent) =>
         toggle
@@ -66,6 +66,36 @@ export class SettingTab extends PluginSettingTab {
             this.display();
           })
       );
+
+    new Setting(containerEl)
+      .setName('Ignore old tasks?')
+      .setDesc('Do you want to exclude tasks if they are older than a certain age? This could be useful if you have a very large number of tasks and are not interested in the past.')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(this.plugin.settings.ignoreOldTasks)
+          .onChange(async (value) => {
+            this.plugin.settings.ignoreOldTasks = value;
+            await this.plugin.saveSettings();
+            this.display();
+          })
+      );
+
+    if (this.plugin.settings.ignoreOldTasks) {
+      new Setting(containerEl)
+        .setName('How many days back to you want to keep old tasks?')
+        .setDesc('If every date for a given task is more than this many days ago then it will be excluded from your calendar.')
+        .addText((text) =>
+          text
+            .setValue(this.plugin.settings.oldTaskInDays.toString())
+            .onChange(async (value) => {
+              let days: number = parseInt(value, 10);
+              if (days < 0) days = 1;
+              if (days > 3650) days = 3650;
+              this.plugin.settings.oldTaskInDays = days;
+              await this.plugin.saveSettings();
+            })
+        );
+    }
 
     new Setting(containerEl)
       .setName('Save calendar to GitHub Gist?')

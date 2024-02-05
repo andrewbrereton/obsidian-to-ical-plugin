@@ -54,6 +54,14 @@ This is to allow you to exclude completed tasks from being added to your calenda
 
 Enabling this will append all of your tasks as TODO items to the end of your calendar file. Some iCalendar clients are able to render these tasks separate to the calendar events. Some clients that support this include Google Tasks, Microsoft Outlook, Microsoft To Do, Mozilla Thunderbird with Lightning Calendar, Android CalDAV-Sync, Calendars by Readdle, Todoist and OmniFocus.
 
+### Ignore old tasks?
+
+Toggles on or off the functionality where you are able to exclude tasks whose dates are older than the value you specify.
+
+### How many days back to you want to keep old tasks?
+
+If `Ignore old tasks?` is true then you will be asked to set the age in days. Minimum value is 1 day. Maximum value is 3650 days (10 years).
+
 ### Save calendar to GitHub Gist?
 
 Enabling this will unlock the [Save calendar to GitHub Gist](README.md#save-calendar-to-gitHub-gist) settings.

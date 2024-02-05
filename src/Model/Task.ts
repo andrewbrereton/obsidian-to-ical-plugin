@@ -64,7 +64,7 @@ export class Task {
   }
 }
 
-export function createTaskFromLine(line: string, fileUri: string, howToParseInternalLinks: string, ignoreCompletedTasks: boolean): Task|null {
+export function createTaskFromLine(line: string, fileUri: string, howToParseInternalLinks: string, ignoreCompletedTasks: boolean, ignoreOldTasks: boolean, oldTaskInDays: number): Task|null {
   const taskRegExp = /(\*|-)\s*(?<taskStatus>\[.?])\s*(?<summary>.*)\s*/gi;
   const dateRegExp = /\b(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\b/gi;
 
@@ -91,6 +91,21 @@ export function createTaskFromLine(line: string, fileUri: string, howToParseInte
   }
 
   const taskDates = getTaskDatesFromMarkdown(line);
+
+  // Ignore old tasks is enabled, and all of the task's dates are after the retention period. Bail.
+  if (ignoreOldTasks === true) {
+    const now = new Date();
+    const thresholdDate = new Date(now.setDate(now.getDate() - oldTaskInDays));
+
+    const isAllDatesOld = taskDates.every((taskDate: TaskDate) => {
+      return taskDate.date < thresholdDate;
+    });
+
+    if (isAllDatesOld === true) {
+      return null;
+    }
+  }
+
   const summary = getSummaryFromMarkdown(taskMatch?.groups?.summary ?? '', howToParseInternalLinks);
 
   return new Task(taskStatus, taskDates, summary, fileUri);

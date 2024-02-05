@@ -21,6 +21,8 @@ export interface Settings {
   ignoreCompletedTasks: boolean;
   isDebug: boolean;
   isIncludeTodos: boolean;
+  ignoreOldTasks: boolean;
+  oldTaskInDays: number;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -39,6 +41,8 @@ export const DEFAULT_SETTINGS: Settings = {
   ignoreCompletedTasks: false,
   isDebug: false,
   isIncludeTodos: false,
+  ignoreOldTasks: false,
+  oldTaskInDays: 365,
 };
 
 export function settingsWithoutSecrets(settings: Settings): Settings {
