@@ -18,7 +18,7 @@ Your vault will be scanned every now and then for changes to tasks to keep your 
 
 ## Support for Obsidian Tasks
 
-This plugin has rudimentary support for [Obsidian Tasks emoji format](https://publish.obsidian.md/tasks/Reference/Task+Formats/Tasks+Emoji+Format). However it is not mandatory.
+This plugin has rudimentary support for [Obsidian Tasks emoji format](https://publish.obsidian.md/tasks/Reference/Task+Formats/Tasks+Emoji+Format) and [Obsidian Tasks dataview format](https://publish.obsidian.md/tasks/Reference/Task+Formats/Dataview+Format). However it is not mandatory.
 
 ## Settings
 
