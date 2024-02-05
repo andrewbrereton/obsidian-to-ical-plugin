@@ -20,6 +20,8 @@ export interface Settings {
   howToParseInternalLinks: string;
   ignoreCompletedTasks: boolean;
   isDebug: boolean;
+  ignoreOldTasks: boolean;
+  oldTaskInDays: number;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -37,6 +39,8 @@ export const DEFAULT_SETTINGS: Settings = {
   howToParseInternalLinks: HOW_TO_PARSE_INTERNAL_LINKS.DoNotModifyThem,
   ignoreCompletedTasks: false,
   isDebug: false,
+  ignoreOldTasks: false,
+  oldTaskInDays: 365,
 };
 
 export function settingsWithoutSecrets(settings: Settings): Settings {
