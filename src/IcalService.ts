@@ -5,7 +5,7 @@ import { TaskStatus } from './Model/TaskStatus';
 export class IcalService {
   getCalendar(tasks: Task[], includeTodos: boolean): string {
     const events = this.getEvents(tasks);
-    const toDos = this.getToDos(tasks);
+    const toDos = includeTodos ? this.getToDos(tasks) : '';
 
     let calendar = '' +
       'BEGIN:VCALENDAR\r\n' +
@@ -15,7 +15,7 @@ export class IcalService {
       'NAME:Obsidian Calendar\r\n' +
       'CALSCALE:GREGORIAN\r\n' +
       events +
-      (includeTodos ? toDos : '') +
+      toDos +
       'END:VCALENDAR\r\n'
       ;
 
