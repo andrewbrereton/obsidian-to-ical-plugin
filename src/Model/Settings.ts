@@ -20,6 +20,7 @@ export interface Settings {
   howToParseInternalLinks: string;
   ignoreCompletedTasks: boolean;
   isDebug: boolean;
+  isIncludeTodos: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -37,6 +38,7 @@ export const DEFAULT_SETTINGS: Settings = {
   howToParseInternalLinks: HOW_TO_PARSE_INTERNAL_LINKS.DoNotModifyThem,
   ignoreCompletedTasks: false,
   isDebug: false,
+  isIncludeTodos: false,
 };
 
 export function settingsWithoutSecrets(settings: Settings): Settings {

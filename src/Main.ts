@@ -67,7 +67,7 @@ export class Main {
     log(`Found ${this.tasks.length} tasks`, this.tasks);
 
     // Build the calendar
-    const calendar = this.iCalService.getCalendar(this.tasks);
+    const calendar = this.iCalService.getCalendar(this.tasks, this.settings.isIncludeTodos);
     log('Calendar has been built', {calendar});
 
     // Save to Gist

@@ -1,9 +1,11 @@
 import { Task } from './Model/Task';
 import { TaskDateName } from './Model/TaskDate';
+import { TaskStatus } from './Model/TaskStatus';
 
 export class IcalService {
-  getCalendar(tasks: Task[]): string {
+  getCalendar(tasks: Task[], includeTodos: boolean): string {
     const events = this.getEvents(tasks);
+    const toDos = this.getToDos(tasks);
 
     let calendar = '' +
       'BEGIN:VCALENDAR\r\n' +
@@ -13,6 +15,7 @@ export class IcalService {
       'NAME:Obsidian Calendar\r\n' +
       'CALSCALE:GREGORIAN\r\n' +
       events +
+      (includeTodos ? toDos : '') +
       'END:VCALENDAR\r\n'
       ;
 
@@ -57,6 +60,50 @@ export class IcalService {
       'END:VEVENT\r\n';
 
     return event;
+  }
+
+  private getToDos(tasks: Task[]): string {
+    return tasks
+      .map((task: Task) => {
+        return this.getToDo(task);
+      })
+      .join('');
+  }
+
+  private getToDo(task: Task): string {
+    let toDo = '' +
+      'BEGIN:VTODO\r\n' +
+      'UID:' + task.getId() + '\r\n' +
+      'SUMMARY:' + task.getSummary() + '\r\n' +
+      'DTSTAMP:' + task.getDate(null, 'YYYYMMDDTHHmmss') + '\r\n'
+      'LOCATION:ALTREP="' + encodeURI(task.getLocation()) + '":' + encodeURI(task.getLocation()) + '\r\n';
+
+    if (task.hasA(TaskDateName.Due)) {
+      toDo += 'DUE;VALUE=DATE:' + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
+    }
+
+    if (task.hasA(TaskDateName.Done)) {
+      toDo += 'COMPLETED;VALUE=DATE:' + task.getDate(TaskDateName.Done, 'YYYYMMDD') + '\r\n';
+    }
+
+    switch (task.status) {
+      case TaskStatus.ToDo:
+        toDo += 'STATUS:NEEDS-ACTION\r\n';
+        break;
+      case TaskStatus.InProgress:
+        toDo += 'STATUS:IN-PROCESS\r\n';
+        break;
+      case TaskStatus.Done:
+        toDo += 'STATUS:COMPLETED\r\n';
+        break;
+      case TaskStatus.Cancelled:
+        toDo += 'STATUS:CANCELLED\r\n';
+        break;
+    }
+
+    toDo += 'END:VTODO\r\n';
+
+    return toDo;
   }
 
   private pretty(calendar: string): string {

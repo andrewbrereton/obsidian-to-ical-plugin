@@ -55,6 +55,19 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
+      .setName('Add tasks as TODO items to your calendar')
+      .setDesc('As well as adding your tasks as calendar events, you can choose to add your tasks as todo items to your calendar')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(this.plugin.settings.isIncludeTodos)
+          .onChange(async (value) => {
+            this.plugin.settings.isIncludeTodos = value;
+            await this.plugin.saveSettings();
+            this.display();
+          })
+      );
+
+    new Setting(containerEl)
       .setName('Save calendar to GitHub Gist?')
       .addToggle((toggle: ToggleComponent) =>
         toggle
