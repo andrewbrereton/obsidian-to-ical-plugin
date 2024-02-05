@@ -30,6 +30,9 @@ export function getSummaryFromMarkdown(markdown: string, howToParseInternalLinks
   // Remove emoji dates
   markdown = removeEmojiDates(markdown);
 
+  // Remove Dataview dates
+  markdown = removeDataviewDates(markdown);
+
   // Remove any leftover dates
   markdown = removeDates(markdown);
 
@@ -89,6 +92,13 @@ function removeRecurringDates(markdown: string): string {
 
 function removeEmojiDates(markdown: string): string {
   const regExp = /\s*➕|⏳|🛫|📅|✅\s?\d{4}-\d{2}-\d{1,2}\s*/gi;
+  markdown = markdown.replace(regExp, '');
+
+  return markdown;
+}
+
+function removeDataviewDates(markdown: string): string {
+  const regExp = /\s*\[(created|scheduled|start|due|completion|cancelled)::\s?\d{4}-\d{2}-\d{1,2}\s*\]/gi;
   markdown = markdown.replace(regExp, '');
 
   return markdown;
