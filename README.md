@@ -50,6 +50,14 @@ This option will remove them entirely from your event summary.
 
 This is to allow you to exclude completed tasks from being added to your calendar. It will also remove tasks from your calendar once they are marked as completed.
 
+### Ignore old tasks?
+
+Toggles on or off the functionality where you are able to exclude tasks whose dates are older than the value you specify.
+
+### How many days back to you want to keep old tasks?
+
+If `Ignore old tasks?` is true then you will be asked to set the age in days. Minimum value is 1 day. Maximum value is 3650 days (10 years).
+
 ### Save calendar to GitHub Gist?
 
 Enabling this will unlock the [Save calendar to GitHub Gist](README.md#save-calendar-to-gitHub-gist) settings.
