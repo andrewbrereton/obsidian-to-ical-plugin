@@ -30,7 +30,7 @@ Obsidian supports two types of [internal link](https://help.obsidian.md/Linking+
 
 Wikilinks can look like: `[[Link to document]]` or `[[Link to document|Link title]]`. Markdown links look like `[Link title](Link to document)`.
 
-#### Do not modify them
+#### Do not modify them (default)
 
 This option will keep the links in your event just as they appear.
 
@@ -61,6 +61,36 @@ Toggles on or off the functionality where you are able to exclude tasks whose da
 ### How many days back to you want to keep old tasks?
 
 If `Ignore old tasks?` is true then you will be asked to set the age in days. Minimum value is 1 day. Maximum value is 3650 days (10 years).
+
+### Which task date should be used?
+
+Tasks can have one or more dates. From either a single raw date in YYYY-MM-DD format, to dates for when a task starts, is scheduled or is due. This setting is to customise which date is chosen when building your iCalendar.
+
+#### Prefer due date (default)
+
+Prefer due date means the following sequence will be followed:
+
+1. If the task has a due date and a start date, they will be the start and end date
+1. If the task only has a due date, that will be used
+1. If the task only has a start date, that will be used
+1. If neither are found, just find any date related to that task
+
+#### Prefer start date
+
+Prefer start date means the following sequence will be followed:
+
+1. If the task only has a start date, that will be used
+1. If the task only has a due date, that will be used
+1. If neither are found, just find any date related to that task
+
+#### Create an event per start/scheduled/due date
+
+Create an event for each start date, scheduled date and due date associated with a task. This means if your task has all three dates, then three separate events will be created in your calendar.
+
+1. If there is a start date, an event will be created using that date. The summary will be appended with a 🛫.
+1. If there is a scheduled date, an event will be created using that date. The summary will be appended with a ⏳.
+1. If there is a due date, an event will be created using that date. The summary will be appended with a 📅.
+1. If none of the above dates were found, then take any old date that we can find
 
 ### Save calendar to GitHub Gist?
 

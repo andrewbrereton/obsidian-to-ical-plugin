@@ -1,8 +1,14 @@
 export const HOW_TO_PARSE_INTERNAL_LINKS = {
-  DoNotModifyThem: 'Do not modify them',
+  DoNotModifyThem: 'Do not modify them (default)',
   KeepTitle: 'Keep the title',
   PreferTitle: 'Prefer the title',
   RemoveThem: 'Remove them',
+};
+
+export const HOW_TO_PROCESS_MULTIPLE_DATES = {
+  PreferDueDate: 'Prefer due date (default)',
+  PreferStartDate: 'Prefer start date',
+  CreateMultipleEvents: 'Create an event per start/scheduled/due date',
 };
 
 export interface Settings {
@@ -23,6 +29,7 @@ export interface Settings {
   isIncludeTodos: boolean;
   ignoreOldTasks: boolean;
   oldTaskInDays: number;
+  howToProcessMultipleDates: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -43,6 +50,7 @@ export const DEFAULT_SETTINGS: Settings = {
   isIncludeTodos: false,
   ignoreOldTasks: false,
   oldTaskInDays: 365,
+  howToProcessMultipleDates: HOW_TO_PROCESS_MULTIPLE_DATES.PreferDueDate,
 };
 
 export function settingsWithoutSecrets(settings: Settings): Settings {

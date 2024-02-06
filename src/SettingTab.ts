@@ -8,7 +8,7 @@ import {
   ToggleComponent
 } from 'obsidian';
 import * as path from 'path';
-import { DEFAULT_SETTINGS, HOW_TO_PARSE_INTERNAL_LINKS } from 'src/Model/Settings';
+import { DEFAULT_SETTINGS, HOW_TO_PARSE_INTERNAL_LINKS, HOW_TO_PROCESS_MULTIPLE_DATES } from 'src/Model/Settings';
 import { log } from './Logger';
 import ObsidianIcalPlugin from './ObsidianIcalPlugin';
 
@@ -96,6 +96,20 @@ export class SettingTab extends PluginSettingTab {
             })
         );
     }
+
+    new Setting(containerEl)
+      .setName('Which task date should be used?')
+      .setDesc('A task can have many dates (eg: due, start, scheduled, etc). When multiple dates are encountered in a task, which date do you want to use for the calendar?')
+      .addDropdown((dropdown: DropdownComponent) =>
+        dropdown
+          .addOptions(HOW_TO_PROCESS_MULTIPLE_DATES)
+          .setValue(this.plugin.settings.howToProcessMultipleDates)
+          .onChange(async (value) => {
+            this.plugin.settings.howToProcessMultipleDates = value;
+            await this.plugin.saveSettings();
+            this.display();
+          })
+      );
 
     new Setting(containerEl)
       .setName('Save calendar to GitHub Gist?')
