@@ -1,14 +1,9 @@
+import { SETTINGS } from './Model/Settings';
 import { Task } from './Model/Task';
 import { TaskDateName } from './Model/TaskDate';
-import { HOW_TO_PROCESS_MULTIPLE_DATES } from './Model/Settings';
+import { getSetting } from './SettingsManager';
 
 export class IcalService {
-  private howToProcessMultipleDates: string;
-
-  constructor(howToProcessMultipleDates: string) {
-    this.howToProcessMultipleDates = howToProcessMultipleDates;
-  }
-
   getCalendar(tasks: Task[]): string {
     const events = this.getEvents(tasks);
 
@@ -45,7 +40,7 @@ export class IcalService {
 
     if (date === null) {
 
-      switch (this.howToProcessMultipleDates) {
+      switch (getSetting(SETTINGS.howToProcessMultipleDates)) {
 
         // User would prefer to use the task's start date
         // If a start date does not exist, take the due date

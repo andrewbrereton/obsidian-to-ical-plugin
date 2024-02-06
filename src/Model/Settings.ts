@@ -31,6 +31,26 @@ export interface Settings {
   howToProcessMultipleDates: string;
 }
 
+export const SETTINGS: { [K in keyof Settings]: K } = {
+  githubPersonalAccessToken: 'githubPersonalAccessToken',
+  githubGistId: 'githubGistId',
+  githubUsername: 'githubUsername',
+  filename: 'filename',
+  isPeriodicSaveEnabled: 'isPeriodicSaveEnabled',
+  periodicSaveInterval: 'periodicSaveInterval',
+  isSaveToGistEnabled: 'isSaveToGistEnabled',
+  isSaveToFileEnabled: 'isSaveToFileEnabled',
+  savePath: 'savePath',
+  saveFileName: 'saveFileName',
+  saveFileExtension: 'saveFileExtension',
+  howToParseInternalLinks: 'howToParseInternalLinks',
+  ignoreCompletedTasks: 'ignoreCompletedTasks',
+  isDebug: 'isDebug',
+  ignoreOldTasks: 'ignoreOldTasks',
+  oldTaskInDays: 'oldTaskInDays',
+  howToProcessMultipleDates: 'howToProcessMultipleDates',
+};
+
 export const DEFAULT_SETTINGS: Settings = {
   githubPersonalAccessToken: '',
   githubGistId: '',
@@ -50,11 +70,3 @@ export const DEFAULT_SETTINGS: Settings = {
   oldTaskInDays: 365,
   howToProcessMultipleDates: HOW_TO_PROCESS_MULTIPLE_DATES.PreferDueDate,
 };
-
-export function settingsWithoutSecrets(settings: Settings): Settings {
-  return Object.assign({}, settings, {
-    githubPersonalAccessToken: '<redacted>',
-    githubGistId: '<redacted>',
-    githubUsername: '<redacted>',
-  });
-}
