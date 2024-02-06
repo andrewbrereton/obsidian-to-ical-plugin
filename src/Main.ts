@@ -19,7 +19,7 @@ export class Main {
   constructor(app: App, settings: Settings) {
     this.app = app;
     this.settings = settings;
-    this.iCalService = new IcalService();
+    this.iCalService = new IcalService(this.settings.howToProcessMultipleDates);
     this.githubClient = new GithubClient(this.settings.githubPersonalAccessToken, this.settings.githubGistId, this.settings.filename);
     this.fileClient = new FileClient(this.app.vault, this.settings.savePath, this.settings.saveFileName, this.settings.saveFileExtension);
     this.tasks = [];

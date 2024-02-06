@@ -98,6 +98,7 @@ export default class ObsidianIcalPlugin extends Plugin {
 
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+    await this.saveSettings();
   }
 
   async saveSettings() {
