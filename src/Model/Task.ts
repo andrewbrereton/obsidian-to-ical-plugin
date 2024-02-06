@@ -32,7 +32,17 @@ export class Task {
     });
   }
 
+  public hasAnyDate(): boolean {
+    return this.dates.length > 0;
+  }
+
   public getDate(taskDateName: TaskDateName | null, format: string): string {
+    // If there are not dates, then return an empty string
+    // This happens when TODOs are included as they don't require a date
+    if (this.dates.length === 0) {
+      return '';
+    }
+
     // HACK: If taskDateName is null then just use the first date that we know about
     if (taskDateName === null) {
       taskDateName = this.dates[0].name;
@@ -64,7 +74,7 @@ export class Task {
   }
 }
 
-export function createTaskFromLine(line: string, fileUri: string, howToParseInternalLinks: string, ignoreCompletedTasks: boolean, ignoreOldTasks: boolean, oldTaskInDays: number): Task|null {
+export function createTaskFromLine(line: string, fileUri: string, howToParseInternalLinks: string, ignoreCompletedTasks: boolean, ignoreOldTasks: boolean, oldTaskInDays: number, isIncludeTodos: boolean): Task|null {
   const taskRegExp = /(\*|-)\s*(?<taskStatus>\[.?])\s*(?<summary>.*)\s*/gi;
   const dateRegExp = /\b(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\b/gi;
 
@@ -77,8 +87,8 @@ export function createTaskFromLine(line: string, fileUri: string, howToParseInte
 
   const dateMatch = [...line.matchAll(dateRegExp)][0] ?? null;
 
-  // This task doesn't have a date. Bail.
-  if (dateMatch === null) {
+  // This task doesn't have a date and we are not including TODO items. Bail.
+  if (dateMatch === null && isIncludeTodos === false) {
     return null;
   }
 

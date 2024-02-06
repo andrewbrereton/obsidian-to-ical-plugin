@@ -34,6 +34,14 @@ export class IcalService {
 
   private getEvent(task: Task): string {
     // console.log({task});
+
+    // This task does not have a date.
+    // Therefore it must be included because it is a TODO and isIncludeTodos setting is true.
+    // Don't add it to the VEVENT block, as it will be added to the VTODO block later.
+    if (task.hasAnyDate() === false) {
+      return '';
+    }
+
     let event = '' +
       'BEGIN:VEVENT\r\n' +
       'UID:' + task.getId() + '\r\n' +
@@ -75,7 +83,8 @@ export class IcalService {
       'BEGIN:VTODO\r\n' +
       'UID:' + task.getId() + '\r\n' +
       'SUMMARY:' + task.getSummary() + '\r\n' +
-      'DTSTAMP:' + task.getDate(null, 'YYYYMMDDTHHmmss') + '\r\n'
+      // If a task does not have a date, do not include the DTSTAMP property
+      (task.hasAnyDate() ? 'DTSTAMP:' + task.getDate(null, 'YYYYMMDDTHHmmss') + '\r\n' : '')
       'LOCATION:ALTREP="' + encodeURI(task.getLocation()) + '":' + encodeURI(task.getLocation()) + '\r\n';
 
     if (task.hasA(TaskDateName.Due)) {
