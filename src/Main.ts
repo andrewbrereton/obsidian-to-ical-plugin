@@ -4,9 +4,8 @@ import { GithubClient } from './GithubClient';
 import { IcalService } from './IcalService';
 import { log } from './Logger';
 import { Task } from './Model/Task';
+import { settings } from './SettingsManager';
 import { TaskFinder } from './TaskFinder';
-import { getSetting, settingsWithoutSecrets } from './SettingsManager';
-import { SETTINGS } from './Model/Settings';
 
 export class Main {
   app: App;
@@ -30,7 +29,7 @@ export class Main {
     const taskPromises = [];
 
     log('Performing a scan');
-    log('Settings', { settings: settingsWithoutSecrets() });
+    log('Settings', { settings: settings.settingsWithoutSecrets() });
 
     log(`Found ${markdownFiles.length} Markdown files`, markdownFiles);
 
@@ -70,7 +69,7 @@ export class Main {
     log('Calendar has been built', {calendar});
 
     // Save to Gist
-    if (getSetting(SETTINGS.isSaveToGistEnabled)) {
+    if (settings.isSaveToGistEnabled) {
       log('Saving calendar to Gist...');
       await this.saveToGist(calendar);
       log('Done');
@@ -79,7 +78,7 @@ export class Main {
     }
 
     // Save to file
-    if (getSetting(SETTINGS.isSaveToFileEnabled)) {
+    if (settings.isSaveToFileEnabled) {
       log('Saving calendar to file...');
       await this.saveToFile(calendar);
       log('Done');

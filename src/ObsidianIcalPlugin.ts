@@ -1,18 +1,18 @@
 import { Plugin } from 'obsidian';
 import { Main } from 'src/Main';
-import { SETTINGS } from 'src/Model/Settings';
 import { log, logger } from './Logger';
 import { SettingTab } from './SettingTab';
-import { settingsManager, getSetting } from './SettingsManager';
+import { initSettingsManager, settings } from './SettingsManager';
 
 export default class ObsidianIcalPlugin extends Plugin {
   main: Main;
   periodicSaveInterval: number|null;
 
   async onload() {
-    await settingsManager(this);
-
-    logger(getSetting(SETTINGS.isDebug));
+    // Initialise SettingsManager
+    await initSettingsManager(this);
+    // Initialise Logger
+    logger(settings.isDebug);
 
     log('SettingsManager and Logger initialised');
 
@@ -99,12 +99,12 @@ export default class ObsidianIcalPlugin extends Plugin {
 
   // Trigger a save every now and then
   configurePeriodicSave() {
-    if (getSetting(SETTINGS.isPeriodicSaveEnabled)) {
-      log(`Periodic save enabled and will run every ${getSetting(SETTINGS.periodicSaveInterval)} minute(s)`);
+    if (settings.isPeriodicSaveEnabled) {
+      log(`Periodic save enabled and will run every ${settings.periodicSaveInterval} minute(s)`);
       this.periodicSaveInterval = window.setInterval(async () => {
-        log(`Periodic save triggers every ${getSetting(SETTINGS.periodicSaveInterval)} minute(s)`);
+        log(`Periodic save triggers every ${settings.periodicSaveInterval} minute(s)`);
         await this.main.start();
-      }, getSetting(SETTINGS.periodicSaveInterval) * 1000 * 60);
+      }, settings.periodicSaveInterval * 1000 * 60);
 
       // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
       this.registerInterval(this.periodicSaveInterval);

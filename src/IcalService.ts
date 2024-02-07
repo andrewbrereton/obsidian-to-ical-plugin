@@ -1,7 +1,6 @@
-import { SETTINGS } from './Model/Settings';
 import { Task } from './Model/Task';
 import { TaskDateName } from './Model/TaskDate';
-import { getSetting } from './SettingsManager';
+import { settings } from './SettingsManager';
 
 export class IcalService {
   getCalendar(tasks: Task[]): string {
@@ -40,7 +39,7 @@ export class IcalService {
 
     if (date === null) {
 
-      switch (getSetting(SETTINGS.howToProcessMultipleDates)) {
+      switch (settings.howToProcessMultipleDates) {
 
         // User would prefer to use the task's start date
         // If a start date does not exist, take the due date

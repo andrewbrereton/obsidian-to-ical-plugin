@@ -3,8 +3,7 @@ import { moment } from 'obsidian';
 import { TaskDate, TaskDateName, getTaskDatesFromMarkdown } from './TaskDate';
 import { TaskStatus, getTaskStatusEmoji, getTaskStatusFromMarkdown } from './TaskStatus';
 import { getSummaryFromMarkdown } from './TaskSummary';
-import { getSetting } from 'src/SettingsManager';
-import { SETTINGS } from './Settings';
+import { settings } from '../SettingsManager'
 
 export class Task {
   public status: TaskStatus;
@@ -88,16 +87,16 @@ export function createTaskFromLine(line: string, fileUri: string): Task|null {
   const taskStatus = getTaskStatusFromMarkdown(taskMatch?.groups?.taskStatus ?? '');
 
   // Task is done and user wants to ignore completed tasks. Bail.
-  if (taskStatus === TaskStatus.Done && getSetting(SETTINGS.ignoreCompletedTasks) === true) {
+  if (taskStatus === TaskStatus.Done && settings.ignoreCompletedTasks === true) {
     return null;
   }
 
   const taskDates = getTaskDatesFromMarkdown(line);
 
   // Ignore old tasks is enabled, and all of the task's dates are after the retention period. Bail.
-  if (getSetting(SETTINGS.ignoreOldTasks) === true) {
+  if (settings.ignoreOldTasks === true) {
     const now = new Date();
-    const thresholdDate = new Date(now.setDate(now.getDate() - getSetting(SETTINGS.oldTaskInDays)));
+    const thresholdDate = new Date(now.setDate(now.getDate() - settings.oldTaskInDays));
 
     const isAllDatesOld = taskDates.every((taskDate: TaskDate) => {
       return taskDate.date < thresholdDate;
@@ -108,7 +107,7 @@ export function createTaskFromLine(line: string, fileUri: string): Task|null {
     }
   }
 
-  const summary = getSummaryFromMarkdown(taskMatch?.groups?.summary ?? '', getSetting(SETTINGS.howToParseInternalLinks));
+  const summary = getSummaryFromMarkdown(taskMatch?.groups?.summary ?? '', settings.howToParseInternalLinks);
 
   return new Task(taskStatus, taskDates, summary, fileUri);
 }
