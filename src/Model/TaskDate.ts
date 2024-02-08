@@ -86,7 +86,7 @@ export function getTaskDatesFromMarkdown(markdown: string): TaskDate[] {
   markdown = convertDataviewToEmoji(markdown);
 
   const dateRegExp = /(?<emoji>➕|⏳|🛫|📅|✅)?\s?(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\b/gi;
-  const dateMatches = [...markdown.matchAll(dateRegExp)] ?? null;
+  const dateMatches = [...markdown.matchAll(dateRegExp)];
 
   const taskDates = dateMatches
     .filter((dateMatch) => {
