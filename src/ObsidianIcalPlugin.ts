@@ -92,14 +92,24 @@ export default class ObsidianIcalPlugin extends Plugin {
     this.main = new Main(this.app);
     await this.main.start();
 
-    this.configurePeriodicSave();
+    await this.configurePeriodicSave();
   }
 
-  onunload() {}
+  onunload() {
+    this.clearPeriodicSaveInterval();
+  }
+
+  clearPeriodicSaveInterval() {
+    window.clearInterval(this.periodicSaveInterval ?? 0);
+    this.periodicSaveInterval = null;
+  }
 
   // Trigger a save every now and then
-  configurePeriodicSave() {
-    if (settings.isPeriodicSaveEnabled) {
+  async configurePeriodicSave() {
+    // Clear any existing period save intervals before we do anything else
+    this.clearPeriodicSaveInterval();
+
+    if (settings.isPeriodicSaveEnabled && settings.periodicSaveInterval > 0) {
       log(`Periodic save enabled and will run every ${settings.periodicSaveInterval} minute(s)`);
       this.periodicSaveInterval = window.setInterval(async () => {
         log(`Periodic save triggers every ${settings.periodicSaveInterval} minute(s)`);
@@ -108,12 +118,6 @@ export default class ObsidianIcalPlugin extends Plugin {
 
       // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
       this.registerInterval(this.periodicSaveInterval);
-    } else {
-      log('Periodic save disabled');
-      if (this.periodicSaveInterval ?? 0 > 0) {
-        window.clearInterval(this.periodicSaveInterval ?? 0);
-        this.periodicSaveInterval = null;
-      }
     }
   }
 }

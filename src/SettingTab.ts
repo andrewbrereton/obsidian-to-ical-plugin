@@ -141,7 +141,7 @@ export class SettingTab extends PluginSettingTab {
               if (minutes < 1) minutes = 1;
               if (minutes > 1440) minutes = 1440;
               settings.periodicSaveInterval = minutes;
-              this.plugin.configurePeriodicSave();
+              await this.plugin.configurePeriodicSave();
             })
         );
     }
