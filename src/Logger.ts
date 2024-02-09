@@ -22,7 +22,7 @@ class Logger {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public log(message: string, object?: any) {
     if (this.isDebug) {
-      console.log('[' + moment().format('YYYY-MM-DD HH:mm:ss') + '] [iCal] ' + message);
+      console.log('[' + moment().format('YYYY-MM-DD-HH:mm:ss.SSS') + '][info][ical] ' + message);
       if (object) {
         console.log(object);
       }

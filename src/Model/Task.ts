@@ -3,6 +3,7 @@ import { moment } from 'obsidian';
 import { TaskDate, TaskDateName, getTaskDatesFromMarkdown } from './TaskDate';
 import { TaskStatus, getTaskStatusEmoji, getTaskStatusFromMarkdown } from './TaskStatus';
 import { getSummaryFromMarkdown } from './TaskSummary';
+import { settings } from '../SettingsManager'
 
 export class Task {
   public status: TaskStatus;
@@ -64,7 +65,7 @@ export class Task {
   }
 }
 
-export function createTaskFromLine(line: string, fileUri: string, howToParseInternalLinks: string, ignoreCompletedTasks: boolean, ignoreOldTasks: boolean, oldTaskInDays: number): Task|null {
+export function createTaskFromLine(line: string, fileUri: string): Task|null {
   const taskRegExp = /(\*|-)\s*(?<taskStatus>\[.?])\s*(?<summary>.*)\s*/gi;
   const dateRegExp = /\b(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\b/gi;
 
@@ -77,7 +78,7 @@ export function createTaskFromLine(line: string, fileUri: string, howToParseInte
 
   const dateMatch = [...line.matchAll(dateRegExp)][0] ?? null;
 
-  // This task doesn't have a date. Bail.
+  // This task doesn't have a date and we are not including TODO items. Bail.
   if (dateMatch === null) {
     return null;
   }
@@ -86,16 +87,16 @@ export function createTaskFromLine(line: string, fileUri: string, howToParseInte
   const taskStatus = getTaskStatusFromMarkdown(taskMatch?.groups?.taskStatus ?? '');
 
   // Task is done and user wants to ignore completed tasks. Bail.
-  if (taskStatus === TaskStatus.Done && ignoreCompletedTasks === true) {
+  if (taskStatus === TaskStatus.Done && settings.ignoreCompletedTasks === true) {
     return null;
   }
 
   const taskDates = getTaskDatesFromMarkdown(line);
 
   // Ignore old tasks is enabled, and all of the task's dates are after the retention period. Bail.
-  if (ignoreOldTasks === true) {
+  if (settings.ignoreOldTasks === true) {
     const now = new Date();
-    const thresholdDate = new Date(now.setDate(now.getDate() - oldTaskInDays));
+    const thresholdDate = new Date(now.setDate(now.getDate() - settings.oldTaskInDays));
 
     const isAllDatesOld = taskDates.every((taskDate: TaskDate) => {
       return taskDate.date < thresholdDate;
@@ -106,7 +107,7 @@ export function createTaskFromLine(line: string, fileUri: string, howToParseInte
     }
   }
 
-  const summary = getSummaryFromMarkdown(taskMatch?.groups?.summary ?? '', howToParseInternalLinks);
+  const summary = getSummaryFromMarkdown(taskMatch?.groups?.summary ?? '', settings.howToParseInternalLinks);
 
   return new Task(taskStatus, taskDates, summary, fileUri);
 }

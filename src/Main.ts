@@ -3,27 +3,25 @@ import { FileClient } from './FileClient';
 import { GithubClient } from './GithubClient';
 import { IcalService } from './IcalService';
 import { log } from './Logger';
-import { Settings, settingsWithoutSecrets } from './Model/Settings';
 import { Task } from './Model/Task';
+import { settings } from './SettingsManager';
 import { TaskFinder } from './TaskFinder';
 
 export class Main {
   app: App;
-  settings: Settings;
   iCalService: IcalService;
   githubClient: GithubClient;
   fileClient: FileClient;
   tasks: Task[];
   taskFinder: TaskFinder;
 
-  constructor(app: App, settings: Settings) {
+  constructor(app: App) {
     this.app = app;
-    this.settings = settings;
-    this.iCalService = new IcalService(this.settings.howToProcessMultipleDates);
-    this.githubClient = new GithubClient(this.settings.githubPersonalAccessToken, this.settings.githubGistId, this.settings.filename);
-    this.fileClient = new FileClient(this.app.vault, this.settings.savePath, this.settings.saveFileName, this.settings.saveFileExtension);
+    this.iCalService = new IcalService();
+    this.githubClient = new GithubClient();
+    this.fileClient = new FileClient(this.app.vault);
     this.tasks = [];
-    this.taskFinder = new TaskFinder(this.app.vault, this.settings.howToParseInternalLinks, this.settings.ignoreCompletedTasks, this.settings.ignoreOldTasks, this.settings.oldTaskInDays);
+    this.taskFinder = new TaskFinder(this.app.vault);
   }
 
   async start() {
@@ -31,7 +29,7 @@ export class Main {
     const taskPromises = [];
 
     log('Performing a scan');
-    log('Settings', { settings: settingsWithoutSecrets(this.settings) });
+    log('Settings', { settings: settings.settingsWithoutSecrets() });
 
     log(`Found ${markdownFiles.length} Markdown files`, markdownFiles);
 
@@ -71,7 +69,7 @@ export class Main {
     log('Calendar has been built', {calendar});
 
     // Save to Gist
-    if (this.settings.isSaveToGistEnabled) {
+    if (settings.isSaveToGistEnabled) {
       log('Saving calendar to Gist...');
       await this.saveToGist(calendar);
       log('Done');
@@ -80,7 +78,7 @@ export class Main {
     }
 
     // Save to file
-    if (this.settings.isSaveToFileEnabled) {
+    if (settings.isSaveToFileEnabled) {
       log('Saving calendar to file...');
       await this.saveToFile(calendar);
       log('Done');

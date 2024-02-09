@@ -3,17 +3,9 @@ import { Task, createTaskFromLine } from './Model/Task';
 
 export class TaskFinder {
   private vault: Vault;
-  private howToParseInternalLinks: string;
-  private ignoreCompletedTasks: boolean;
-  private ignoreOldTasks: boolean;
-  private oldTaskInDays: number
 
-  constructor(vault: Vault, howToParseInternalLinks: string, ignoreCompletedTasks: boolean, ignoreOldTasks: boolean, oldTaskInDays: number) {
+  constructor(vault: Vault) {
     this.vault = vault;
-    this.howToParseInternalLinks = howToParseInternalLinks;
-    this.ignoreCompletedTasks = ignoreCompletedTasks;
-    this.ignoreOldTasks = ignoreOldTasks;
-    this.oldTaskInDays = oldTaskInDays;
   }
 
   async findTasks(file: TFile, listItemsCache: ListItemCache[]): Promise<Task[]> {
@@ -27,7 +19,7 @@ export class TaskFinder {
       // Get the line
       .map((idx) => lines[idx])
       // Create a Task from the line
-      .map((line: string) => createTaskFromLine(line, fileUri, this.howToParseInternalLinks, this.ignoreCompletedTasks, this.ignoreOldTasks, this.oldTaskInDays))
+      .map((line: string) => createTaskFromLine(line, fileUri))
       // Filter out the nulls
       .filter((task: Task | null) => task !== null) as Task[]
       ;
