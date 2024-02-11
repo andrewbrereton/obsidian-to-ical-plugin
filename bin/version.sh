@@ -13,19 +13,53 @@ ensureOnMainBranch() {
   fi
 }
 
+ensureCleanBranch() {
+  # Check for uncommitted changes
+  if [ -n "$(git status --porcelain)" ]
+  then
+    echo "Error: There are uncommitted changes in the current directory." >&2
+    exit 1
+  else
+    echo "Confirmed: No uncommitted changes"
+  fi
+
+  # Check for not pushed changes
+  if git fetch origin main && [ -n "$(git cherry -v origin/main)" ]
+  then
+    echo "Error: There are changes not pushed to remote."
+    exit 1
+  else
+    echo "Confirmed: No changes need to be pushed to remote"
+  fi
+}
+
+
 ensureFileReadableAndHasData() {
   local FILE_PATH="$1"
 
   if [ ! -s ${FILE_PATH} ]
   then
-    echo "Error: File ${FILE} does not exist or is empty." >&2
+    echo "Error: File ${FILE_PATH} does not exist or is empty." >&2
     exit 1
   else
     echo "Confirmed: File $FILE_PATH exists and is readable."
   fi
 }
 
+confirmContinue() {
+  while true
+  do
+    read -p "Do you wish to continue? (y/n) " yn
+    case $yn in
+      [Yy]* ) return 0;;
+      [Nn]* ) return 1;;
+      * ) echo "Please answer yes or no.";;
+    esac
+  done
+}
+
 ensureOnMainBranch
+ensureCleanBranch
 
 FILE_MANIFEST="manifest.json"
 FILE_PACKAGE="package.json"
@@ -73,7 +107,20 @@ sed -i '' "s/obsidian-ical-plugin v[0-9.]*\/\/EN/obsidian-ical-plugin v${NEW_VER
 
 echo "Version numbers updated in all files."
 
-git commit -a -m "Upgrade version from ${CURRENT_VERSION} to ${NEW_VERSION}"
-git push
-git tag -a "${NEW_VERSION}" -m "${NEW_VERSION}"
-git push origin ${NEW_VERSION}
+git diff
+
+if confirmContinue
+then
+  git commit -a -m "Upgrade version from ${CURRENT_VERSION} to ${NEW_VERSION}"
+  git push
+  git tag -a "${NEW_VERSION}" -m "${NEW_VERSION}"
+  git push origin ${NEW_VERSION}
+  echo "Done!"
+else
+  echo "Reverting version changes.."
+  git checkout $FILE_MANIFEST
+  git checkout $FILE_PACKAGE
+  git checkout $FILE_ICAL_SERVICE
+  echo "Exiting..."
+  exit 1
+fi
