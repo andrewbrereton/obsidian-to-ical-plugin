@@ -1,4 +1,4 @@
-name: Release Obsidian plugin
+name: Testing release of plugin
 
 on:
   push:
