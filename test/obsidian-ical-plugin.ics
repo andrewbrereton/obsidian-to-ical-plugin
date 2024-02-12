@@ -1,0 +1,134 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Andrew Brereton//obsidian-ical-plugin v1.15.2//EN
+X-WR-CALNAME:Obsidian Calendar
+NAME:Obsidian Calendar
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:3321e8a9-6b6e-4385-ab18-6bceddc3fb0f
+DTSTAMP:20231209T000000
+DTSTART:20231209
+SUMMARY:🔲 test start but no due date wikilink link 1 bare
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:0d2b5eb3-9298-4a03-83b7-69aaf5c920b1
+DTSTAMP:20231210T000000
+DTSTART:20231210
+SUMMARY:🔲 test start but no due date wikilink link 1 bare
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:2a65514d-4d0f-43ff-87e4-a3b7e4dabe5e
+DTSTAMP:20231211T000000
+DTSTART:20231211
+SUMMARY:🔲 test start but no due date wikilink title 1
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:37525a15-36fc-4fdb-b959-01acd9f4e5f6
+DTSTAMP:20231212T000000
+DTSTART:20231212
+SUMMARY:🔲 test start but no due date wikilink title 2
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:2e52e2ef-d9a7-437d-b072-0f32f01741e2
+DTSTAMP:20231213T000000
+DTSTART:20231213
+SUMMARY:🔲 test start but no due date markdown title 1
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:9b41e112-5155-4114-9897-942f413b6530
+DTSTAMP:20231214T000000
+DTSTART:20231214
+SUMMARY:🔲 test start but no due date  markdown title 2
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:2b55b147-af91-405d-8d8b-c99deac65887
+DTSTAMP:20231215T000000
+DTSTART:20231215
+SUMMARY:🔲 test start but no due date  markdown title 3
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:d91048f3-dd99-47f1-affc-af05ab9e6431
+DTSTAMP:20231215T000000
+DTSTART:20231214T000000
+DTEND:20231215T000000
+SUMMARY:🔲 test start and due markdown title 3
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:26603ca9-f411-45a7-a5c3-e647fd131a9a
+DTSTAMP:20231208T000000
+DTSTART:20231208
+SUMMARY:🔲 test dataview created
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:4b6d722e-0281-40bb-82af-4604afbfba41
+DTSTAMP:20231208T000000
+DTSTART:20231208
+SUMMARY:🔲 test dataview started
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:65d5a530-1c51-4380-8bad-fe591555ebea
+DTSTAMP:20231208T000000
+DTSTART:20231208
+SUMMARY:🔲 test dataview scheduled
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:f55273d9-7995-46f1-9f86-c2be15d9c989
+DTSTAMP:20231208T000000
+DTSTART:20231208
+SUMMARY:🔲 test dataview due
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:8cdcf1b0-f7fb-472f-8712-612e165456d9
+DTSTAMP:20231208T000000
+DTSTART:20231208
+SUMMARY:🔲 test dataview created due
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:988e7207-9dae-4ae7-b3e8-9468abf01e5f
+DTSTAMP:20231208T000000
+DTSTART:20231208
+SUMMARY:🏃 test dataview created due in progress
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:2095c139-8d1e-4bdc-82c3-2a5403a29258
+DTSTAMP:20231208T000000
+DTSTART:20231208
+SUMMARY:✅ test dataview created due completed
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:4da73c5d-86de-4b98-8b72-39e2f33d1874
+DTSTAMP:20231208T000000
+DTSTART:20231208
+SUMMARY:🚫 test dataview created cancelled
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:706bd5d7-7987-4621-94c4-f2fc6143c4ab
+DTSTAMP:20231208T000000
+DTSTART:20231209
+SUMMARY:🚫 test dataview created due cancelled
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:aa929e44-a616-4e16-b7e0-bfeb4b02d6d4
+DTSTAMP:20231208T000000
+DTSTART:20231209
+SUMMARY:🚫 test dataview created due cancelled
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+END:VCALENDAR

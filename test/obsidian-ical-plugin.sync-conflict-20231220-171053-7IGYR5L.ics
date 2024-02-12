@@ -1,0 +1,63 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Andrew Brereton//obsidian-ical-plugin v1.10.2//EN
+X-WR-CALNAME:Obsidian Calendar
+NAME:Obsidian Calendar
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:561f5d1a-af38-49f7-b5f7-04cfa5598e42
+DTSTAMP:20231208T000000
+DTSTART:20231208
+SUMMARY:🔲 test start but no due date wikilink link 1 bare
+LOCATION:ALTREP="obsidian://open?vault=obsidian-ical-plugin&file=three.md":obsidian://open?vault=obsidian-ical-plugin&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:f479af88-9741-4f51-96db-069d06d63d79
+DTSTAMP:20231209T000000
+DTSTART:20231209
+SUMMARY:🔲 test start but no due date wikilink link 1 bare
+LOCATION:ALTREP="obsidian://open?vault=obsidian-ical-plugin&file=three.md":obsidian://open?vault=obsidian-ical-plugin&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:ceadaeab-58f1-46b8-bdf9-27135bef2447
+DTSTAMP:20231210T000000
+DTSTART:20231210
+SUMMARY:🔲 test start but no due date wikilink link 1 bare
+LOCATION:ALTREP="obsidian://open?vault=obsidian-ical-plugin&file=three.md":obsidian://open?vault=obsidian-ical-plugin&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:7b3a0bce-71d3-4825-8025-8a75d02c59ac
+DTSTAMP:20231211T000000
+DTSTART:20231211
+SUMMARY:🔲 test start but no due date wikilink title 1
+LOCATION:ALTREP="obsidian://open?vault=obsidian-ical-plugin&file=three.md":obsidian://open?vault=obsidian-ical-plugin&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:40ca0cd7-a582-4642-b59b-ee7aa91641bb
+DTSTAMP:20231212T000000
+DTSTART:20231212
+SUMMARY:🔲 test start but no due date wikilink title 2
+LOCATION:ALTREP="obsidian://open?vault=obsidian-ical-plugin&file=three.md":obsidian://open?vault=obsidian-ical-plugin&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:9936d9a2-299a-4c96-838f-868b99832a86
+DTSTAMP:20231213T000000
+DTSTART:20231213
+SUMMARY:🔲 test start but no due date markdown title 1
+LOCATION:ALTREP="obsidian://open?vault=obsidian-ical-plugin&file=three.md":obsidian://open?vault=obsidian-ical-plugin&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:82ec4c44-991f-4877-ae87-4c166dd31f39
+DTSTAMP:20231214T000000
+DTSTART:20231214
+SUMMARY:🔲 test start but no due date  markdown title 2
+LOCATION:ALTREP="obsidian://open?vault=obsidian-ical-plugin&file=three.md":obsidian://open?vault=obsidian-ical-plugin&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:a3c7b24b-290c-4fa0-85af-c4244b53c1c4
+DTSTAMP:20231215T000000
+DTSTART:20231215
+SUMMARY:🔲 test start but no due date  markdown title 3
+LOCATION:ALTREP="obsidian://open?vault=obsidian-ical-plugin&file=three.md":obsidian://open?vault=obsidian-ical-plugin&file=three.md
+END:VEVENT
+END:VCALENDAR

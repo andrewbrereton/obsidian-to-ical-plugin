@@ -1,0 +1,175 @@
+{
+  "main": {
+    "id": "568c8a51e0405c83",
+    "type": "split",
+    "children": [
+      {
+        "id": "d4057a48844fd997",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "4fb900050d23e375",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "three.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "cb7dd57a85719300",
+    "type": "split",
+    "children": [
+      {
+        "id": "3d63ca722b33b0c5",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "923b88f5c842cc62",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "c3f165ad8fad5f13",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "a3ecca512e2cfdbe",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "975c066ec7f7dc9f",
+    "type": "split",
+    "children": [
+      {
+        "id": "645af2b4adecc98c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "4f76a4a3fbc348ba",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "three.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "e62dabeedc0d36f1",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "three.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "1f024fb6fad5b669",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "a47de4c98dec343e",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "three.md"
+              }
+            }
+          },
+          {
+            "id": "bae19d77c46542dd",
+            "type": "leaf",
+            "state": {
+              "type": "ical-sidebar-view",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "4fb900050d23e375",
+  "lastOpenFiles": [
+    "three.sync-conflict-20231216-094835-7IGYR5L.md",
+    "obsidian-ical-plugin.sync-conflict-20231220-171053-7IGYR5L.ics",
+    "three.md",
+    "one.md",
+    "obsidian-ical-plugin.sync-conflict-20231208-104724-S37MIKB.ics",
+    "obsidian-ical-plugin.sync-conflict-20231208-104619-S37MIKB.ics",
+    "obsidian-ical-plugin.sync-conflict-20231208-104519-S37MIKB.ics",
+    "obsidian-ical-plugin.sync-conflict-20231208-104424-S37MIKB.ics",
+    "obsidian-ical-plugin.sync-conflict-20231208-104320-S37MIKB.ics",
+    "obsidian-ical-plugin.sync-conflict-20231208-104220-S37MIKB.ics",
+    "obsidian-ical-plugin.sync-conflict-20231208-104110-7IGYR5L.ics",
+    "obsidian-ical-plugin.sync-conflict-20231208-104008-7IGYR5L.ics",
+    "obsidian-ical-plugin.sync-conflict-20231208-103858-7IGYR5L.ics",
+    "two.md"
+  ]
+}
