@@ -1,5 +1,5 @@
 # vscode
-.vscode 
+.vscode
 
 # Intellij
 *.iml
@@ -9,14 +9,12 @@
 node_modules
 
 # Don't include the compiled main.js file in the repo.
+# Don't include the Obsidian test vault plugin settings.
 # They should be uploaded to GitHub releases instead.
-main.js
+build
 
 # Exclude sourcemaps
 *.map
-
-# obsidian
-data.json
 
 # Exclude macOS Finder (System Explorer) View States
 .DS_Store
