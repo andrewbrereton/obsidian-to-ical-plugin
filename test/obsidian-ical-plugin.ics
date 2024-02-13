@@ -1,0 +1,787 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Andrew Brereton//obsidian-ical-plugin v1.15.2//EN
+X-WR-CALNAME:Obsidian Calendar
+NAME:Obsidian Calendar
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:77a79eb2-5924-44e7-a94a-4b14caf4356f
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=21\, todo\, bare date\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:846f4d1b-ecf4-46b6-a15a-697709470ade
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=22\, done\, bare date\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:b6888b5d-5dec-43a7-92a5-1f6197e26812
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=23\, cancelled\, bare date\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:24573261-a202-4eb3-a166-9ea3d0fe9aa6
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=24\, in progress\, bare date\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:5de63543-4cbf-48e0-a593-4743036bd253
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=25\, #tag\, todo\, bare date\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:c48a0eb7-0f12-4f76-a7ba-65786ff420b5
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=26\, #tag\, done\, bare date\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:d97463f5-470d-470d-9750-c37b6f725f2a
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=27\, #tag\, cancelled\, bare date\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:5a7376d9-442a-4168-b49d-ced629a5e6d6
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=28\, #tag\, in progress\, bare date\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:bb15fa6d-e437-4567-8a4a-d490512ebd3c
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=29\, todo\, bare date\, wikilink link bare\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:05e7793c-ff83-4507-b7d4-ac6867bb44d4
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=30\, done\, bare date\, wikilink link bare\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:09145366-6c68-48ca-a608-e178459193b7
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=31\, cancelled\, bare date\, wikilink link bare\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:df302b4e-2b03-40d3-afd6-d9b3e3db0f90
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=32\, in progress\, bare date\, wikilink link bare\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:a7b7c456-c044-4eec-981d-a63630f3a866
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=33\, todo\, bare date\, wikilink title\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:f989135e-f050-4509-b86d-22a65f1fa488
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=34\, done\, bare date\, wikilink title\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:c32e355c-63af-4b0f-b1dd-90ca307ec39b
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=35\, cancelled\, bare date\, wikilink title\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:d1726f5f-1f29-43bc-8078-cdcbb1333422
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=36\, in progress\, bare date\, wikilink title\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:3fe0abb3-7e22-444e-a703-e985bf02c850
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=37\, todo\, bare date\, markdown title\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:aa54f652-6bc7-4ad9-b7b5-e02c715b7286
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=38\, done\, bare date\, markdown title\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:80d17e8f-dd74-4d13-921f-bca30a7bf50e
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=39\, cancelled\, bare date\, markdown title\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:32ee6f5d-c34d-41dd-aec5-90771ab27bd2
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=40\, in progress\, bare date\, markdown title\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:332cff15-124e-4958-a77e-7ca7560cd199
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=41\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:9bc3ab48-7138-4c04-afc1-0b05ecd03966
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=42\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:3a5120e0-e6be-4999-87af-c49c111ffbec
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=43\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:4b9c9093-00bf-4cad-b4ce-3888a5d7ff06
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=44\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:b0070964-590d-4e6d-b9a4-7f1b87894859
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=45\, #tag\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:50356b97-1ac1-4f3c-86a8-655c22f8e3d7
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=46\, #tag\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:45407fc6-f712-4699-9a98-6bc972004626
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=47\, #tag\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:93b98524-1c53-49c4-94c3-eb8da48edd6b
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=48\, #tag\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:006f331d-ac5d-423f-8b7e-4d6a0807bc3f
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=49\, todo\, wikilink link bare
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:40be6b05-3d22-48cc-90c9-36e7ec631c9c
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=50\, done\, wikilink link bare
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:ae7f8337-f970-4c4b-a9cb-8dafcd7eacb0
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=51\, cancelled\, wikilink link bare
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:0fbb925c-a001-4b45-a3e2-c0a4f562fb87
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=52\, in progress\, wikilink link bare
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:474920af-e2b7-4272-8155-6591302fe4de
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=53\, todo\, wikilink title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:5735b46c-2235-4fd5-8b4a-ee2556b2962e
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=54\, done\, wikilink title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:e3367638-44ae-4c6a-a744-c2d0c4a28666
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=55\, cancelled\, wikilink title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:1f4afb2e-c34c-4471-a86b-ec57e743b919
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=56\, in progress\, wikilink title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:7ff284ed-7514-40c7-8dc7-748d4b4fddec
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=57\, todo\, markdown title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:182b55c3-2f0c-4d9d-9bcd-72a067c21acc
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=58\, done\, markdown title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:69d53993-0602-45b3-bdb8-050b2de913ef
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=59\, cancelled\, markdown title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:d6919da4-e9d2-4b56-810f-08c5f963f86e
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=60\, in progress\, markdown title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:074763d0-ecb5-415c-b2cb-0d03b94b1b37
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=61\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:1b3ee8e0-8fdb-4f56-b775-083df6017a23
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=62\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:5ec06b17-149b-43b0-be55-9c8fe7c87818
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=63\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:aea531e4-4489-4d38-8c05-9e00fc68196a
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=64\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:97c3d649-af80-481b-a84a-5ee6bf55827d
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=65\, #tag\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:8f958cfd-51c3-4677-b06d-d00e94981c96
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=66\, #tag\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:1861b2df-4b32-4cb6-ae14-c9a4e6b090c9
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=67\, #tag\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:bdf71761-b6a3-4c88-a9ec-a03fe3c058bd
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=68\, #tag\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:03450e43-1f6e-4280-b4c5-d038c78f30ba
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=69\, todo\, wikilink link bare
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:bf397371-43ef-49e6-90bb-02192d60e8e1
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=70\, done\, wikilink link bare
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:347d1a30-efb9-43ad-9029-a54e481028a5
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=71\, cancelled\, wikilink link bare
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:5e8d4544-34b4-4258-bde7-1f7d3f5db0fe
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=72\, in progress\, wikilink link bare
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:cc258319-15ae-45e8-885a-d7cdd7a455a1
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=73\, todo\, wikilink title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:bebbcdbc-b970-4714-8967-cf5e6c0b0541
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=74\, done\, wikilink title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:7adad65c-e22f-44c3-8152-2286a107b572
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=75\, cancelled\, wikilink title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:cadbe8bb-3570-4a6b-8f12-a174b6b489f6
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=76\, in progress\, wikilink title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:4d151b06-fec8-4f71-a1b2-7d3cb9045062
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=77\, todo\, markdown title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:f2658e6c-9e99-44d2-bb76-f7a160b22375
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=78\, done\, markdown title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:9fad31fe-d089-4cd7-a443-4aa211699e90
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=79\, cancelled\, markdown title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:b47376b8-32c4-4268-9811-805c43776bd0
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=80\, in progress\, markdown title
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:18c366c8-9be3-47e0-a18b-5edfb1c3ef5e
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=81\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:5ec89931-4c86-44cd-b953-dc192878ae2f
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=82\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:52e4a2a4-0191-4f24-85f5-32d54c1e14a9
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=83\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:3ce7f169-86cd-4a17-b8b5-b0bc9f78c923
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=84\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:60473fb8-8e53-453b-931a-4562370c6af7
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=85\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:1cf81c90-ce50-4337-8a84-7fd1897f6003
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=86\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:493cb81f-a326-43de-a7b8-a8aadf8071c3
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=87\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:7e3ad639-114b-451e-9b7f-964ddcdba078
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=88\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:7f047526-903c-421c-947b-e029bb1c6a73
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=89\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:e0c4bc70-000f-479b-b00a-45ae28d09713
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=90\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:26f76557-420f-42fe-8b26-088f87e1e373
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=91\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:15c7cdbc-2200-4439-9268-5624651a4b50
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=92\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:fb674a48-6e29-4f6c-8604-788356d3b286
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🔲 id=93\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:cf256961-e6cf-482d-ba49-7dfcd7d7c74c
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:✅ id=94\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:10bda758-191d-4a80-893d-bc44cb3ecaa5
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🚫 id=95\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:06a99324-88e6-437c-9a89-40922f2bcc1a
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🏃 id=96\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:f33beb59-6bc4-4321-96c4-e45beaa1b036
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🔲 id=97\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:ef87e643-f7bc-420a-8ac1-c1abe05b6062
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:✅ id=98\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:b084d725-1c94-4af7-af08-1f950ead1924
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🚫 id=99\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:f73e664b-07dd-4aea-825c-6668bfe44978
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🏃 id=100\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:0f8e17a9-f16a-4e63-afd8-721871192fcf
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🔲 id=101\, todo\, ❌
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:62103265-713c-4589-a353-b1aca039d14a
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:✅ id=102\, done\, ❌
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:11d93b20-286f-4251-adcd-3d0b5bff29ff
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🚫 id=103\, cancelled\, ❌
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:bc1e2a43-81a2-427a-873f-eca49b9fcd6b
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🏃 id=104\, in progress\, ❌
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:1cd5e41e-6e71-4926-bfde-7145cc407452
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=105\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:e7a828c9-9f5e-40d1-a4a6-dc8d82ee09ae
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=106\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:d298144d-63c6-4b09-b5a8-32f117655399
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=107\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:80852d12-10dc-4e8b-ab9f-79d17666eb93
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=108\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:2d84cbfd-95d5-4e9a-b494-87c135ab7561
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=109\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:22a32f22-be12-49b1-959f-badbaf248a4a
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=110\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:40992ec5-b2d0-42b3-b83a-4ec05b44b419
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=111\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:66f1ad31-4c47-412b-9131-a707931120c7
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=112\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:e5742cc5-c68c-4fd8-86c7-6596cff6cfc3
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🔲 id=113\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:be2cf596-3b93-4e89-a239-2f0a4283e465
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:✅ id=114\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:7c6a6939-bc84-4614-a431-18ec7c0d7189
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🚫 id=115\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:0b6f3317-8840-41d2-b8e2-3b158b7fe3d6
+DTSTAMP:20240101T000000
+DTSTART:20240101
+SUMMARY:🏃 id=116\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:8ecf8d8b-476b-4952-ab1b-5821a47277e8
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🔲 id=117\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:a693dc9d-ab5c-43bf-9197-a4ec62c413fd
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:✅ id=118\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:c4fa0214-1e6e-459b-97d3-532e73bb7bda
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🚫 id=119\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:2d8d2521-2833-4a3d-84ef-81edb217ba05
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🏃 id=120\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:636b959d-4032-4433-a547-9ede10d59df8
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🔲 id=121\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:b0d61913-0bd2-4d26-8308-f873d93cc939
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:✅ id=122\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:f269bdc5-ecf8-491f-a6d3-8f01683e2073
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🚫 id=123\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:422476c5-47e3-4205-b241-f302b7632bb5
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🏃 id=124\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:15bd0ac8-8c05-431f-b0fc-e14b8073aca4
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🔲 id=125\, todo\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:d00d7f32-5bbe-45b5-a020-cb94b2d38347
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:✅ id=126\, done\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:503600e7-2e56-4698-80ab-3132575003fc
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🚫 id=127\, cancelled\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+BEGIN:VEVENT
+UID:4ae670a9-2210-46b9-ade1-ef664c307763
+DTSTAMP:20240101T000000
+DTSTART:20240101T000000
+DTEND:20240101T000000
+SUMMARY:🏃 id=128\, in progress\,
+LOCATION:ALTREP="obsidian://open?vault=test&file=three.md":obsidian://open?vault=test&file=three.md
+END:VEVENT
+END:VCALENDAR
