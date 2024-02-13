@@ -3,7 +3,7 @@ import { moment } from 'obsidian';
 import { TaskDate, TaskDateName, getTaskDatesFromMarkdown } from './TaskDate';
 import { TaskStatus, getTaskStatusEmoji, getTaskStatusFromMarkdown } from './TaskStatus';
 import { getSummaryFromMarkdown } from './TaskSummary';
-import { settings } from '../SettingsManager'
+import { settings } from '../SettingsManager';
 
 export class Task {
   public status: TaskStatus;
