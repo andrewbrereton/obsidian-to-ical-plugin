@@ -1,22 +1,17 @@
 import { Task } from './Model/Task';
 import { TaskDateName } from './Model/TaskDate';
 import { TaskStatus } from './Model/TaskStatus';
+import { settings } from './SettingsManager';
 
 export class IcalService {
-  private howToProcessMultipleDates: string;
-
-  constructor(howToProcessMultipleDates: string) {
-    this.howToProcessMultipleDates = howToProcessMultipleDates;
-  }
-
-  getCalendar(tasks: Task[], includeTodos: boolean): string {
+  getCalendar(tasks: Task[]): string {
     const events = this.getEvents(tasks);
-    const toDos = includeTodos ? this.getToDos(tasks) : '';
+    const toDos = settings.isIncludeTodos ? this.getToDos(tasks) : '';
 
     let calendar = '' +
       'BEGIN:VCALENDAR\r\n' +
       'VERSION:2.0\r\n' +
-      'PRODID:-//Andrew Brereton//obsidian-ical-plugin v1.14.1//EN\r\n' +
+      'PRODID:-//Andrew Brereton//obsidian-ical-plugin v1.16.0//EN\r\n' +
       'X-WR-CALNAME:Obsidian Calendar\r\n' +
       'NAME:Obsidian Calendar\r\n' +
       'CALSCALE:GREGORIAN\r\n' +
@@ -55,7 +50,7 @@ export class IcalService {
 
     if (date === null) {
 
-      switch (this.howToProcessMultipleDates) {
+      switch (settings.howToProcessMultipleDates) {
 
         // User would prefer to use the task's start date
         // If a start date does not exist, take the due date
@@ -77,27 +72,25 @@ export class IcalService {
         // If there is a due date, then create an event for it
         // If there are no events, then take any old date that we can find
         case 'CreateMultipleEvents':
-          let events = '';
+          event = '';
 
           if (task.hasA(TaskDateName.Start)) {
-            events += this.getEvent(task, task.getDate(TaskDateName.Start, 'YYYYMMDD'), '🛫 ');
+            event += this.getEvent(task, task.getDate(TaskDateName.Start, 'YYYYMMDD'), '🛫 ');
           }
 
           if (task.hasA(TaskDateName.Scheduled)) {
-            events += this.getEvent(task, task.getDate(TaskDateName.Scheduled, 'YYYYMMDD'), '⏳ ');
+            event += this.getEvent(task, task.getDate(TaskDateName.Scheduled, 'YYYYMMDD'), '⏳ ');
           }
 
           if (task.hasA(TaskDateName.Due)) {
-            events += this.getEvent(task, task.getDate(TaskDateName.Due, 'YYYYMMDD'), '📅 ');
+            event += this.getEvent(task, task.getDate(TaskDateName.Due, 'YYYYMMDD'), '📅 ');
           }
 
           if (event === '') {
-            events += this.getEvent(task, task.getDate(null, 'YYYYMMDD'), '');
+            event += this.getEvent(task, task.getDate(null, 'YYYYMMDD'), '');
           }
 
-          return events;
-
-          break;
+          return event;
 
         // User would prefer to use the task's due date
         // If there is a start and due date, set the start to the start date and the end to the due date
@@ -151,7 +144,7 @@ export class IcalService {
       'UID:' + task.getId() + '\r\n' +
       'SUMMARY:' + task.getSummary() + '\r\n' +
       // If a task does not have a date, do not include the DTSTAMP property
-      (task.hasAnyDate() ? 'DTSTAMP:' + task.getDate(null, 'YYYYMMDDTHHmmss') + '\r\n' : '')
+      (task.hasAnyDate() ? 'DTSTAMP:' + task.getDate(null, 'YYYYMMDDTHHmmss') + '\r\n' : '') +
       'LOCATION:ALTREP="' + encodeURI(task.getLocation()) + '":' + encodeURI(task.getLocation()) + '\r\n';
 
     if (task.hasA(TaskDateName.Due)) {

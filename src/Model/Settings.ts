@@ -52,11 +52,3 @@ export const DEFAULT_SETTINGS: Settings = {
   oldTaskInDays: 365,
   howToProcessMultipleDates: HOW_TO_PROCESS_MULTIPLE_DATES.PreferDueDate,
 };
-
-export function settingsWithoutSecrets(settings: Settings): Settings {
-  return Object.assign({}, settings, {
-    githubPersonalAccessToken: '<redacted>',
-    githubGistId: '<redacted>',
-    githubUsername: '<redacted>',
-  });
-}

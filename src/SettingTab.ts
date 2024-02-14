@@ -11,6 +11,7 @@ import * as path from 'path';
 import { DEFAULT_SETTINGS, HOW_TO_PARSE_INTERNAL_LINKS, HOW_TO_PROCESS_MULTIPLE_DATES } from 'src/Model/Settings';
 import { log } from './Logger';
 import ObsidianIcalPlugin from './ObsidianIcalPlugin';
+import { settings } from './SettingsManager';
 
 export class SettingTab extends PluginSettingTab {
   plugin: ObsidianIcalPlugin;
@@ -33,10 +34,9 @@ export class SettingTab extends PluginSettingTab {
       .addDropdown((dropdown: DropdownComponent) =>
         dropdown
           .addOptions(HOW_TO_PARSE_INTERNAL_LINKS)
-          .setValue(this.plugin.settings.howToParseInternalLinks)
+          .setValue(settings.howToParseInternalLinks)
           .onChange(async (value) => {
-            this.plugin.settings.howToParseInternalLinks = value;
-            await this.plugin.saveSettings();
+            settings.howToParseInternalLinks = value;
             this.display();
           })
       );
@@ -46,10 +46,9 @@ export class SettingTab extends PluginSettingTab {
       .setDesc('Choose if you want your calendar to ignore tasks that have been completed.')
       .addToggle((toggle: ToggleComponent) =>
         toggle
-          .setValue(this.plugin.settings.ignoreCompletedTasks)
+          .setValue(settings.ignoreCompletedTasks)
           .onChange(async (value) => {
-            this.plugin.settings.ignoreCompletedTasks = value;
-            await this.plugin.saveSettings();
+            settings.ignoreCompletedTasks = value;
             this.display();
           })
       );
@@ -59,10 +58,9 @@ export class SettingTab extends PluginSettingTab {
       .setDesc('As well as adding your tasks as calendar events, you can choose to add your tasks as todo items to your calendar')
       .addToggle((toggle: ToggleComponent) =>
         toggle
-          .setValue(this.plugin.settings.isIncludeTodos)
+          .setValue(settings.isIncludeTodos)
           .onChange(async (value) => {
-            this.plugin.settings.isIncludeTodos = value;
-            await this.plugin.saveSettings();
+            settings.isIncludeTodos = value;
             this.display();
           })
       );
@@ -72,27 +70,25 @@ export class SettingTab extends PluginSettingTab {
       .setDesc('Do you want to exclude tasks if they are older than a certain age? This could be useful if you have a very large number of tasks and are not interested in the past.')
       .addToggle((toggle: ToggleComponent) =>
         toggle
-          .setValue(this.plugin.settings.ignoreOldTasks)
+          .setValue(settings.ignoreOldTasks)
           .onChange(async (value) => {
-            this.plugin.settings.ignoreOldTasks = value;
-            await this.plugin.saveSettings();
+            settings.ignoreOldTasks = value;
             this.display();
           })
       );
 
-    if (this.plugin.settings.ignoreOldTasks) {
+    if (settings.ignoreOldTasks) {
       new Setting(containerEl)
         .setName('How many days back to you want to keep old tasks?')
         .setDesc('If every date for a given task is more than this many days ago then it will be excluded from your calendar.')
         .addText((text) =>
           text
-            .setValue(this.plugin.settings.oldTaskInDays.toString())
+            .setValue(settings.oldTaskInDays.toString())
             .onChange(async (value) => {
               let days: number = parseInt(value, 10);
               if (days < 0) days = 1;
               if (days > 3650) days = 3650;
-              this.plugin.settings.oldTaskInDays = days;
-              await this.plugin.saveSettings();
+              settings.oldTaskInDays = days;
             })
         );
     }
@@ -103,10 +99,9 @@ export class SettingTab extends PluginSettingTab {
       .addDropdown((dropdown: DropdownComponent) =>
         dropdown
           .addOptions(HOW_TO_PROCESS_MULTIPLE_DATES)
-          .setValue(this.plugin.settings.howToProcessMultipleDates)
+          .setValue(settings.howToProcessMultipleDates)
           .onChange(async (value) => {
-            this.plugin.settings.howToProcessMultipleDates = value;
-            await this.plugin.saveSettings();
+            settings.howToProcessMultipleDates = value;
             this.display();
           })
       );
@@ -115,10 +110,9 @@ export class SettingTab extends PluginSettingTab {
       .setName('Save calendar to GitHub Gist?')
       .addToggle((toggle: ToggleComponent) =>
         toggle
-          .setValue(this.plugin.settings.isSaveToGistEnabled)
+          .setValue(settings.isSaveToGistEnabled)
           .onChange(async (value) => {
-            this.plugin.settings.isSaveToGistEnabled = value;
-            await this.plugin.saveSettings();
+            settings.isSaveToGistEnabled = value;
             this.display();
           })
       );
@@ -127,10 +121,9 @@ export class SettingTab extends PluginSettingTab {
       .setName('Save calendar to disk?')
       .addToggle((toggle: ToggleComponent) =>
         toggle
-          .setValue(this.plugin.settings.isSaveToFileEnabled)
+          .setValue(settings.isSaveToFileEnabled)
           .onChange(async (value) => {
-            this.plugin.settings.isSaveToFileEnabled = value;
-            await this.plugin.saveSettings();
+            settings.isSaveToFileEnabled = value;
             this.display();
           })
       );
@@ -140,34 +133,32 @@ export class SettingTab extends PluginSettingTab {
       .setDesc('Do you want the plugin to periodically process your tasks? If you choose not to then a calendar will only be built when Obsidian is loaded.')
       .addToggle((toggle: ToggleComponent) =>
         toggle
-          .setValue(this.plugin.settings.isPeriodicSaveEnabled)
+          .setValue(settings.isPeriodicSaveEnabled)
           .onChange(async (value) => {
-            this.plugin.settings.isPeriodicSaveEnabled = value;
-            await this.plugin.saveSettings();
+            settings.isPeriodicSaveEnabled = value;
             this.plugin.configurePeriodicSave();
             this.display();
           })
       );
 
-    if (this.plugin.settings.isPeriodicSaveEnabled) {
+    if (settings.isPeriodicSaveEnabled) {
       new Setting(containerEl)
         .setName('How often should we parse and save your calendar? (minutes)')
         .setDesc('How often do you want to periodically scan for tasks?')
         .addText((text) =>
           text
-            .setValue(this.plugin.settings.periodicSaveInterval.toString())
+            .setValue(settings.periodicSaveInterval.toString())
             .onChange(async (value) => {
               let minutes: number = parseInt(value, 10);
               if (minutes < 1) minutes = 1;
               if (minutes > 1440) minutes = 1440;
-              this.plugin.settings.periodicSaveInterval = minutes;
-              await this.plugin.saveSettings();
-              this.plugin.configurePeriodicSave();
+              settings.periodicSaveInterval = minutes;
+              await this.plugin.configurePeriodicSave();
             })
         );
     }
 
-    if (this.plugin.settings.isSaveToGistEnabled) {
+    if (settings.isSaveToGistEnabled) {
       containerEl.createEl('h1', { text: 'Save calendar to GitHub Gist' });
 
       containerEl.createEl('p', { cls: 'setting-item-description', text: 'Perform the following steps to get your Personal Access Token and Gist ID:' });
@@ -181,13 +172,12 @@ export class SettingTab extends PluginSettingTab {
         .setDesc('Used to privately store your calendar on Github')
         .addText((text: TextComponent) =>
           text
-            .setValue(this.plugin.settings.githubPersonalAccessToken)
+            .setValue(settings.githubPersonalAccessToken)
             .onChange(async (value: string) => {
               try {
                 this.validateGithubPersonalAccessToken(value);
                 githubPersonalAccessTokenErrorElement.innerText = '';
-                this.plugin.settings.githubPersonalAccessToken = value;
-                await this.plugin.saveSettings();
+                settings.githubPersonalAccessToken = value;
               } catch(error) {
                 log('Error!', error);
                 githubPersonalAccessTokenErrorElement.innerText = `${error.message ?? 'Unknown error'}`;
@@ -203,10 +193,9 @@ export class SettingTab extends PluginSettingTab {
         .addText((text: TextComponent) =>
           text
             // .setPlaceholder("Enter your GitHub Gist ID")
-            .setValue(this.plugin.settings.githubGistId)
+            .setValue(settings.githubGistId)
             .onChange(async (value) => {
-              this.plugin.settings.githubGistId = value;
-              await this.plugin.saveSettings();
+              settings.githubGistId = value;
             })
         );
 
@@ -215,10 +204,9 @@ export class SettingTab extends PluginSettingTab {
         .setDesc('This is only used to generate the URL to your calendar')
         .addText((text: TextComponent) =>
           text
-            .setValue(this.plugin.settings.githubUsername)
+            .setValue(settings.githubUsername)
             .onChange(async (value) => {
-              this.plugin.settings.githubUsername = value;
-              await this.plugin.saveSettings();
+              settings.githubUsername = value;
             })
         );
 
@@ -227,15 +215,14 @@ export class SettingTab extends PluginSettingTab {
         .setDesc('Give your calendar a file name')
         .addText((text: TextComponent) =>
           text
-            .setValue(this.plugin.settings.filename)
+            .setValue(settings.filename)
             .setPlaceholder('obsidian.ics')
             .onChange(async (value) => {
-              this.plugin.settings.filename = value;
-              await this.plugin.saveSettings();
+              settings.filename = value;
             })
         );
 
-      const url = `https://gist.githubusercontent.com/${this.plugin.settings.githubUsername}/${this.plugin.settings.githubGistId}/raw/${this.plugin.settings.filename}`;
+      const url = `https://gist.githubusercontent.com/${settings.githubUsername}/${settings.githubGistId}/raw/${settings.filename}`;
 
       new Setting(containerEl)
         .setName('Your calendar URL')
@@ -257,12 +244,11 @@ export class SettingTab extends PluginSettingTab {
     }
 
 
-    if (this.plugin.settings.isSaveToFileEnabled) {
+    if (settings.isSaveToFileEnabled) {
       containerEl.createEl('h1', { text: 'Save calendar to disk' });
 
-      if (this.plugin.settings.saveFileName === DEFAULT_SETTINGS.saveFileName) {
-        this.plugin.settings.saveFileName = this.app.vault.getName();
-        await this.plugin.saveSettings();
+      if (settings.saveFileName === DEFAULT_SETTINGS.saveFileName) {
+        settings.saveFileName = this.app.vault.getName();
         this.display();
       }
 
@@ -271,10 +257,9 @@ export class SettingTab extends PluginSettingTab {
         .setDesc('Which directory/folder do you want to save your calendar to? An empty string means to the current vault root path. The path must be inside the vault.')
         .addText((text: TextComponent) =>
           text
-            .setValue(this.plugin.settings.savePath)
+            .setValue(settings.savePath)
             .onChange(async (value) => {
-              this.plugin.settings.savePath = value;
-              await this.plugin.saveSettings();
+              settings.savePath = value;
             })
         );
 
@@ -284,10 +269,9 @@ export class SettingTab extends PluginSettingTab {
         .addText((text: TextComponent) =>
           text
             .setPlaceholder(this.app.vault.getName())
-            .setValue(this.plugin.settings.saveFileName ?? this.app.vault.getName())
+            .setValue(settings.saveFileName ?? this.app.vault.getName())
             .onChange(async (value) => {
-              this.plugin.settings.saveFileName = value;
-              await this.plugin.saveSettings();
+              settings.saveFileName = value;
             })
         );
 
@@ -302,15 +286,14 @@ export class SettingTab extends PluginSettingTab {
               '.ifb': '.ifb',
               '.icalendar': '.icalendar',
             })
-            .setValue(this.plugin.settings.saveFileExtension)
+            .setValue(settings.saveFileExtension)
             .onChange(async (value) => {
-              this.plugin.settings.saveFileExtension = value;
-              await this.plugin.saveSettings();
+              settings.saveFileExtension = value;
               this.display();
             })
         );
 
-      const savePath = `${this.plugin.settings.savePath ?? this.plugin.settings.savePath + path.sep}${this.plugin.settings.saveFileName}${this.plugin.settings.saveFileExtension}`;
+      const savePath = `${settings.savePath ?? settings.savePath + path.sep}${settings.saveFileName}${settings.saveFileExtension}`;
 
       new Setting(containerEl)
         .setName('Your calendar path')
@@ -335,10 +318,9 @@ export class SettingTab extends PluginSettingTab {
         .setDesc('Turning this on will write logs to console.')
         .addToggle((toggle: ToggleComponent) =>
           toggle
-            .setValue(this.plugin.settings.isDebug)
+            .setValue(settings.isDebug)
             .onChange(async (value) => {
-              this.plugin.settings.isDebug = value;
-              await this.plugin.saveSettings();
+              settings.isDebug = value;
               this.display();
             })
         );

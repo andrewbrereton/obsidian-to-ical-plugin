@@ -1,19 +1,20 @@
 import { Plugin } from 'obsidian';
 import { Main } from 'src/Main';
-import { DEFAULT_SETTINGS, Settings } from 'src/Model/Settings';
 import { log, logger } from './Logger';
 import { SettingTab } from './SettingTab';
+import { initSettingsManager, settings } from './SettingsManager';
 
 export default class ObsidianIcalPlugin extends Plugin {
-  settings: Settings;
   main: Main;
   periodicSaveInterval: number|null;
 
   async onload() {
-    await this.loadSettings();
+    // Initialise SettingsManager
+    await initSettingsManager(this);
+    // Initialise Logger
+    logger(settings.isDebug);
 
-    logger(this.settings.isDebug);
-    log('Logger initialised');
+    log('SettingsManager and Logger initialised');
 
     // // This creates an icon in the left ribbon.
     // const ribbonIconEl = this.addRibbonIcon(
@@ -88,60 +89,35 @@ export default class ObsidianIcalPlugin extends Plugin {
 
   // Once the Obsidian layout is ready, kick off a scan and configure periodic save
   async onLayoutReady(): Promise<void> {
-    this.main = new Main(this.app, this.settings);
+    this.main = new Main(this.app);
     await this.main.start();
 
-    this.configurePeriodicSave();
+    await this.configurePeriodicSave();
   }
 
-  onunload() {}
-
-  async loadSettings() {
-    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-
-    // Because we may be applying new default settings to the settings that were loaded from the filesystem,
-    // I think we should save these settings back to the filesystem.
-    await this.saveSettings();
+  onunload() {
+    this.clearPeriodicSaveInterval();
   }
 
-  async saveSettings() {
-    await this.saveData(this.settings);
+  clearPeriodicSaveInterval() {
+    window.clearInterval(this.periodicSaveInterval ?? 0);
+    this.periodicSaveInterval = null;
   }
 
   // Trigger a save every now and then
-  configurePeriodicSave() {
-    if (this.settings.isPeriodicSaveEnabled) {
-      log(`Periodic save enabled and will run every ${this.settings.periodicSaveInterval} minute(s)`);
+  async configurePeriodicSave() {
+    // Clear any existing period save intervals before we do anything else
+    this.clearPeriodicSaveInterval();
+
+    if (settings.isPeriodicSaveEnabled && settings.periodicSaveInterval > 0) {
+      log(`Periodic save enabled and will run every ${settings.periodicSaveInterval} minute(s)`);
       this.periodicSaveInterval = window.setInterval(async () => {
-        log(`Periodic save triggers every ${this.settings.periodicSaveInterval} minute(s)`);
+        log(`Periodic save triggers every ${settings.periodicSaveInterval} minute(s)`);
         await this.main.start();
-      }, this.settings.periodicSaveInterval * 1000 * 60);
+      }, settings.periodicSaveInterval * 1000 * 60);
 
       // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
       this.registerInterval(this.periodicSaveInterval);
-    } else {
-      log('Periodic save disabled');
-      if (this.periodicSaveInterval ?? 0 > 0) {
-        window.clearInterval(this.periodicSaveInterval ?? 0);
-        this.periodicSaveInterval = null;
-      }
     }
   }
 }
-
-// class SampleModal extends Modal {
-//   constructor(app: App) {
-//     super(app);
-//   }
-
-//   onOpen() {
-//     const { contentEl } = this;
-//     contentEl.setText("Woah!");
-//   }
-
-//   onClose() {
-//     const { contentEl } = this;
-//     contentEl.empty();
-//   }
-// }
-

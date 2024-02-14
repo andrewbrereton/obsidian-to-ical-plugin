@@ -1,0 +1,9 @@
+{
+  "author": "Joost Plattel",
+  "authorUrl": "https://jplattel.nl",
+  "description": "Allows template-based customization of the app window title",
+  "id": "open-note-to-window-title",
+  "isDesktopOnly": false,
+  "name": "Custom window title",
+  "version": "0.3.5"
+}

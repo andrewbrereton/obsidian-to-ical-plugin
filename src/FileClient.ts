@@ -1,21 +1,16 @@
 import { TFile, Vault } from 'obsidian';
 import { log } from './Logger';
+import { settings } from './SettingsManager';
 
 export class FileClient {
   vault: Vault;
-  filePath: string;
-  fileName: string;
-  fileExtension: string;
 
-  constructor(vault: Vault, filePath: string, fileName: string, fileExtension: string) {
+  constructor(vault: Vault) {
     this.vault = vault;
-    this.filePath = filePath;
-    this.fileName = fileName;
-    this.fileExtension = fileExtension;
   }
 
   async save(calendar: string) {
-    const fileRelativePath = `${this.filePath ?? this.filePath + '/'}${this.fileName}${this.fileExtension}`;
+    const fileRelativePath = `${settings.savePath ?? settings.savePath + '/'}${settings.saveFileName}${settings.saveFileExtension}`;
     const file = this.vault.getAbstractFileByPath(fileRelativePath);
 
     if (file instanceof TFile) {
