@@ -208,6 +208,15 @@ class SettingsManager {
     this.settings.isIncludeTodos = isIncludeTodos;
     this.saveSettings();
   }
+
+  public get isOnlyTasksWithoutDatesAreTodos(): boolean {
+    return this.settings.isOnlyTasksWithoutDatesAreTodos;
+  }
+
+  public set isOnlyTasksWithoutDatesAreTodos(isOnlyTasksWithoutDatesAreTodos: boolean) {
+    this.settings.isOnlyTasksWithoutDatesAreTodos = isOnlyTasksWithoutDatesAreTodos;
+    this.saveSettings();
+  }
 }
 
 export let settings: SettingsManager = SettingsManager.settingsManager;

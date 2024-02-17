@@ -65,6 +65,20 @@ export class SettingTab extends PluginSettingTab {
           })
       );
 
+    if (settings.isIncludeTodos) {
+      new Setting(containerEl)
+        .setName('Only tasks without dates are TODO items')
+        .setDesc('When adding the TODO items to your iCalendar, should we only consider tasks without dates as TODO items?')
+        .addToggle((toggle: ToggleComponent) =>
+          toggle
+            .setValue(settings.isOnlyTasksWithoutDatesAreTodos)
+            .onChange(async (value) => {
+              settings.isOnlyTasksWithoutDatesAreTodos = value;
+              this.display();
+            })
+        );
+    }
+
     new Setting(containerEl)
       .setName('Ignore old tasks?')
       .setDesc('Do you want to exclude tasks if they are older than a certain age? This could be useful if you have a very large number of tasks and are not interested in the past.')

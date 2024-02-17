@@ -27,6 +27,7 @@ export interface Settings {
   ignoreCompletedTasks: boolean;
   isDebug: boolean;
   isIncludeTodos: boolean;
+  isOnlyTasksWithoutDatesAreTodos: boolean;
   ignoreOldTasks: boolean;
   oldTaskInDays: number;
   howToProcessMultipleDates: string;
@@ -48,6 +49,7 @@ export const DEFAULT_SETTINGS: Settings = {
   ignoreCompletedTasks: false,
   isDebug: false,
   isIncludeTodos: false,
+  isOnlyTasksWithoutDatesAreTodos: true,
   ignoreOldTasks: false,
   oldTaskInDays: 365,
   howToProcessMultipleDates: HOW_TO_PROCESS_MULTIPLE_DATES.PreferDueDate,

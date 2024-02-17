@@ -133,6 +133,11 @@ export class IcalService {
   private getToDos(tasks: Task[]): string {
     return tasks
       .map((task: Task) => {
+        if (settings.isOnlyTasksWithoutDatesAreTodos && task.hasAnyDate() === true) {
+          // User only wants tasks without dates to be added as TODO items
+          return '';
+        }
+
         return this.getToDo(task);
       })
       .join('');
