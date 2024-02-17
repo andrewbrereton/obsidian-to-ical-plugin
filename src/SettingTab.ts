@@ -243,7 +243,6 @@ export class SettingTab extends PluginSettingTab {
         });
     }
 
-
     if (settings.isSaveToFileEnabled) {
       containerEl.createEl('h1', { text: 'Save calendar to disk' });
 
@@ -312,19 +311,19 @@ export class SettingTab extends PluginSettingTab {
               }, 500);
             });
         });
-
-      new Setting(containerEl)
-        .setName('Debug mode')
-        .setDesc('Turning this on will write logs to console.')
-        .addToggle((toggle: ToggleComponent) =>
-          toggle
-            .setValue(settings.isDebug)
-            .onChange(async (value) => {
-              settings.isDebug = value;
-              this.display();
-            })
-        );
     }
+
+    new Setting(containerEl)
+      .setName('Debug mode')
+      .setDesc('Turning this on will write logs to console.')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isDebug)
+          .onChange(async (value) => {
+            settings.isDebug = value;
+            this.display();
+          })
+      );
   }
 
   validateGithubPersonalAccessToken(value: string): void {
