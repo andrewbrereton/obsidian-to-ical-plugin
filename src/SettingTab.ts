@@ -54,6 +54,32 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
+      .setName('Add tasks as TODO items to your calendar')
+      .setDesc('As well as adding your tasks as calendar events, you can choose to add your tasks as todo items to your calendar')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isIncludeTodos)
+          .onChange(async (value) => {
+            settings.isIncludeTodos = value;
+            this.display();
+          })
+      );
+
+    if (settings.isIncludeTodos) {
+      new Setting(containerEl)
+        .setName('Only tasks without dates are TODO items')
+        .setDesc('When adding the TODO items to your iCalendar, should we only consider tasks without dates as TODO items?')
+        .addToggle((toggle: ToggleComponent) =>
+          toggle
+            .setValue(settings.isOnlyTasksWithoutDatesAreTodos)
+            .onChange(async (value) => {
+              settings.isOnlyTasksWithoutDatesAreTodos = value;
+              this.display();
+            })
+        );
+    }
+
+    new Setting(containerEl)
       .setName('Ignore old tasks?')
       .setDesc('Do you want to exclude tasks if they are older than a certain age? This could be useful if you have a very large number of tasks and are not interested in the past.')
       .addToggle((toggle: ToggleComponent) =>
@@ -231,7 +257,6 @@ export class SettingTab extends PluginSettingTab {
         });
     }
 
-
     if (settings.isSaveToFileEnabled) {
       containerEl.createEl('h1', { text: 'Save calendar to disk' });
 
@@ -300,19 +325,19 @@ export class SettingTab extends PluginSettingTab {
               }, 500);
             });
         });
-
-      new Setting(containerEl)
-        .setName('Debug mode')
-        .setDesc('Turning this on will write logs to console.')
-        .addToggle((toggle: ToggleComponent) =>
-          toggle
-            .setValue(settings.isDebug)
-            .onChange(async (value) => {
-              settings.isDebug = value;
-              this.display();
-            })
-        );
     }
+
+    new Setting(containerEl)
+      .setName('Debug mode')
+      .setDesc('Turning this on will write logs to console.')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isDebug)
+          .onChange(async (value) => {
+            settings.isDebug = value;
+            this.display();
+          })
+      );
   }
 
   validateGithubPersonalAccessToken(value: string): void {

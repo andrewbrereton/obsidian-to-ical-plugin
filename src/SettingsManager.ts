@@ -1,6 +1,6 @@
-import { Plugin } from "obsidian";
-import { log } from "./Logger";
-import { DEFAULT_SETTINGS, Settings } from "./Model/Settings";
+import { Plugin } from 'obsidian';
+import { log } from './Logger';
+import { DEFAULT_SETTINGS, Settings } from './Model/Settings';
 
 // Settings class in instantiated using a singleton pattern
 class SettingsManager {
@@ -15,10 +15,10 @@ class SettingsManager {
   }
 
   public static async createInstance(plugin: Plugin): Promise<SettingsManager> {
-      SettingsManager.instance = new SettingsManager(plugin);
-      await this.instance.loadSettings();
+    SettingsManager.instance = new SettingsManager(plugin);
+    await this.instance.loadSettings();
 
-      return SettingsManager.instance
+    return SettingsManager.instance;
   }
 
   public static get settingsManager(): SettingsManager {
@@ -197,6 +197,24 @@ class SettingsManager {
 
   public set howToProcessMultipleDates(howToProcessMultipleDates: string) {
     this.settings.howToProcessMultipleDates = howToProcessMultipleDates;
+    this.saveSettings();
+  }
+
+  public get isIncludeTodos(): boolean {
+    return this.settings.isIncludeTodos;
+  }
+
+  public set isIncludeTodos(isIncludeTodos: boolean) {
+    this.settings.isIncludeTodos = isIncludeTodos;
+    this.saveSettings();
+  }
+
+  public get isOnlyTasksWithoutDatesAreTodos(): boolean {
+    return this.settings.isOnlyTasksWithoutDatesAreTodos;
+  }
+
+  public set isOnlyTasksWithoutDatesAreTodos(isOnlyTasksWithoutDatesAreTodos: boolean) {
+    this.settings.isOnlyTasksWithoutDatesAreTodos = isOnlyTasksWithoutDatesAreTodos;
     this.saveSettings();
   }
 }

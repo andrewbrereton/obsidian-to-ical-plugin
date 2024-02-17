@@ -1,10 +1,12 @@
 import { Task } from './Model/Task';
 import { TaskDateName } from './Model/TaskDate';
+import { TaskStatus } from './Model/TaskStatus';
 import { settings } from './SettingsManager';
 
 export class IcalService {
   getCalendar(tasks: Task[]): string {
     const events = this.getEvents(tasks);
+    const toDos = settings.isIncludeTodos ? this.getToDos(tasks) : '';
 
     let calendar = '' +
       'BEGIN:VCALENDAR\r\n' +
@@ -14,6 +16,7 @@ export class IcalService {
       'NAME:Obsidian Calendar\r\n' +
       'CALSCALE:GREGORIAN\r\n' +
       events +
+      toDos +
       'END:VCALENDAR\r\n'
       ;
 
@@ -32,6 +35,14 @@ export class IcalService {
 
   private getEvent(task: Task, date: string|null, prependSummary: string): string {
     // console.log({task});
+
+    // This task does not have a date.
+    // Therefore it must be included because it is a TODO and isIncludeTodos setting is true.
+    // Don't add it to the VEVENT block, as it will be added to the VTODO block later.
+    if (task.hasAnyDate() === false) {
+      return '';
+    }
+
     let event = '' +
       'BEGIN:VEVENT\r\n' +
       'UID:' + task.getId() + '\r\n' +
@@ -61,27 +72,25 @@ export class IcalService {
         // If there is a due date, then create an event for it
         // If there are no events, then take any old date that we can find
         case 'CreateMultipleEvents':
-          let events = '';
+          event = '';
 
           if (task.hasA(TaskDateName.Start)) {
-            events += this.getEvent(task, task.getDate(TaskDateName.Start, 'YYYYMMDD'), '🛫 ');
+            event += this.getEvent(task, task.getDate(TaskDateName.Start, 'YYYYMMDD'), '🛫 ');
           }
 
           if (task.hasA(TaskDateName.Scheduled)) {
-            events += this.getEvent(task, task.getDate(TaskDateName.Scheduled, 'YYYYMMDD'), '⏳ ');
+            event += this.getEvent(task, task.getDate(TaskDateName.Scheduled, 'YYYYMMDD'), '⏳ ');
           }
 
           if (task.hasA(TaskDateName.Due)) {
-            events += this.getEvent(task, task.getDate(TaskDateName.Due, 'YYYYMMDD'), '📅 ');
+            event += this.getEvent(task, task.getDate(TaskDateName.Due, 'YYYYMMDD'), '📅 ');
           }
 
           if (event === '') {
-            events += this.getEvent(task, task.getDate(null, 'YYYYMMDD'), '');
+            event += this.getEvent(task, task.getDate(null, 'YYYYMMDD'), '');
           }
 
-          return events;
-
-          break;
+          return event;
 
         // User would prefer to use the task's due date
         // If there is a start and due date, set the start to the start date and the end to the due date
@@ -119,6 +128,56 @@ export class IcalService {
       'END:VEVENT\r\n';
 
     return event;
+  }
+
+  private getToDos(tasks: Task[]): string {
+    return tasks
+      .map((task: Task) => {
+        if (settings.isOnlyTasksWithoutDatesAreTodos && task.hasAnyDate() === true) {
+          // User only wants tasks without dates to be added as TODO items
+          return '';
+        }
+
+        return this.getToDo(task);
+      })
+      .join('');
+  }
+
+  private getToDo(task: Task): string {
+    let toDo = '' +
+      'BEGIN:VTODO\r\n' +
+      'UID:' + task.getId() + '\r\n' +
+      'SUMMARY:' + task.getSummary() + '\r\n' +
+      // If a task does not have a date, do not include the DTSTAMP property
+      (task.hasAnyDate() ? 'DTSTAMP:' + task.getDate(null, 'YYYYMMDDTHHmmss') + '\r\n' : '') +
+      'LOCATION:ALTREP="' + encodeURI(task.getLocation()) + '":' + encodeURI(task.getLocation()) + '\r\n';
+
+    if (task.hasA(TaskDateName.Due)) {
+      toDo += 'DUE;VALUE=DATE:' + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
+    }
+
+    if (task.hasA(TaskDateName.Done)) {
+      toDo += 'COMPLETED;VALUE=DATE:' + task.getDate(TaskDateName.Done, 'YYYYMMDD') + '\r\n';
+    }
+
+    switch (task.status) {
+      case TaskStatus.ToDo:
+        toDo += 'STATUS:NEEDS-ACTION\r\n';
+        break;
+      case TaskStatus.InProgress:
+        toDo += 'STATUS:IN-PROCESS\r\n';
+        break;
+      case TaskStatus.Done:
+        toDo += 'STATUS:COMPLETED\r\n';
+        break;
+      case TaskStatus.Cancelled:
+        toDo += 'STATUS:CANCELLED\r\n';
+        break;
+    }
+
+    toDo += 'END:VTODO\r\n';
+
+    return toDo;
   }
 
   private pretty(calendar: string): string {

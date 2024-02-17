@@ -50,12 +50,12 @@ describe('Obsidian iCal Plugin', () => {
       { id: 24, expectedSummaryIncludes: '🏃' },
       { id: 25, expectedSummaryIncludes: '🔲' },
       { id: 27, expectedSummaryIncludes: '#tag' },
-      { id: 29, expectedSummaryIncludes: ', wikilink link bare,' },
-      { id: 33, expectedSummaryIncludes: ', wikilink title,' },
-      { id: 37, expectedSummaryIncludes: 'markdown title,' },
+      { id: 29, expectedSummaryIncludes: 'wikilink link bare' },
+      { id: 33, expectedSummaryIncludes: 'wikilink title' },
+      { id: 37, expectedSummaryIncludes: 'markdown title' },
       { id: 47, expectedSummaryIncludes: 'cancelled,' },
       { id: 71, expectedSummaryIncludes: 'wikilink link bare' },
-      { id: 77, expectedSummaryIncludes: ', markdown title' },
+      { id: 77, expectedSummaryIncludes: 'markdown title' },
       { id: 88, expectedSummaryIncludes: 'in progress' },
       { id: 124, expectedSummaryIncludes: 'in progress' },
       { id: 127, expectedSummaryIncludes: 'cancelled' },
@@ -84,6 +84,29 @@ describe('Obsidian iCal Plugin', () => {
             expect(dateOnly).toBe(expectedDate); // Compares date part only
           }
         });
+      });
+    });
+  });
+
+  describe('TODO items were added', () => {
+    const testCases = [
+      { id: 1, expectedSummaryIncludes: 'no dates' },
+      { id: 2, expectedSummaryIncludes: 'no dates' },
+      { id: 3, expectedSummaryIncludes: 'no dates' },
+      { id: 4, expectedSummaryIncludes: 'no dates' },
+      { id: 5, expectedSummaryIncludes: 'no dates' },
+      { id: 6, expectedSummaryIncludes: 'no dates' },
+      { id: 7, expectedSummaryIncludes: 'no dates' },
+      { id: 8, expectedSummaryIncludes: 'no dates' },
+      { id: 9, expectedSummaryIncludes: 'no dates' },
+    ];
+
+    testCases.forEach(({ id, expectedSummaryIncludes }) => {
+      test(`Task id=${id} summary includes "${expectedSummaryIncludes}"`, () => {
+        const event = jcalData[2].find(event => event[1].some(prop => prop[0] === 'summary' && prop[3].includes(`id=${id},`)));
+        expect(event).toBeDefined();
+        const summary = event[1].find(prop => prop[0] === 'summary')[3];
+        expect(summary).toContain(expectedSummaryIncludes);
       });
     });
   });
