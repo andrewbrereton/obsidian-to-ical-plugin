@@ -60,6 +60,9 @@ export class IcalService {
             event += 'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDD') + '\r\n';
           } else if (task.hasA(TaskDateName.Due)) {
             event += 'DTSTART:' + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
+          } else if (task.hasA(TaskDateName.TimeStart) && task.hasA(TaskDateName.TimeEnd)) {
+            event += 'DTSTART:' + task.getDate(TaskDateName.TimeStart, 'YYYYMMDD[T]HHmmss[Z]') + '\r\n';
+            event += 'DTEND:' + task.getDate(TaskDateName.TimeEnd, 'YYYYMMDD[T]HHmmss[Z]') + '\r\n';
           } else {
             event += 'DTSTART:' + task.getDate(null, 'YYYYMMDD') + '\r\n';
           }
@@ -109,6 +112,9 @@ export class IcalService {
           } else if (task.hasA(TaskDateName.Start)) {
             event += '' +
               'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDD') + '\r\n';
+          } else if (task.hasA(TaskDateName.TimeStart) && task.hasA(TaskDateName.TimeEnd)) {
+            event += 'DTSTART:' + task.getDate(TaskDateName.TimeStart, 'YYYYMMDD[T]HHmmss[Z]') + '\r\n';
+            event += 'DTEND:' + task.getDate(TaskDateName.TimeEnd, 'YYYYMMDD[T]HHmmss[Z]') + '\r\n';
           } else {
             event += '' +
               'DTSTART:' + task.getDate(null, 'YYYYMMDD') + '\r\n';

@@ -1,4 +1,4 @@
-import { App } from 'obsidian';
+import { App, TFile } from 'obsidian';
 import { FileClient } from './FileClient';
 import { GithubClient } from './GithubClient';
 import { IcalService } from './IcalService';
@@ -6,6 +6,8 @@ import { log } from './Logger';
 import { Task } from './Model/Task';
 import { settings } from './SettingsManager';
 import { TaskFinder } from './TaskFinder';
+import { Heading } from './Model/Heading';
+import { Headings } from './Model/Headings';
 
 export class Main {
   app: App;
@@ -46,7 +48,18 @@ export class Main {
 
       // If there are cached list items in this Markdown file then interrogate it further to extract the Tasks
       if (listItemsCache.length) {
-        const tasks = await this.taskFinder.findTasks(file, listItemsCache);
+        let headings;
+        // If the user has enabled Day Planner format, then go and get all the Headings in this Markfile file
+        if (settings.isDayPlannerPluginFormatEnabled) {
+          const markdownHeadings = this.app.metadataCache.getFileCache(file)?.headings ?? [];
+
+          if (markdownHeadings.length) {
+            headings = new Headings(markdownHeadings);
+          }
+        }
+
+        const tasks = await this.taskFinder.findTasks(file, listItemsCache, headings);
+
         taskPromises.push(tasks);
       }
     }
@@ -85,6 +98,25 @@ export class Main {
     } else {
       log('Skip saving calendar to file');
     }
+  }
+
+  getHeadings(file: TFile): Heading[]|null {
+    // Find all the lines in the Markdown file that are headings
+    const fileHeadings = this.app.metadataCache.getFileCache(file)?.headings ?? [];
+
+    // Create an array of Heading objects from the lines in the file
+    // Don't include the Heading objects that are NULL
+    const headings = fileHeadings.reduce((accumulator: Heading[], heading) => {
+      const newHeading = createHeadingFromLine(heading);
+
+      if (newHeading !== null) {
+        accumulator.push(newHeading);
+      }
+
+      return accumulator;
+    }, [] as Heading[]);
+
+    return headings;
   }
 
   async saveToGist(calendar: string) {

@@ -55,7 +55,7 @@ export class Task {
       }
     });
 
-    return matchingTaskDate ? moment(matchingTaskDate.date).format(format) : '';
+    return matchingTaskDate ? moment(matchingTaskDate.date).utc().format(format) : '';
   }
 
   public getSummary(): string {
@@ -75,7 +75,7 @@ export class Task {
   }
 }
 
-export function createTaskFromLine(line: string, fileUri: string): Task|null {
+export function createTaskFromLine(line: string, fileUri: string, dateOverride: Date|null): Task|null {
   const taskRegExp = /(\*|-)\s*(?<taskStatus>\[.?])\s*(?<summary>.*)\s*/gi;
   const dateRegExp = /\b(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\b/gi;
 
@@ -89,7 +89,7 @@ export function createTaskFromLine(line: string, fileUri: string): Task|null {
   const dateMatch = [...line.matchAll(dateRegExp)][0] ?? null;
 
   // This task doesn't have a date and we are not including TODO items. Bail.
-  if (dateMatch === null && settings.isIncludeTodos === false) {
+  if ((dateMatch === null && dateOverride === null) && settings.isIncludeTodos === false) {
     return null;
   }
 
@@ -101,7 +101,7 @@ export function createTaskFromLine(line: string, fileUri: string): Task|null {
     return null;
   }
 
-  const taskDates = getTaskDatesFromMarkdown(line);
+  const taskDates = getTaskDatesFromMarkdown(line, dateOverride);
 
   // Ignore old tasks is enabled, and all of the task's dates are after the retention period. Bail.
   if (settings.ignoreOldTasks === true) {
