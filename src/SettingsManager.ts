@@ -217,6 +217,15 @@ class SettingsManager {
     this.settings.isOnlyTasksWithoutDatesAreTodos = isOnlyTasksWithoutDatesAreTodos;
     this.saveSettings();
   }
+
+  public get isDayPlannerPluginFormatEnabled(): boolean {
+    return this.settings.isDayPlannerPluginFormatEnabled;
+  }
+
+  public set isDayPlannerPluginFormatEnabled(isDayPlannerPluginFormatEnabled: boolean) {
+    this.settings.isDayPlannerPluginFormatEnabled = isDayPlannerPluginFormatEnabled;
+    this.saveSettings();
+  }
 }
 
 export let settings: SettingsManager = SettingsManager.settingsManager;

@@ -31,6 +31,7 @@ export interface Settings {
   ignoreOldTasks: boolean;
   oldTaskInDays: number;
   howToProcessMultipleDates: string;
+  isDayPlannerPluginFormatEnabled: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -53,4 +54,5 @@ export const DEFAULT_SETTINGS: Settings = {
   ignoreOldTasks: false,
   oldTaskInDays: 365,
   howToProcessMultipleDates: HOW_TO_PROCESS_MULTIPLE_DATES.PreferDueDate,
+  isDayPlannerPluginFormatEnabled: false,
 };
