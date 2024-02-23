@@ -29,7 +29,6 @@ export class Headings {
   }
 
   addHeading(heading: Heading) {
-    console.log({heading});
     // Find the correct position to insert the new heading to maintain the sorted order
     const insertIndex = this.headings.findIndex(h => h.getLine < heading.getLine);
 
