@@ -99,14 +99,8 @@ export function getTaskDatesFromMarkdown(markdown: string, dateOverride: Date|nu
       return [];
     }
 
-    console.log({markdown, dateOverride, match});
-
     let timeStartString = match[1];
     let timeEndString = match[2]; // The second time, if present
-
-    if(markdown.contains('id=137')) {
-      console.log({markdown, timeStartString, timeEndString});
-    }
 
     if (!timeEndString) {
       // If the second time is not present, calculate it
