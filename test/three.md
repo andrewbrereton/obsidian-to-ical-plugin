@@ -178,33 +178,33 @@ Each task should have a `id=X` where `X` is a unique number. This is so if I add
 ### Daily Planner
 #### 2024-01-01
 
-- [ ] 11:01 id=129, start time only, (hour)(:)(minute) format
-- [ ] 11:02:00 id=130, start time only, (hour)(:)(minute)(:)(second) format
-- [ ] 11am id=131, start time only, (hour)(am|pm) format
-- [ ] 11:03am id=132, start time only, (hour)(:)(minute)(am|pm) format
-- [ ] 11:04:00am id=133, start time only, (hour)(:)(minute)(:)(second)(am|pm) format
-- [ ] 11 am id=131, start time only, (hour)(space)(am|pm) format
-- [ ] 11:03 am id=132, start time only, (hour)(:)(minute)(space)(am|pm) format
-- [ ] 11:04:00 am id=133, start time only, (hour)(:)(minute)(:)(second)(space)(am|pm) format
+- [ ] 17:01 id=129, start time only, (hour)(:)(minute) format
+- [ ] 17:02:00 id=130, start time only, (hour)(:)(minute)(:)(second) format
+- [ ] 5pm id=131, start time only, (hour)(am|pm) format
+- [ ] 5:03pm id=132, start time only, (hour)(:)(minute)(am|pm) format
+- [ ] 5:04:00pm id=133, start time only, (hour)(:)(minute)(:)(second)(am|pm) format
+- [ ] 5 pm id=134, start time only, (hour)(space)(am|pm) format
+- [ ] 5:03 pm id=135, start time only, (hour)(:)(minute)(space)(am|pm) format
+- [ ] 5:04:00 pm id=136, start time only, (hour)(:)(minute)(:)(second)(space)(am|pm) format
 
 #### 2024-01-02
 
-- [ ] 11:05 - 11:06 id=134, start time and end time, (hour)(:)(minute) format
-- [ ] 11:06:00 - 11:07:00 id=135, start time and end time, (hour)(:)(minute)(:)(second) format
-- [ ] 11am - 12am id=136, start time and end time, (hour)(am|pm) format
-- [ ] 11:07am - 11:08am id=137, start time and end time, (hour)(:)(minute)(am|pm) format
-- [ ] 11:08:00am - 11:09:00am id=138, start time and end time, (hour)(:)(minute)(:)(second)(am|pm) format
-- [ ] 11 am - 12 am id=139, start time and end time, (hour)(space)(am|pm) format
-- [ ] 11:09 am - 11:10 am id=140, start time and end time, (hour)(:)(minute)(space)(am|pm) format
-- [ ] 11:10:00 am - 11:11:00 am id=141, start time and end time, (hour)(:)(minute)(:)(second)(space)(am|pm) format
+- [ ] 17:05 - 17:06 id=137, start time and end time, (hour)(:)(minute) format
+- [ ] 17:06:00 - 17:07:00 id=138, start time and end time, (hour)(:)(minute)(:)(second) format
+- [ ] 5pm - 6pm id=139, start time and end time, (hour)(am|pm) format
+- [ ] 5:07pm - 5:08pm id=140, start time and end time, (hour)(:)(minute)(am|pm) format
+- [ ] 5:08:00pm - 5:09:00pm id=141, start time and end time, (hour)(:)(minute)(:)(second)(am|pm) format
+- [ ] 5 pm - 6 pm id=142, start time and end time, (hour)(space)(am|pm) format
+- [ ] 5:09 pm - 5:10 pm id=143, start time and end time, (hour)(:)(minute)(space)(am|pm) format
+- [ ] 5:10:00 pm - 5:11:00 pm id=144, start time and end time, (hour)(:)(minute)(:)(second)(space)(am|pm) format
 
-#### 2024-01-02
+#### 2024-01-03
 
-- [ ] 11:11-11:12 id=142, start time and end time, (hour)(:)(minute) format
-- [ ] 11:12:00-11:13:00 id=143, start time and end time, (hour)(:)(minute)(:)(second) format
-- [ ] 11am-12am id=144, start time and end time, (hour)(am|pm) format
-- [ ] 11:13am-11:14am id=145, start time and end time, (hour)(:)(minute)(am|pm) format
-- [ ] 11:14:00am-11:15:00am id=146, start time and end time, (hour)(:)(minute)(:)(second)(am|pm) format
-- [ ] 11 am-12 am id=147, start time and end time, (hour)(space)(am|pm) format
-- [ ] 11:15 am-11:16 am id=148, start time and end time, (hour)(:)(minute)(space)(am|pm) format
-- [ ] 11:16:00 am-11:17:00 am id=149, start time and end time, (hour)(:)(minute)(:)(second)(space)(am|pm) format
+- [ ] 17:11-17:12 id=145, start time and end time, (hour)(:)(minute) format
+- [ ] 17:12:00-17:13:00 id=146, start time and end time, (hour)(:)(minute)(:)(second) format
+- [ ] 5pm-6pm id=147, start time and end time, (hour)(am|pm) format
+- [ ] 5:13pm-5:14pm id=148, start time and end time, (hour)(:)(minute)(am|pm) format
+- [ ] 5:14:00pm-5:15:00pm id=149, start time and end time, (hour)(:)(minute)(:)(second)(am|pm) format
+- [ ] 5 pm-6 pm id=150, start time and end time, (hour)(space)(am|pm) format
+- [ ] 5:15 pm-5:16 pm id=151, start time and end time, (hour)(:)(minute)(space)(am|pm) format
+- [ ] 5:16:00 pm-5:17:00 pm id=152, start time and end time, (hour)(:)(minute)(:)(second)(space)(am|pm) format
