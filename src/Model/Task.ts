@@ -1,6 +1,6 @@
 import 'crypto';
 import { moment } from 'obsidian';
-import { TaskDate, TaskDateName, getTaskDatesFromMarkdown } from './TaskDate';
+import { TaskDate, TaskDateName, getTaskDatesFromMarkdown, hasTime } from './TaskDate';
 import { TaskStatus, getTaskStatusEmoji, getTaskStatusFromMarkdown } from './TaskStatus';
 import { getSummaryFromMarkdown } from './TaskSummary';
 import { settings } from '../SettingsManager';
@@ -55,7 +55,17 @@ export class Task {
       }
     });
 
-    return matchingTaskDate ? moment(matchingTaskDate.date).utc().format(format) : '';
+    if (typeof matchingTaskDate === 'undefined') {
+      return '';
+    }
+
+    // If the Task has its time set, then it has been set because we are have found a Day Planner plugin
+    // task. The time is in local timezone, so we need to convert it to UTC.
+    if (hasTime(matchingTaskDate)) {
+      return moment(matchingTaskDate.date).utc().format(format);
+    } else {
+      return moment(matchingTaskDate.date).format(format);
+    }
   }
 
   public getSummary(): string {

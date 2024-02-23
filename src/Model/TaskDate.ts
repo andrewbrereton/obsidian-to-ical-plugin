@@ -91,7 +91,7 @@ export function getTaskDatesFromMarkdown(markdown: string, dateOverride: Date|nu
 
   // If we have an override date, then just use that instead of trying to derive them
   if (dateOverride !== null) {
-    const timeRegExp = /\b(\d{1,2}:\d{2}(?::\d{2})?\s*(?:[ap]m)?)\s*(-\s*(\d{1,2}:\d{2}(?::\d{2})?\s*(?:[ap]m)?)|(?=\s|\b|$))/i;
+    const timeRegExp = /\b(\d{1,2}(?::\d{2})?(?::\d{2})?\s*[ap]m|\d{1,2}(?::\d{2})?(?::\d{2})?)(?:\s*-\s*(\d{1,2}(?::\d{2})?(?::\d{2})?\s*[ap]m|\d{1,2}(?::\d{2})?(?::\d{2})?))?\b/i;
     // const timeRegExp = /\b((?<!\d{4}-\d{2}-)\d{1,2}:(\d{2})(?::\d{2})?\s*(?:[ap][m])?|(?<!\d{4}-\d{2}-)\d{1,2}\s*[ap][m])\b/gi;
     const match = markdown.match(timeRegExp);
 
@@ -99,8 +99,14 @@ export function getTaskDatesFromMarkdown(markdown: string, dateOverride: Date|nu
       return [];
     }
 
+    console.log({markdown, dateOverride, match});
+
     let timeStartString = match[1];
-    let timeEndString = match[3]; // The second time, if present
+    let timeEndString = match[2]; // The second time, if present
+
+    if(markdown.contains('id=137')) {
+      console.log({markdown, timeStartString, timeEndString});
+    }
 
     if (!timeEndString) {
       // If the second time is not present, calculate it
@@ -145,6 +151,8 @@ function calculateEndTime(startTime: string): string {
   const isPM = startTime.toLowerCase().includes('pm');
   let [hour, minute] = startTime.replace(/(am|pm)/i, '').split(':').map(Number);
 
+  if (isNaN(minute)) minute = 0; // If no minutes then set it to 0
+
   if (isPM && hour < 12) hour += 12; // Convert PM to 24-hour
   if (!isPM && hour === 12) hour = 0; // Handle 12 AM as 00:00
 
@@ -176,22 +184,37 @@ function calculateEndTime(startTime: string): string {
   return `${endHour}:${endMinuteStr} ${endAMPM}`;
 }
 
-function createTimeDate(dateOverride: Date, time: string): Date {
-  // Extract date components from dateOverride
+function createTimeDate(dateOverride: Date, timeString: string): Date {
   const year = dateOverride.getFullYear();
-  const month = dateOverride.getMonth(); // Note: months are 0-indexed in JavaScript Dates
+  const month = dateOverride.getMonth();
   const day = dateOverride.getDate();
 
-  // Extract time components
-  let hour = parseInt(time.match(/\d{1,2}/)[0]);
-  let minute = parseInt(time.match(/:(\d{2})/)[1]);
-  const isPM = time.toLowerCase().includes('pm');
-  const isAM = time.toLowerCase().includes('am');
+  // This regex matches hours, optional minutes, optional seconds, and optional AM/PM with various spacings
+  const timeRegex = /(\d{1,2})(?::(\d{2}))?(?::(\d{2}))?\s*([ap]m)?/i;
+  const match = timeString.match(timeRegex);
 
-  // Adjust hours for AM/PM format
-  if (isPM && hour < 12) hour += 12;
-  if (isAM && hour === 12) hour = 0; // Convert 12 AM to 00:00 hours
+  if (!match) throw new Error('Invalid time format');
 
-  // Create a new Date object with both date and time components
-  return new Date(year, month, day, hour, minute);
+  let hour = parseInt(match[1], 10);
+  const minute = match[2] ? parseInt(match[2], 10) : 0;
+  const second = match[3] ? parseInt(match[3], 10) : 0;
+  const amPmIndicator = match[4];
+
+  // Adjust for AM/PM
+  if (amPmIndicator) {
+    if (amPmIndicator.toLowerCase() === 'pm' && hour < 12) hour += 12;
+    if (amPmIndicator.toLowerCase() === 'am' && hour === 12) hour = 0;
+  }
+
+  return new Date(year, month, day, hour, minute, second);
+}
+
+export function hasTime(taskDate: TaskDate): boolean {
+  // Create a new Date object representing the start of the day (midnight) of the input date
+  const startOfDay = new Date(taskDate.date);
+  startOfDay.setHours(0, 0, 0, 0);
+
+  // Compare the original date to the start of the day
+  // If they are not equal, time has been set
+  return taskDate.date.getTime() !== startOfDay.getTime();
 }
