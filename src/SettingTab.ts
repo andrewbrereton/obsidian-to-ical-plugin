@@ -121,6 +121,18 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
+      .setName('Support Day Planner plugin?')
+      .setDesc('Turn this on if you want to support the Day Planner plugin format.')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isDayPlannerPluginFormatEnabled)
+          .onChange(async (value) => {
+            settings.isDayPlannerPluginFormatEnabled = value;
+            this.display();
+          })
+      );
+
+    new Setting(containerEl)
       .setName('Save calendar to GitHub Gist?')
       .addToggle((toggle: ToggleComponent) =>
         toggle
