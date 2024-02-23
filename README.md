@@ -20,6 +20,10 @@ Your vault will be scanned every now and then for changes to tasks to keep your 
 
 This plugin has rudimentary support for [Obsidian Tasks emoji format](https://publish.obsidian.md/tasks/Reference/Task+Formats/Tasks+Emoji+Format) and [Obsidian Tasks dataview format](https://publish.obsidian.md/tasks/Reference/Task+Formats/Dataview+Format). However it is not mandatory.
 
+## Support for Day Planner
+
+This plugin supports [Day Planner](https://github.com/ivan-lednev/obsidian-day-planner) format tasks. If you enable this in the settings, then the date of the task will be taken from the tasks heading, and the start time and end time will be taken from the task. If there is no end time, the default end time will be 30 minutes from the start time.
+
 ## Settings
 
 iCal has various settings which I will try to explain.
@@ -95,6 +99,10 @@ Create an event for each start date, scheduled date and due date associated with
 1. If there is a scheduled date, an event will be created using that date. The summary will be appended with a ⏳.
 1. If there is a due date, an event will be created using that date. The summary will be appended with a 📅.
 1. If none of the above dates were found, then take any old date that we can find
+
+### Support Day Planner plugin?
+
+Enabling this will tell the plugin to consider [Day Planner plugin](https://github.com/ivan-lednev/obsidian-day-planner) format if tasks are discovered with times in them.
 
 ### Save calendar to GitHub Gist?
 
