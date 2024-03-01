@@ -168,6 +168,23 @@ describe('Obsidian iCal Plugin', () => {
     });
   });
 
+
+  describe('Excluded tasks were excluded', () => {
+    const testCases = [156, 157, 158, 159];
+    testCases.forEach((id) => {
+      test(`Task should be excluded (id=${id})`, () => {
+        let found = false; // Flag to indicate if the ID is found
+        jcalData[2].forEach((event) => {
+          const summary = event[1].find(prop => prop[0] === 'summary');
+          if (summary && summary[3].includes(`id=${id}`)) {
+            found = true; // Set flag to true if ID is found
+          }
+        });
+        expect(found).toBe(false); // Expect the ID to not be found
+      });
+    });
+  });
+
   afterAll(async () => {
   // Cleanup: delete the generated .ics file, if necessary
   // await fs.unlink(outputPath);
