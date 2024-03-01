@@ -208,3 +208,13 @@ Each task should have a `id=X` where `X` is a unique number. This is so if I add
 - [ ] 5 pm-6 pm id=150, start time and end time, (hour)(space)(am|pm) format
 - [ ] 5:15 pm-5:16 pm id=151, start time and end time, (hour)(:)(minute)(space)(am|pm) format
 - [ ] 5:16:00 pm-5:17:00 pm id=152, start time and end time, (hour)(:)(minute)(:)(second)(space)(am|pm) format
+
+### Include and exclude based on tags
+
+- [ ] id=153 include because of #include1
+- [ ] id=154 include because of #include2
+- [ ] id=155 include because of #include1 and #include2
+- [ ] id=156 exclude because of #exclude1
+- [ ] id=157 exclude because of #exclude2
+- [ ] id=158 exclude because of #exclude1 and #exclude2
+- [ ] id=159 exclude based of #exclude1 even though there is also a #include1

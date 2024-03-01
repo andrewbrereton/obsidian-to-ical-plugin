@@ -120,6 +120,24 @@ Enabling this will tell iCal that it should periodically scan your vault for tas
 
 The number of minutes between each scan to generate and save your calendar. Must be a number between 1 and 1,440 (24 hours).
 
+### Only include tasks with certain tags?
+
+Enabling this will unlock the [Only include tasks that contain these tags](README.md#only-include-tasks-that-contain-these-tags) setting.
+
+### Only include tasks that contain these tags
+
+You can enter one or more tags. Only tasks that contains one or more of these tasks will be included in your calendar. Multiple tags should be separated by a space.
+
+### Exclude tasks with certain tags?
+
+Enabling this will unlock the [Exclude tasks that contain these tags](README.md#exclude-tasks-that-contain-these-tags) setting.
+
+### Exclude tasks that contain these tags
+
+You can enter one or more tags. If a task contains any of these tags, then it will be excluded from your calendar. Multiple tags should be separated by a space.
+
+If you have include tags and exclude tags, then exclude tags take priority.
+
 ### Save calendar to GitHub Gist
 
 Saving to GitHub Gist means you will be given a URL that you can import into your calendar applications.

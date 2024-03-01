@@ -39,6 +39,20 @@ export class TaskFinder {
           }
         }
 
+        // If the user wants to only include tasks with certain tags, filter them here
+        if (settings.isIncludeTasksWithTags) {
+          if (!this.hasTag(lineAndHeading.markdownLine, settings.includeTasksWithTags)) {
+            return null;
+          }
+        }
+
+        // If the user wants to exclude tasks with certain tags, filter them here
+        if (settings.isExcludeTasksWithTags) {
+          if (this.hasTag(lineAndHeading.markdownLine, settings.excludeTasksWithTags)) {
+            return null;
+          }
+        }
+
         return createTaskFromLine(lineAndHeading.markdownLine, fileUri, dateOverride);
       })
       // Filter out the nulls
@@ -58,5 +72,16 @@ export class TaskFinder {
     const timeRegExp = /\b((?<!\d{4}-\d{2}-)\d{1,2}:(\d{2})(?::\d{2})?\s*(?:[ap][m])?|(?<!\d{4}-\d{2}-)\d{1,2}\s*[ap][m])\b/gi;
 
     return timeRegExp.test(line);
+  }
+
+  // Does this line contain any of the tags provided?
+  hasTag(line: string, tags: string): boolean {
+    if (!tags.includes(' ')) {
+      // If tag inclusion/exclusion is enabled then this function will be called for every task that is discovered.
+      // This is a small optimisation so that if there is only one tag, then skip the split() and some() loop calls.
+      return line.includes(tags);
+    }
+
+    return tags.split(' ').some(tag => line.includes(tag));
   }
 }

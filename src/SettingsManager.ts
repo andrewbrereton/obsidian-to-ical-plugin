@@ -226,6 +226,42 @@ class SettingsManager {
     this.settings.isDayPlannerPluginFormatEnabled = isDayPlannerPluginFormatEnabled;
     this.saveSettings();
   }
+
+  public get isIncludeTasksWithTags(): boolean {
+    return this.settings.isIncludeTasksWithTags;
+  }
+
+  public set isIncludeTasksWithTags(isIncludeTasksWithTags: boolean) {
+    this.settings.isIncludeTasksWithTags = isIncludeTasksWithTags;
+    this.saveSettings();
+  }
+
+  public get includeTasksWithTags(): string {
+    return this.settings.includeTasksWithTags;
+  }
+
+  public set includeTasksWithTags(includeTasksWithTags: string) {
+    this.settings.includeTasksWithTags = includeTasksWithTags;
+    this.saveSettings();
+  }
+
+  public get isExcludeTasksWithTags(): boolean {
+    return this.settings.isExcludeTasksWithTags;
+  }
+
+  public set isExcludeTasksWithTags(isExcludeTasksWithTags: boolean) {
+    this.settings.isExcludeTasksWithTags = isExcludeTasksWithTags;
+    this.saveSettings();
+  }
+
+  public get excludeTasksWithTags(): string {
+    return this.settings.excludeTasksWithTags;
+  }
+
+  public set excludeTasksWithTags(excludeTasksWithTags: string) {
+    this.settings.excludeTasksWithTags = excludeTasksWithTags;
+    this.saveSettings();
+  }
 }
 
 export let settings: SettingsManager = SettingsManager.settingsManager;
