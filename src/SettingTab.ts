@@ -184,6 +184,60 @@ export class SettingTab extends PluginSettingTab {
         );
     }
 
+    new Setting(containerEl)
+      .setName('Only include tasks with certain tags?')
+      .setDesc('Do you want your calendar to only include tasks that contain certain tags?')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isIncludeTasksWithTags)
+          .onChange(async (value) => {
+            settings.isIncludeTasksWithTags = value;
+            this.display();
+          })
+      );
+
+    if (settings.isIncludeTasksWithTags) {
+      new Setting(containerEl)
+        .setName('Only include tasks that contain these tags')
+        .setDesc('Enter one or more tags. Separate multiple tags with a space. If one or more of these tags are found then the task will be included in your calendar.')
+        .addText((text) =>
+          text
+            .setValue(settings.includeTasksWithTags.toString())
+            .setPlaceholder(DEFAULT_SETTINGS.includeTasksWithTags)
+            .onChange(async (includeTasksWithTags) => {
+              includeTasksWithTags = this.cleanTags(includeTasksWithTags);
+              settings.includeTasksWithTags = includeTasksWithTags;
+            })
+        );
+    }
+
+    new Setting(containerEl)
+      .setName('Exclude tasks with certain tags?')
+      .setDesc('Do you want your calendar to exclude tasks that contain certain tags?')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isExcludeTasksWithTags)
+          .onChange(async (value) => {
+            settings.isExcludeTasksWithTags = value;
+            this.display();
+          })
+      );
+
+    if (settings.isExcludeTasksWithTags) {
+      new Setting(containerEl)
+        .setName('Exclude tasks that contain these tags')
+        .setDesc('Enter one or more tags. Separate multiple tags with a space. If one or more of these tags are found then the task will be excluded from your calendar.')
+        .addText((text) =>
+          text
+            .setValue(settings.excludeTasksWithTags.toString())
+            .setPlaceholder(DEFAULT_SETTINGS.excludeTasksWithTags)
+            .onChange(async (excludeTasksWithTags) => {
+              excludeTasksWithTags = this.cleanTags(excludeTasksWithTags);
+              settings.excludeTasksWithTags = excludeTasksWithTags;
+            })
+        );
+    }
+
     if (settings.isSaveToGistEnabled) {
       containerEl.createEl('h1', { text: 'Save calendar to GitHub Gist' });
 
@@ -361,5 +415,10 @@ export class SettingTab extends PluginSettingTab {
     }
 
     throw new Error('GitHub Personal Access Token must start in "ghp_" for classic tokens or "github_pat_" for fine-grained tokens.');
+  }
+
+  // Replace multiple whitespace characters with a single space
+  cleanTags(value: string): string {
+    return value.replace(/\s+/g, ' ');
   }
 }
