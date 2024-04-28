@@ -27,7 +27,8 @@ export class Main {
   }
 
   async start() {
-    const markdownFiles = this.app.vault.getMarkdownFiles();
+    const markdownFiles = this.app.vault.getMarkdownFiles()
+      .filter((file) => file.path.startsWith(settings.rootFolder));
     const taskPromises = [];
 
     log('Performing a scan');

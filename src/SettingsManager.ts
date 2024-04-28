@@ -262,6 +262,15 @@ class SettingsManager {
     this.settings.excludeTasksWithTags = excludeTasksWithTags;
     this.saveSettings();
   }
+
+  public get rootFolder(): string {
+    return this.settings.rootFolder;
+  }
+
+  public set rootFolder(rootFolder: string) {
+    this.settings.rootFolder = rootFolder;
+    this.saveSettings();
+  }
 }
 
 export let settings: SettingsManager = SettingsManager.settingsManager;

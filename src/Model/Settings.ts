@@ -36,6 +36,7 @@ export interface Settings {
   includeTasksWithTags: string;
   isExcludeTasksWithTags: boolean;
   excludeTasksWithTags: string;
+  rootFolder: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -63,4 +64,5 @@ export const DEFAULT_SETTINGS: Settings = {
   includeTasksWithTags: '#calendar',
   isExcludeTasksWithTags: false,
   excludeTasksWithTags: '#ignore',
+  rootFolder: '',
 };

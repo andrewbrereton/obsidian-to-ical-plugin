@@ -29,6 +29,17 @@ export class SettingTab extends PluginSettingTab {
     containerEl.createEl('p', { cls: 'setting-item-description', text: 'This plugin finds all of the tasks in your vault that contain a date and generates a calendar in iCalendar format. The calendar can be saved to a file and/or saved in a Gist on GitHub so that it can be added to your iCalendar calendar of choice.' });
 
     new Setting(containerEl)
+      .setName('Root folder')
+      .setDesc('Starting folder from which the plugin will start looking for tasks.')
+      .addText((text) =>
+        text
+          .setValue(settings.rootFolder.toString())
+          .onChange(async (folder) => {
+            settings.rootFolder = folder;
+          })
+      );
+
+    new Setting(containerEl)
       .setName('Processing internal links')
       .setDesc('How should [[wikilinks]] and [markdown links](markdown links) be processed if they are encountered in a task?')
       .addDropdown((dropdown: DropdownComponent) =>
