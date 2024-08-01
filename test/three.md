@@ -7,7 +7,7 @@ Each task should have a `id=X` where `X` is a unique number. This is so if I add
 ## No Dates
 ### Bare
 - [ ] id=1, todo, no dates
-- [x] id=2, done, no dates
+- [ ] id=2, done, no dates
 - [-] id=3, cancelled, no dates
 - [/] id=4, in progress, no dates
 ### Tags
