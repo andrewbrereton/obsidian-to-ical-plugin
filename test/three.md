@@ -7,7 +7,7 @@ Each task should have a `id=X` where `X` is a unique number. This is so if I add
 ## No Dates
 ### Bare
 - [ ] id=1, todo, no dates
-- [x] id=2, done, no dates
+- [ ] id=2, done, no dates
 - [-] id=3, cancelled, no dates
 - [/] id=4, in progress, no dates
 ### Tags
@@ -175,6 +175,18 @@ Each task should have a `id=X` where `X` is a unique number. This is so if I add
 - [x] id=126, done, [due:: 2024-01-01] [created:: 2024-01-01] [scheduled:: 2024-01-01] [start:: 2024-01-01] [cancelled:: 2024-01-01]
 - [-] id=127, cancelled, [due:: 2024-01-01] [created:: 2024-01-01] [scheduled:: 2024-01-01] [start:: 2024-01-01] [cancelled:: 2024-01-01]
 - [/] id=128, in progress, [due:: 2024-01-01] [created:: 2024-01-01] [scheduled:: 2024-01-01] [start:: 2024-01-01] [cancelled:: 2024-01-01]
+
+### Daily Planner in task format
+
+- [ ] 17:01 id=160, start time only, (hour)(:)(minute) format 📅 2024-08-03 
+- [ ] 17:02:00 id=161, start time only, (hour)(:)(minute)(:)(second) format 📅 2024-08-02 
+- [ ] 5pm id=162, start time only, (hour)(am|pm) format
+- [ ] 5:03pm id=163, start time only, (hour)(:)(minute)(am|pm) format ⏳ 2024-08-02 📅 2024-08-03 
+- [ ] 5:04:00pm id=164, start time only, (hour)(:)(minute)(:)(second)(am|pm) format ⏳ 2024-08-03 📅 
+- [ ] 5 pm id=165, start time only, (hour)(space)(am|pm) format 🛫 2024-08-02 ⏳ 2024-08-03 📅 2024-08-04 
+- [ ] 5:03 pm id=166, start time only, (hour)(:)(minute)(space)(am|pm) format 📅 2024-08-06 🛫 2024-08-05 ⏳ 2024-08-04 
+- [ ] 5:04:00 pm id=167, start time only, (hour)(:)(minute)(:)(second)(space)(am|pm) format 📅 2024-08-06 ⏳ 2024-08-05 🛫 2024-08-02 
+
 ### Daily Planner
 #### 2024-01-01
 
@@ -209,6 +221,7 @@ Each task should have a `id=X` where `X` is a unique number. This is so if I add
 - [ ] 5:15 pm-5:16 pm id=151, start time and end time, (hour)(:)(minute)(space)(am|pm) format
 - [ ] 5:16:00 pm-5:17:00 pm id=152, start time and end time, (hour)(:)(minute)(:)(second)(space)(am|pm) format
 
+
 ### Include and exclude based on tags
 
 - [ ] id=153 include because of #include1
@@ -218,3 +231,5 @@ Each task should have a `id=X` where `X` is a unique number. This is so if I add
 - [ ] id=157 exclude because of #exclude2
 - [ ] id=158 exclude because of #exclude1 and #exclude2
 - [ ] id=159 exclude based of #exclude1 even though there is also a #include1
+
+

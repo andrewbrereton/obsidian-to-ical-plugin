@@ -68,6 +68,62 @@ export class Task {
     }
   }
 
+  public getTimeFromSummary() {
+    const timeRegex = /(\d{1,2}(?::\d{1,2}(?::\d{2})?)?\s*(?:[aApP][mM])?)\s*(?:-\s*(\d{1,2}(?::\d{1,2}(?::\d{2})?)?\s*(?:[aApP][mM])?))?\s*(?:id=\d+)?/;
+    
+    const to24HourFormat = (time) => {
+        let [fullTime, ampm] = time.toLowerCase().split(/([ap]m)/);
+        fullTime = fullTime.trim();
+        let [hours, minutes, seconds] = fullTime.split(':').map(Number);
+        
+        if (ampm === 'pm' && hours !== 12) {
+            hours += 12;
+        } else if (ampm === 'am' && hours === 12) {
+            hours = 0;
+        }
+        
+        if (isNaN(hours)) return null;
+        
+        hours = String(hours).padStart(2, '0');
+        minutes = String(minutes || 0).padStart(2, '0');
+        seconds = String(seconds || 0).padStart(2, '0');
+        
+        return `${hours}:${minutes}:${seconds}`;
+    };
+
+    let match = this.summary.match(timeRegex);
+    
+    if (match) {
+        let start = to24HourFormat(match[1]);
+        if (!start) return null;
+
+        let end = match[2] ? to24HourFormat(match[2]) : start;
+        if (!end) return null;
+
+        // 如果 start 和 end 相同，将 end 往后推半小时
+        if (start === end) {
+            const [hours, minutes, seconds] = start.split(':').map(Number);
+            const endDate = new Date();
+            endDate.setHours(hours, minutes, seconds);
+            endDate.setMinutes(endDate.getMinutes() + 30);
+            end = [
+                String(endDate.getHours()).padStart(2, '0'),
+                String(endDate.getMinutes()).padStart(2, '0'),
+                String(endDate.getSeconds()).padStart(2, '0')
+            ].join(':');
+        }
+
+        // 格式化为 hhmmss
+        const formatTime = (time) => time.replace(/:/g, '');
+
+        return {
+            start: formatTime(start),
+            end: formatTime(end)
+        };
+    }
+    return null;
+}
+
   public getSummary(): string {
     const summary = this.summary
       .replace(/\\/gm, '\\\\')

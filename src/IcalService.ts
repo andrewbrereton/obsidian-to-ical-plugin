@@ -25,6 +25,29 @@ export class IcalService {
     return calendar;
   }
 
+  private add30Minutes(datetimeStr: string): string {
+    const year = datetimeStr.slice(0, 4);
+    const month = datetimeStr.slice(4, 6);
+    const day = datetimeStr.slice(6, 8);
+    const hour = datetimeStr.slice(9, 11);
+    const minute = datetimeStr.slice(11, 13);
+    const second = datetimeStr.slice(13, 15);
+
+    const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`);
+    date.setMinutes(date.getMinutes() + 30);
+
+    const pad = (num) => String(num).padStart(2, '0');
+
+    const newYear = date.getFullYear();
+    const newMonth = pad(date.getMonth() + 1);
+    const newDay = pad(date.getDate());
+    const newHour = pad(date.getHours());
+    const newMinute = pad(date.getMinutes());
+    const newSecond = pad(date.getSeconds());
+
+    return `${newYear}${newMonth}${newDay}T${newHour}${newMinute}${newSecond}`;
+  }
+
   private getEvents(tasks: Task[]): string {
     return tasks
       .map((task: Task) => {
@@ -33,7 +56,7 @@ export class IcalService {
       .join('');
   }
 
-  private getEvent(task: Task, date: string|null, prependSummary: string): string {
+  private getEvent(task: Task, date: string | null, prependSummary: string): string {
     // console.log({task});
 
     // This task does not have a date.
@@ -43,96 +66,126 @@ export class IcalService {
       return '';
     }
 
-    let event = '' +
-      'BEGIN:VEVENT\r\n' +
-      'UID:' + task.getId() + '\r\n' +
-      'DTSTAMP:' + task.getDate(null, 'YYYYMMDDTHHmmss') + '\r\n';
-
+    let event = "BEGIN:VEVENT\r\nUID:" + task.getId() + "\r\nDTSTAMP:" + task.getDate(null, "YYYYMMDDTHHmmss") + "\r\n";
+    const times = task.getTimeFromSummary();
     if (date === null) {
-
-      switch (settings.howToProcessMultipleDates) {
-
-        // User would prefer to use the task's start date
-        // If a start date does not exist, take the due date
-        // If a due date does not exist, take any old date that we can find
-        case 'PreferStartDate':
-          if (task.hasA(TaskDateName.Start)) {
-            event += 'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDD') + '\r\n';
-          } else if (task.hasA(TaskDateName.Due)) {
-            event += 'DTSTART:' + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
-          } else if (task.hasA(TaskDateName.TimeStart) && task.hasA(TaskDateName.TimeEnd)) {
-            event += 'DTSTART:' + task.getDate(TaskDateName.TimeStart, 'YYYYMMDD[T]HHmmss[Z]') + '\r\n';
-            event += 'DTEND:' + task.getDate(TaskDateName.TimeEnd, 'YYYYMMDD[T]HHmmss[Z]') + '\r\n';
-          } else {
-            event += 'DTSTART:' + task.getDate(null, 'YYYYMMDD') + '\r\n';
-          }
-
-          break;
-
-        // User would prefer to create an event per task date
-        // If there is a start date, then create an event for it
-        // If there is a schedule date, then create an event for it
-        // If there is a due date, then create an event for it
-        // If there are no events, then take any old date that we can find
-        case 'CreateMultipleEvents':
-          event = '';
-
-          if (task.hasA(TaskDateName.Start)) {
-            event += this.getEvent(task, task.getDate(TaskDateName.Start, 'YYYYMMDD'), '🛫 ');
-          }
-
-          if (task.hasA(TaskDateName.Scheduled)) {
-            event += this.getEvent(task, task.getDate(TaskDateName.Scheduled, 'YYYYMMDD'), '⏳ ');
-          }
-
-          if (task.hasA(TaskDateName.Due)) {
-            event += this.getEvent(task, task.getDate(TaskDateName.Due, 'YYYYMMDD'), '📅 ');
-          }
-
-          if (event === '') {
-            event += this.getEvent(task, task.getDate(null, 'YYYYMMDD'), '');
-          }
-
-          return event;
-
-        // User would prefer to use the task's due date
-        // If there is a start and due date, set the start to the start date and the end to the due date
-        // If a start and due date does not exist, take the due date
-        // If a due date does not exist, take the start date
-        // If a start date does not exist, take any old date that we can find
-        case 'PreferDueDate':
-        default:
-          if (task.hasA(TaskDateName.Start) && task.hasA(TaskDateName.Due)) {
-            event += '' +
-              'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDDTHHmmss') + '\r\n' +
-              'DTEND:' + task.getDate(TaskDateName.Due, 'YYYYMMDDTHHmmss') + '\r\n';
-          } else if (task.hasA(TaskDateName.Due)) {
-            event += '' +
-              'DTSTART:' + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
-          } else if (task.hasA(TaskDateName.Start)) {
-            event += '' +
-              'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDD') + '\r\n';
-          } else if (task.hasA(TaskDateName.TimeStart) && task.hasA(TaskDateName.TimeEnd)) {
-            event += 'DTSTART:' + task.getDate(TaskDateName.TimeStart, 'YYYYMMDD[T]HHmmss[Z]') + '\r\n';
-            event += 'DTEND:' + task.getDate(TaskDateName.TimeEnd, 'YYYYMMDD[T]HHmmss[Z]') + '\r\n';
-          } else {
-            event += '' +
-              'DTSTART:' + task.getDate(null, 'YYYYMMDD') + '\r\n';
-          }
-
-          break;
+      if (times) {
+        let dtstart = task.getDate(null, "YYYYMMDD");
+        let dtend = task.getDate(null, "YYYYMMDD");
+        if (task.hasA("Scheduled")) {
+         dtstart = task.getDate("Scheduled", "YYYYMMDD");
+        }
+        if (task.hasA("Due")) {
+          dtend = task.getDate("Due", "YYYYMMDD");
+        }
+        event += `DTSTART:${dtstart}T${times.start}\r\n`;
+        event += `DTEND:${dtend}T${times.end}\r\n`;
+      } else {
+        switch (settings.howToProcessMultipleDates) {
+          case "PreferScheduledDate":
+            if (task.hasA(
+              "Scheduled"
+              /* Scheduled */
+            )) {
+              event += "DTSTART:" + task.getDate("Scheduled", "YYYYMMDDTHHmmss") + "\r\n";
+              event += "DTEND:" + this.add30Minutes(task.getDate("Scheduled", "YYYYMMDDTHHmmss"), 30) + "\r\n";
+            } else if (task.hasA(
+              "Due"
+              /* Due */
+            )) {
+              event += "DTSTART:" + task.getDate("Due", "YYYYMMDDTHHmmss") + "\r\n";
+              event += "DTEND:" + this.add30Minutes(task.getDate("Due", "YYYYMMDDTHHmmss"), 30) + "\r\n";
+            } 
+            // else if (task.hasA(
+            //   "TimeStart"
+            //   /* TimeStart */
+            // ) && task.hasA(
+            //   "TimeEnd"
+            //   /* TimeEnd */
+            // )) 
+            // {
+            //   event += "DTSTART:" + task.getDate("TimeStart", "YYYYMMDD[T]HHmmss[Z]") + "\r\n";
+            //   event += "DTEND:" + task.getDate("TimeEnd", "YYYYMMDD[T]HHmmss[Z]") + "\r\n";
+            // } 
+            else {
+              event += "DTSTART:" + task.getDate(null, "YYYYMMDDTHHmmss") + "\r\n";
+              event += "DTEND:" + this.add30Minutes(task.getDate(null, "YYYYMMDDTHHmmss"), 30) + "\r\n";
+            }
+            break;
+          case "CreateMultipleEvents":
+            event = "";
+            if (task.hasA(
+              "Start"
+              /* Start */
+            )) {
+              event += this.getEvent(task, task.getDate("Start", "YYYYMMDDTHHmmss"), "\u{1F6EB} ");
+            }
+            if (task.hasA(
+              "Scheduled"
+              /* Scheduled */
+            )) {
+              event += this.getEvent(task, task.getDate("Scheduled", "YYYYMMDDTHHmmss"), "\u23F3 ");
+            }
+            if (task.hasA(
+              "Due"
+              /* Due */
+            )) {
+              event += this.getEvent(task, task.getDate("Due", "YYYYMMDDTHHmmss"), "\u{1F4C5} ");
+            }
+            if (event === "") {
+              event += this.getEvent(task, task.getDate(null, "YYYYMMDDTHHmmss"), "");
+            }
+            return event;
+          case "PreferDueDate":
+            if (task.hasA(
+              "Scheduled"
+              /* Scheduled */
+            ) && task.hasA(
+              "Due"
+              /* Due */
+            )) {
+              event += "DTSTART:" + task.getDate("Scheduled", "YYYYMMDDTHHmmss") + "\r\nDTEND:" + task.getDate("Due", "YYYYMMDDTHHmmss") + "\r\n";
+            } else if (task.hasA(
+              "Due"
+              /* Due */
+            )) {
+              event += "DTSTART:" + task.getDate("Due", "YYYYMMDDTHHmmss") + "\r\n";
+              event += "DTEND:" + this.add30Minutes(task.getDate("Due", "YYYYMMDDTHHmmss"), 30) + "\r\n";
+            } else if (task.hasA(
+              "Scheduled"
+              /* Scheduled */
+            )) {
+              event += "DTSTART:" + task.getDate("Scheduled", "YYYYMMDDTHHmmss") + "\r\n";
+              event += "DTEND:" + this.add30Minutes(task.getDate("Scheduled", "YYYYMMDDTHHmmss"), 30) + "\r\n";
+            } 
+            // else if (task.hasA(
+            //   "TimeStart"
+            //   /* TimeStart */
+            // ) && task.hasA(
+            //   "TimeEnd"
+            //   /* TimeEnd */
+            // )) {
+            //   event += "DTSTART:" + task.getDate("TimeStart", "YYYYMMDD[T]HHmmss[Z3]") + "\r\n";
+            //   event += "DTEND:" + task.getDate("TimeEnd", "YYYYMMDD[T]HHmmss[Z3]") + "\r\n";
+            // } 
+            else {
+              event += "DTSTART:" + task.getDate(null, "YYYYMMDDTHHmmss") + "\r\n";
+              event += "DTEND:" + this.add30Minutes(task.getDate(null, "YYYYMMDDTHHmmss"), 30) + "\r\n";
+            }
+            break;
+        }
       }
     } else {
-      // Date has been given to this function which means we are being called recursively due to CreateMultipleEvents
-      event += '' +
-        'DTSTART:' + date + '\r\n';
+      if (times) {
+        event += `DTSTART:${date.slice(0, 8)}T${times.start}00\r\n`;
+        event += `DTEND:${date.slice(0, 8)}T${times.end}00\r\n`;
+        event += `times:${times}\r\n`;
+      } else {
+        event += `DTSTART:${date}\r\n`;
+        event += `DTEND:${this.add30Minutes(date, 30)}\r\n`;
+      }
     }
-
-    event += '' +
-      'SUMMARY:' + prependSummary + task.getSummary() + '\r\n' +
-      'LOCATION:ALTREP="' + encodeURI(task.getLocation()) + '":' + encodeURI(task.getLocation()) + '\r\n' +
-      'END:VEVENT\r\n';
-
+    event += "SUMMARY:" + prependSummary + task.getSummary() + '\r\nLOCATION:ALTREP="' + encodeURI(task.getLocation()) + '":' + encodeURI(task.getLocation()) + "\r\nEND:VEVENT\r\n";
     return event;
   }
 
