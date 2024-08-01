@@ -68,13 +68,12 @@ export class IcalService {
 
     let event = "BEGIN:VEVENT\r\nUID:" + task.getId() + "\r\nDTSTAMP:" + task.getDate(null, "YYYYMMDDTHHmmss") + "\r\n";
     const times = task.getTimeFromSummary();
-    const defaultdate = task.getDate(null, "YYYYMMDD");
     if (date === null) {
       if (times) {
-        const dtstart = task.getDate(null, "YYYYMMDD");
-        const dtend = task.getDate(null, "YYYYMMDD");
+        let dtstart = task.getDate(null, "YYYYMMDD");
+        let dtend = task.getDate(null, "YYYYMMDD");
         if (task.hasA("Scheduled")) {
-          dtstart = task.getDate("Scheduled", "YYYYMMDD");
+         dtstart = task.getDate("Scheduled", "YYYYMMDD");
         }
         if (task.hasA("Due")) {
           dtend = task.getDate("Due", "YYYYMMDD");
@@ -96,16 +95,19 @@ export class IcalService {
             )) {
               event += "DTSTART:" + task.getDate("Due", "YYYYMMDDTHHmmss") + "\r\n";
               event += "DTEND:" + this.add30Minutes(task.getDate("Due", "YYYYMMDDTHHmmss"), 30) + "\r\n";
-            } else if (task.hasA(
-              "TimeStart"
-              /* TimeStart */
-            ) && task.hasA(
-              "TimeEnd"
-              /* TimeEnd */
-            )) {
-              event += "DTSTART:" + task.getDate("TimeStart", "YYYYMMDD[T]HHmmss[Z]") + "\r\n";
-              event += "DTEND:" + task.getDate("TimeEnd", "YYYYMMDD[T]HHmmss[Z]") + "\r\n";
-            } else {
+            } 
+            // else if (task.hasA(
+            //   "TimeStart"
+            //   /* TimeStart */
+            // ) && task.hasA(
+            //   "TimeEnd"
+            //   /* TimeEnd */
+            // )) 
+            // {
+            //   event += "DTSTART:" + task.getDate("TimeStart", "YYYYMMDD[T]HHmmss[Z]") + "\r\n";
+            //   event += "DTEND:" + task.getDate("TimeEnd", "YYYYMMDD[T]HHmmss[Z]") + "\r\n";
+            // } 
+            else {
               event += "DTSTART:" + task.getDate(null, "YYYYMMDDTHHmmss") + "\r\n";
               event += "DTEND:" + this.add30Minutes(task.getDate(null, "YYYYMMDDTHHmmss"), 30) + "\r\n";
             }
@@ -155,16 +157,18 @@ export class IcalService {
             )) {
               event += "DTSTART:" + task.getDate("Scheduled", "YYYYMMDDTHHmmss") + "\r\n";
               event += "DTEND:" + this.add30Minutes(task.getDate("Scheduled", "YYYYMMDDTHHmmss"), 30) + "\r\n";
-            } else if (task.hasA(
-              "TimeStart"
-              /* TimeStart */
-            ) && task.hasA(
-              "TimeEnd"
-              /* TimeEnd */
-            )) {
-              event += "DTSTART:" + task.getDate("TimeStart", "YYYYMMDD[T]HHmmss[Z]") + "\r\n";
-              event += "DTEND:" + task.getDate("TimeEnd", "YYYYMMDD[T]HHmmss[Z]") + "\r\n";
-            } else {
+            } 
+            // else if (task.hasA(
+            //   "TimeStart"
+            //   /* TimeStart */
+            // ) && task.hasA(
+            //   "TimeEnd"
+            //   /* TimeEnd */
+            // )) {
+            //   event += "DTSTART:" + task.getDate("TimeStart", "YYYYMMDD[T]HHmmss[Z3]") + "\r\n";
+            //   event += "DTEND:" + task.getDate("TimeEnd", "YYYYMMDD[T]HHmmss[Z3]") + "\r\n";
+            // } 
+            else {
               event += "DTSTART:" + task.getDate(null, "YYYYMMDDTHHmmss") + "\r\n";
               event += "DTEND:" + this.add30Minutes(task.getDate(null, "YYYYMMDDTHHmmss"), 30) + "\r\n";
             }
