@@ -194,10 +194,17 @@ export class IcalService {
     calendar = calendar.replace('~(*BSR_ANYCRLF)\R~', '\r\n');
 
     // Line length should not be longer than 75 characters (https://icalendar.org/iCalendar-RFC-5545/3-1-content-lines.html)
-    //#TODO I can't be bothered implementing this *should* requirement
+    //#TODO I can't be bothered implementing this *should* requirement 
+    
+    // Buffer is not used here because it relies on Node.js-specific APIs like Buffer.from and Buffer.toString,    
+    // which are not available in environments like mobile versions of Obsidian.
+    // Instead, TextEncoder and TextDecoder are used for compatibility.
 
     // Ensure we are UTF-8
-    calendar = Buffer.from(calendar, 'utf8').toString('utf8');
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder('utf-8');
+    const encoded = encoder.encode(calendar);
+    calendar = decoder.decode(encoded);
 
     return calendar;
   }
