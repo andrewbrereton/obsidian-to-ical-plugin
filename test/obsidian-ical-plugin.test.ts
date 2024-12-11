@@ -1,10 +1,12 @@
+import { expect, test, describe, beforeAll, afterAll } from 'bun:test';
 import * as ICAL from 'ical.js';
+import { jCal } from 'ical.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
 describe('Obsidian iCal Plugin', () => {
-  let jcalData;
-  let taskIds = [];
+  let jcalData: jCal;
+  const taskIds: number[] = [];
 
   beforeAll(async () => {
     const outputPath = path.join('test', 'obsidian-ical-plugin.ics');
