@@ -1,4 +1,4 @@
-import { App, TFile } from 'obsidian'
+import { App } from 'obsidian'
 import { FileClient } from './FileClient'
 import { GithubClient } from './GithubClient'
 import { IcalService } from './IcalService'
@@ -6,7 +6,6 @@ import { log } from './Logger'
 import { Task } from './Model/Task'
 import { settings } from './SettingsManager'
 import { TaskFinder } from './TaskFinder'
-import { Heading } from './Model/Heading'
 import { Headings } from './Model/Headings'
 
 export class Main {

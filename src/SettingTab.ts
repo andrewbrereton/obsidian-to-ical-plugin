@@ -345,8 +345,8 @@ export class SettingTab extends PluginSettingTab {
 
       new Setting(containerEl)
         .setName('Your calendar URL')
-        // eslint-disable-next-line no-undef
         .setDesc(
+          // eslint-disable-next-line no-undef
           createFragment((fragment) => {
             fragment.createEl('a', {
               text: url,
@@ -424,8 +424,8 @@ export class SettingTab extends PluginSettingTab {
 
       new Setting(containerEl)
         .setName('Your calendar path')
-        // eslint-disable-next-line no-undef
         .setDesc(
+          // eslint-disable-next-line no-undef
           createFragment((fragment) => {
             fragment.createEl('a', {
               text: savePath,
