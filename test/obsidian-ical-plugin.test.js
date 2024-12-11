@@ -1,6 +1,6 @@
-const ICAL = require('ical.js');
-const fs = require('fs').promises;
-const path = require('path');
+import * as ICAL from 'ical.js';
+import * as fs from 'fs/promises';
+import * as path from 'path';
 
 describe('Obsidian iCal Plugin', () => {
   let jcalData;
