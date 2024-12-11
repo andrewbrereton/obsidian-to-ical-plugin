@@ -1,48 +1,51 @@
-import { expect, test, describe, beforeAll, afterAll } from 'bun:test';
-import * as ICAL from 'ical.js';
-import { jCal } from 'ical.js';
-import * as fs from 'fs/promises';
-import * as path from 'path';
+import { expect, test, describe, beforeAll, afterAll } from 'bun:test'
+import * as ICAL from 'ical.js'
+import { jCal } from 'ical.js'
+import * as fs from 'fs/promises'
+import * as path from 'path'
 
 describe('Obsidian iCal Plugin', () => {
-  let jcalData: jCal;
-  const taskIds: number[] = [];
+  let jcalData: jCal
+  const taskIds: number[] = []
 
   beforeAll(async () => {
-    const outputPath = path.join('test', 'obsidian-ical-plugin.ics');
-    const icsContent = await fs.readFile(outputPath, 'utf-8');
-    jcalData = ICAL.parse(icsContent);
+    const outputPath = path.join('test', 'obsidian-ical-plugin.ics')
+    const icsContent = await fs.readFile(outputPath, 'utf-8')
+    jcalData = ICAL.parse(icsContent)
 
     for (let i = 21; i <= 128; i++) {
-      taskIds.push(i);
+      taskIds.push(i)
     }
-  });
+  })
 
   test('iCalendar file structure', () => {
-    expect(jcalData[0]).toBe('vcalendar');
+    expect(jcalData[0]).toBe('vcalendar')
 
-    const prodid = jcalData[1].find(prop => prop[0] === 'prodid')[3];
-    const versionRegex = /-\/\/Andrew Brereton\/\/obsidian-ical-plugin v(\d+\.\d+\.\d+)/;
-    expect(prodid).toMatch(versionRegex);
+    const prodid = jcalData[1].find((prop) => prop[0] === 'prodid')[3]
+    const versionRegex =
+      /-\/\/Andrew Brereton\/\/obsidian-ical-plugin v(\d+\.\d+\.\d+)/
+    expect(prodid).toMatch(versionRegex)
 
-    expect(jcalData[1]).toContainEqual(['version', {}, 'text', '2.0']);
-  });
+    expect(jcalData[1]).toContainEqual(['version', {}, 'text', '2.0'])
+  })
 
   test('All tasks are present in the iCalendar file', () => {
     // Ensure taskIds is populated before running this test
-    expect(taskIds.length).toBeGreaterThan(0); // Sanity check to ensure taskIds is not empty
+    expect(taskIds.length).toBeGreaterThan(0) // Sanity check to ensure taskIds is not empty
 
-    const taskPresence = taskIds.map(id => {
-      return jcalData[2].some(event => {
-        const summary = event[1].find(prop => prop[0] === 'summary');
-        return summary && summary[3].includes(`id=${id},`);
-      });
-    });
+    const taskPresence = taskIds.map((id) => {
+      return jcalData[2].some((event) => {
+        const summary = event[1].find((prop) => prop[0] === 'summary')
+        return summary && summary[3].includes(`id=${id},`)
+      })
+    })
 
     // Check if every task ID has a corresponding event
-    const allTasksPresent = taskPresence.every(isPresent => isPresent === true);
-    expect(allTasksPresent).toBe(true);
-  });
+    const allTasksPresent = taskPresence.every(
+      (isPresent) => isPresent === true
+    )
+    expect(allTasksPresent).toBe(true)
+  })
 
   describe('Check specific task details', () => {
     const testCases = [
@@ -61,34 +64,41 @@ describe('Obsidian iCal Plugin', () => {
       { id: 88, expectedSummaryIncludes: 'in progress' },
       { id: 124, expectedSummaryIncludes: 'in progress' },
       { id: 127, expectedSummaryIncludes: 'cancelled' },
-    ];
+    ]
 
     testCases.forEach(({ id, expectedSummaryIncludes }) => {
       test(`Task id=${id} summary includes "${expectedSummaryIncludes}"`, () => {
-        const event = jcalData[2].find(event => event[1].some(prop => prop[0] === 'summary' && prop[3].includes(`id=${id},`)));
-        expect(event).toBeDefined();
-        const summary = event[1].find(prop => prop[0] === 'summary')[3];
-        expect(summary).toContain(expectedSummaryIncludes);
-      });
-    });
-  });
+        const event = jcalData[2].find((event) =>
+          event[1].some(
+            (prop) => prop[0] === 'summary' && prop[3].includes(`id=${id},`)
+          )
+        )
+        expect(event).toBeDefined()
+        const summary = event[1].find((prop) => prop[0] === 'summary')[3]
+        expect(summary).toContain(expectedSummaryIncludes)
+      })
+    })
+  })
 
   describe('Date formatting for tasks with dates', () => {
-    const testCases = [21,23,44,48,56,67,73,79,80,85,91,92,101,104,105,120,129,130,131,132,133,134,135,136];
-    const expectedDate = '20240101'; // Expected date format without time
+    const testCases = [
+      21, 23, 44, 48, 56, 67, 73, 79, 80, 85, 91, 92, 101, 104, 105, 120, 129,
+      130, 131, 132, 133, 134, 135, 136,
+    ]
+    const expectedDate = '20240101' // Expected date format without time
     testCases.forEach((id) => {
       test(`Date formatting for tasks with dates (id=${id})`, () => {
         jcalData[2].forEach((event) => {
-          const summary = event[1].find(prop => prop[0] === 'summary');
+          const summary = event[1].find((prop) => prop[0] === 'summary')
           if (summary && summary[3].includes(`id=${id}`)) {
-            const dtstart = event[1].find(prop => prop[0] === 'dtstart')[3];
-            const dateOnly = dtstart.split('T')[0].replace(/-/g, ''); // Extracts date part and formats to 'YYYYMMDD'
-            expect(dateOnly).toBe(expectedDate); // Compares date part only
+            const dtstart = event[1].find((prop) => prop[0] === 'dtstart')[3]
+            const dateOnly = dtstart.split('T')[0].replace(/-/g, '') // Extracts date part and formats to 'YYYYMMDD'
+            expect(dateOnly).toBe(expectedDate) // Compares date part only
           }
-        });
-      });
-    });
-  });
+        })
+      })
+    })
+  })
 
   describe('TODO items were added', () => {
     const testCases = [
@@ -101,17 +111,21 @@ describe('Obsidian iCal Plugin', () => {
       { id: 7, expectedSummaryIncludes: 'no dates' },
       { id: 8, expectedSummaryIncludes: 'no dates' },
       { id: 9, expectedSummaryIncludes: 'no dates' },
-    ];
+    ]
 
     testCases.forEach(({ id, expectedSummaryIncludes }) => {
       test(`Task id=${id} summary includes "${expectedSummaryIncludes}"`, () => {
-        const event = jcalData[2].find(event => event[1].some(prop => prop[0] === 'summary' && prop[3].includes(`id=${id},`)));
-        expect(event).toBeDefined();
-        const summary = event[1].find(prop => prop[0] === 'summary')[3];
-        expect(summary).toContain(expectedSummaryIncludes);
-      });
-    });
-  });
+        const event = jcalData[2].find((event) =>
+          event[1].some(
+            (prop) => prop[0] === 'summary' && prop[3].includes(`id=${id},`)
+          )
+        )
+        expect(event).toBeDefined()
+        const summary = event[1].find((prop) => prop[0] === 'summary')[3]
+        expect(summary).toContain(expectedSummaryIncludes)
+      })
+    })
+  })
 
   // FIX: only these tests fail
   // describe('Daily Planner format working', () => {
@@ -171,42 +185,41 @@ describe('Obsidian iCal Plugin', () => {
   //   });
   // });
 
-
   describe('Excluded tasks were excluded', () => {
-    const testCases = [156, 157, 158, 159];
+    const testCases = [156, 157, 158, 159]
     testCases.forEach((id) => {
       test(`Task should be excluded (id=${id})`, () => {
-        let found = false; // Flag to indicate if the ID is found
+        let found = false // Flag to indicate if the ID is found
         jcalData[2].forEach((event) => {
-          const summary = event[1].find(prop => prop[0] === 'summary');
+          const summary = event[1].find((prop) => prop[0] === 'summary')
           if (summary && summary[3].includes(`id=${id}`)) {
-            found = true; // Set flag to true if ID is found
+            found = true // Set flag to true if ID is found
           }
-        });
-        expect(found).toBe(false); // Expect the ID to not be found
-      });
-    });
-  });
+        })
+        expect(found).toBe(false) // Expect the ID to not be found
+      })
+    })
+  })
 
   afterAll(async () => {
-  // Cleanup: delete the generated .ics file, if necessary
-  // await fs.unlink(outputPath);
-  });
-});
+    // Cleanup: delete the generated .ics file, if necessary
+    // await fs.unlink(outputPath);
+  })
+})
 
 function convertUtcToLocalTimeString(utcString) {
   // Convert the string to a more standard ISO 8601 format for parsing
   const isoString = utcString.replace(
     /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/,
     '$1-$2-$3T$4:$5:$6Z'
-  );
+  )
 
   // Parse the ISO string as UTC, then convert to local Date object
-  const date = new Date(isoString);
+  const date = new Date(isoString)
 
   // Format the date to "HH:MM" string
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0')
+  const minutes = date.getMinutes().toString().padStart(2, '0')
 
-  return `${hours}:${minutes}`;
+  return `${hours}:${minutes}`
 }
