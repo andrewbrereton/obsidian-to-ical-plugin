@@ -21,7 +21,7 @@ describe('Obsidian iCal Plugin', () => {
   test('iCalendar file structure', () => {
     expect(jcalData[0]).toBe('vcalendar')
 
-    const prodid = jcalData[1].find((prop) => prop[0] === 'prodid')[3]
+    const prodid = jcalData[1].find((prop) => prop[0] === 'prodid')?.[3]
     const versionRegex =
       /-\/\/Andrew Brereton\/\/obsidian-ical-plugin v(\d+\.\d+\.\d+)/
     expect(prodid).toMatch(versionRegex)
@@ -74,7 +74,7 @@ describe('Obsidian iCal Plugin', () => {
           )
         )
         expect(event).toBeDefined()
-        const summary = event[1].find((prop) => prop[0] === 'summary')[3]
+        const summary = event?.[1].find((prop) => prop[0] === 'summary')?.[3]
         expect(summary).toContain(expectedSummaryIncludes)
       })
     })
@@ -91,8 +91,10 @@ describe('Obsidian iCal Plugin', () => {
         jcalData[2].forEach((event) => {
           const summary = event[1].find((prop) => prop[0] === 'summary')
           if (summary && summary[3].includes(`id=${id}`)) {
-            const dtstart = event[1].find((prop) => prop[0] === 'dtstart')[3]
-            const dateOnly = dtstart.split('T')[0].replace(/-/g, '') // Extracts date part and formats to 'YYYYMMDD'
+            const dtstart = event?.[1].find(
+              (prop) => prop[0] === 'dtstart'
+            )?.[3]
+            const dateOnly = dtstart?.split('T')[0].replace(/-/g, '') // Extracts date part and formats to 'YYYYMMDD'
             expect(dateOnly).toBe(expectedDate) // Compares date part only
           }
         })
@@ -121,7 +123,7 @@ describe('Obsidian iCal Plugin', () => {
           )
         )
         expect(event).toBeDefined()
-        const summary = event[1].find((prop) => prop[0] === 'summary')[3]
+        const summary = event?.[1].find((prop) => prop[0] === 'summary')?.[3]
         expect(summary).toContain(expectedSummaryIncludes)
       })
     })
@@ -207,19 +209,20 @@ describe('Obsidian iCal Plugin', () => {
   })
 })
 
-function convertUtcToLocalTimeString(utcString) {
-  // Convert the string to a more standard ISO 8601 format for parsing
-  const isoString = utcString.replace(
-    /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/,
-    '$1-$2-$3T$4:$5:$6Z'
-  )
+// used only in Daily Planner tests
+// function convertUtcToLocalTimeString(utcString) {
+//   // Convert the string to a more standard ISO 8601 format for parsing
+//   const isoString = utcString.replace(
+//     /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/,
+//     '$1-$2-$3T$4:$5:$6Z'
+//   )
 
-  // Parse the ISO string as UTC, then convert to local Date object
-  const date = new Date(isoString)
+//   // Parse the ISO string as UTC, then convert to local Date object
+//   const date = new Date(isoString)
 
-  // Format the date to "HH:MM" string
-  const hours = date.getHours().toString().padStart(2, '0')
-  const minutes = date.getMinutes().toString().padStart(2, '0')
+//   // Format the date to "HH:MM" string
+//   const hours = date.getHours().toString().padStart(2, '0')
+//   const minutes = date.getMinutes().toString().padStart(2, '0')
 
-  return `${hours}:${minutes}`
-}
+//   return `${hours}:${minutes}`
+// }
