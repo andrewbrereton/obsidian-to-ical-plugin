@@ -21,3 +21,6 @@ build
 
 # Ignore Obsidian workspaces file
 test/.obsidian/workspace.json
+test/.obsidian/plugins/ical/main.js
+test/.obsidian/plugins/ical/manifest.json
+

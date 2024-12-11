@@ -12,7 +12,8 @@
     "dev": "bun esbuild.config.mjs",
     "test": "bun test",
     "build": "tsc -noEmit -skipLibCheck && bun esbuild.config.mjs production",
-    "version": "bun version-bump.mjs && git add manifest.json versions.json"
+    "version": "bun version-bump.mjs && git add manifest.json versions.json",
+    "build-and-copy": "bun run build && bun ./test/.obsidian/scripts/copyFiles.ts"
   },
   "dependencies": {
     "@octokit/rest": "^20.0.2"
