@@ -11,27 +11,27 @@ export enum TaskStatus {
 export function getTaskStatusFromMarkdown(markdown: string): TaskStatus {
   switch (markdown) {
     case '[-]':
-      return TaskStatus.Cancelled;
+      return TaskStatus.Cancelled
     case '[/]':
     case '[d]':
-      return TaskStatus.InProgress;
+      return TaskStatus.InProgress
     case '[x]':
     case '[X]':
-      return TaskStatus.Done;
+      return TaskStatus.Done
     default:
-      return TaskStatus.ToDo;
+      return TaskStatus.ToDo
   }
 }
 
 export function getTaskStatusEmoji(taskStatus: TaskStatus): string {
   switch (taskStatus) {
     case TaskStatus.Cancelled:
-      return '🚫';
+      return '🚫'
     case TaskStatus.Done:
-      return '✅';
+      return '✅'
     case TaskStatus.InProgress:
-      return '🏃';
+      return '🏃'
     default:
-      return '🔲';
+      return '🔲'
   }
 }
