@@ -12,7 +12,8 @@
     "extends": [
       "plugin:@typescript-eslint/eslint-recommended",
       "plugin:@typescript-eslint/recommended",
-      "eslint:recommended"
+      "eslint:recommended",
+      "plugin:prettier/recommended"
     ],
     "parserOptions": {
       "ecmaVersion": "latest",
@@ -25,8 +26,6 @@
       "@typescript-eslint/no-empty-function": "off",
       "no-useless-escape": "off",
       "indent": ["error", 2, { "SwitchCase": 1 }],
-      "linebreak-style": ["error", "unix"],
-      "quotes": ["error", "single"],
-      "semi": ["error", "always"]
+      "linebreak-style": ["error", "unix"]
     }
   }
