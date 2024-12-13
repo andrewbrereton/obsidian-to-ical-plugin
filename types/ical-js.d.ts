@@ -14,7 +14,7 @@ declare module 'ical.js' {
   export type Event = ['vevent', EventBody[], []]
 
   export type EventBody = [
-    'dtstamp' | 'dtstart' | 'summary' | 'uid',
+    'dtstamp' | 'dtstart' | 'dtend' | 'summary' | 'uid',
     Record<string, unknown>,
     'date-time' | 'date' | 'text',
     string,

@@ -23,4 +23,4 @@ build
 test/.obsidian/workspace.json
 test/.obsidian/plugins/ical/main.js
 test/.obsidian/plugins/ical/manifest.json
-
+test/obsidian-ical-plugin.ics
