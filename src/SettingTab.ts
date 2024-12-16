@@ -152,28 +152,6 @@ export class SettingTab extends PluginSettingTab {
       )
 
     new Setting(containerEl)
-      .setName('Save calendar to GitHub Gist?')
-      .addToggle((toggle: ToggleComponent) =>
-        toggle
-          .setValue(settings.isSaveToGistEnabled)
-          .onChange(async (value) => {
-            settings.isSaveToGistEnabled = value
-            this.display()
-          })
-      )
-
-    new Setting(containerEl)
-      .setName('Save calendar to disk?')
-      .addToggle((toggle: ToggleComponent) =>
-        toggle
-          .setValue(settings.isSaveToFileEnabled)
-          .onChange(async (value) => {
-            settings.isSaveToFileEnabled = value
-            this.display()
-          })
-      )
-
-    new Setting(containerEl)
       .setName('Periodically save your calendar')
       .setDesc(
         'Do you want the plugin to periodically process your tasks? If you choose not to then a calendar will only be built when Obsidian is loaded.'
@@ -266,6 +244,17 @@ export class SettingTab extends PluginSettingTab {
             })
         )
     }
+
+    new Setting(containerEl)
+      .setName('Save calendar to GitHub Gist?')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isSaveToGistEnabled)
+          .onChange(async (value) => {
+            settings.isSaveToGistEnabled = value
+            this.display()
+          })
+      )
 
     if (settings.isSaveToGistEnabled) {
       containerEl.createEl('h1', { text: 'Save calendar to GitHub Gist' })
@@ -365,6 +354,17 @@ export class SettingTab extends PluginSettingTab {
           })
         })
     }
+
+    new Setting(containerEl)
+      .setName('Save calendar to disk?')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isSaveToFileEnabled)
+          .onChange(async (value) => {
+            settings.isSaveToFileEnabled = value
+            this.display()
+          })
+      )
 
     if (settings.isSaveToFileEnabled) {
       containerEl.createEl('h1', { text: 'Save calendar to disk' })
