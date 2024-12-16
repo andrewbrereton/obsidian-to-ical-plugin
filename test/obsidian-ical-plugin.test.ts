@@ -126,25 +126,7 @@ describe('Obsidian iCal Plugin', () => {
     })
   })
 
-  describe('Daily Planner format working', () => {
-    function convertUtcToLocalTimeString(utcString: string) {
-      // Convert the string to a more standard ISO 8601 format for parsing
-      const isoString = utcString.replace(
-        /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/,
-        '$1-$2-$3T$4:$5:$6Z'
-      )
-
-      // Parse the ISO string as UTC, then convert to local Date object
-      const date = new Date(isoString)
-      date.setHours(date.getHours() + OFFSET_HOURS)
-
-      // Format the date to "HH:MM" string
-      const hours = date.getHours().toString().padStart(2, '0')
-      const minutes = date.getMinutes().toString().padStart(2, '0')
-
-      return `${hours}:${minutes}`
-    }
-
+  describe('Day Planner format working', () => {
     // UTC timezone
     const testCases = [
       { id: 129, expectedStartTime: '17:01', expectedEndTime: '17:31' },
@@ -181,12 +163,10 @@ describe('Obsidian iCal Plugin', () => {
         expect(event).toBeDefined()
 
         const dtstart = event?.[1].find((prop) => prop[0] === 'dtstart')?.[3]
-        console.log('dtstart', dtstart)
         expect(dtstart).toBeDefined()
         if (!dtstart) return
 
         const dtstartLocaltime = convertUtcToLocalTimeString(dtstart)
-        console.log('dtstartLocaltime', dtstartLocaltime)
 
         expect(dtstartLocaltime).toContain(expectedStartTime)
       })
@@ -206,11 +186,60 @@ describe('Obsidian iCal Plugin', () => {
   })
 
   describe('Excluded tasks were excluded', () => {
-    const testCases = [156, 157, 158, 159]
+    // 160-163 for Task and Day planner
+    const testCases = [156, 157, 158, 159, 160, 161, 162, 163]
     testCases.forEach((id) => {
       test(`Task should be excluded (id=${id})`, () => {
         const event = getEvent(id)
         expect(event).toBeUndefined()
+      })
+    })
+  })
+
+  describe('Tasks and Day Planner without time', () => {
+    const testCases = [164, 165, 166, 167, 168, 169, 170, 171]
+    testCases.forEach((id) => {
+      test(`Task should be included (id=${id})`, () => {
+        const event = getEvent(id)
+        const dateAndTime = event?.[1].find(
+          (prop) => prop[2] === 'date-time'
+        )?.[3]
+        const timeOnly = dateAndTime?.split('T')[1]
+        expect(timeOnly).toBe('00:00:00')
+      })
+    })
+  })
+
+  describe('Tasks and Day Planner with time', () => {
+    const testCases = [
+      { id: 172, timeStart: '17:01', timeEnd: '17:31', date: '2025-01-01' },
+      { id: 173, timeStart: '17:05', timeEnd: '17:06', date: '2025-01-01' },
+      { id: 174, timeStart: '17:00', timeEnd: '17:30', date: '2025-01-01' },
+      { id: 175, timeStart: '17:00', timeEnd: '18:00', date: '2025-01-01' },
+    ]
+
+    testCases.forEach(({ id, timeStart, timeEnd, date }) => {
+      test(`Task id=${id} has start time "${timeStart}"`, () => {
+        const event = getEvent(id)
+        expect(event).toBeDefined()
+
+        const dtstart = event?.[1].find((prop) => prop[0] === 'dtstart')?.[3]
+        expect(dtstart).toBeDefined()
+        if (!dtstart) return
+
+        const dtstartLocaltime = convertUtcToLocalTimeString(dtstart)
+
+        expect(dtstartLocaltime).toContain(timeStart)
+
+        const dtend = event?.[1].find((prop) => prop[0] === 'dtend')?.[3]
+        expect(dtend).toBeDefined()
+        if (!dtend) return
+
+        const dtendLocaltime = convertUtcToLocalTimeString(dtend)
+        expect(dtendLocaltime).toContain(timeEnd)
+
+        const dateOnly = dtstart?.split('T')[0]
+        expect(dateOnly).toBe(date)
       })
     })
   })
@@ -220,3 +249,21 @@ describe('Obsidian iCal Plugin', () => {
     // await fs.unlink(outputPath);
   })
 })
+
+function convertUtcToLocalTimeString(utcString: string) {
+  // Convert the string to a more standard ISO 8601 format for parsing
+  const isoString = utcString.replace(
+    /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/,
+    '$1-$2-$3T$4:$5:$6Z'
+  )
+
+  // Parse the ISO string as UTC, then convert to local Date object
+  const date = new Date(isoString)
+  date.setHours(date.getHours() + OFFSET_HOURS)
+
+  // Format the date to "HH:MM" string
+  const hours = date.getHours().toString().padStart(2, '0')
+  const minutes = date.getMinutes().toString().padStart(2, '0')
+
+  return `${hours}:${minutes}`
+}

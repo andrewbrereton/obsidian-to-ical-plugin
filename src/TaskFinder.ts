@@ -1,7 +1,10 @@
 import { ListItemCache, TFile, Vault } from 'obsidian'
-import { Task, createTaskFromLine } from './Model/Task'
+import { Task } from './Model/Task'
 import { settings } from './SettingsManager'
 import { Headings } from './Model/Headings'
+import { createTaskDataFromLine } from './Model/createTaskDataFromLine'
+import { TaskDateName } from './Model/TaskDate'
+import { parseTaskStartAndEndTime } from './Model/parseTaskStartAndEndTime'
 
 export class TaskFinder {
   private vault: Vault
@@ -73,10 +76,49 @@ export class TaskFinder {
           }
         }
 
-        return createTaskFromLine(
+        const newTaskData = createTaskDataFromLine(
           lineAndHeading.markdownLine,
           fileUri,
           dateOverride
+        )
+
+        if (!newTaskData) return null
+
+        if (
+          settings.isDayPlannerPluginFormatEnabled &&
+          settings.dayPlannerTags &&
+          dateOverride === null
+        ) {
+          const hasExcludeTag = this.hasTag(
+            newTaskData.summary,
+            settings.excludeTasksWithTags
+          )
+          const hasDayPlannerTag = this.hasTag(
+            newTaskData.summary,
+            settings.dayPlannerTags
+          )
+          const hasTimes = this.hasTimes(newTaskData.summary)
+
+          if (!hasExcludeTag && hasDayPlannerTag && hasTimes) {
+            const scheduledTaskDate = newTaskData.taskDates.find((taskDate) => {
+              if (taskDate.name === TaskDateName.Scheduled) return taskDate
+            })
+
+            if (scheduledTaskDate) {
+              const startAndEnd = parseTaskStartAndEndTime(
+                newTaskData.summary,
+                scheduledTaskDate.date
+              )
+              newTaskData.taskDates = startAndEnd
+            }
+          }
+        }
+
+        return new Task(
+          newTaskData.taskStatus,
+          newTaskData.taskDates,
+          newTaskData.summary,
+          newTaskData.fileUri
         )
       })
       // Filter out the nulls

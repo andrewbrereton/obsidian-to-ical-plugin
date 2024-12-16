@@ -19,6 +19,7 @@
   "oldTaskInDays": 365,
   "howToProcessMultipleDates": "PreferDueDate",
   "isDayPlannerPluginFormatEnabled": true,
+  "dayPlannerTags": "#task",
   "isIncludeTasksWithTags": false,
   "includeTasksWithTags": "#include",
   "isExcludeTasksWithTags": true,

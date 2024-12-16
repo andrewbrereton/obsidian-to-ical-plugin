@@ -1,4 +1,5 @@
 import { Plugin } from 'obsidian'
+
 import { log } from './Logger'
 import { DEFAULT_SETTINGS, Settings } from './Model/Settings'
 
@@ -234,6 +235,15 @@ class SettingsManager {
   ) {
     this.settings.isDayPlannerPluginFormatEnabled =
       isDayPlannerPluginFormatEnabled
+    this.saveSettings()
+  }
+
+  public get dayPlannerTags(): string {
+    return this.settings.dayPlannerTags
+  }
+
+  public set dayPlannerTags(dayPlannerTags: string) {
+    this.settings.dayPlannerTags = dayPlannerTags
     this.saveSettings()
   }
 

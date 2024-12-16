@@ -104,6 +104,10 @@ Create an event for each start date, scheduled date and due date associated with
 
 Enabling this will tell the plugin to consider [Day Planner plugin](https://github.com/ivan-lednev/obsidian-day-planner) format if tasks are discovered with times in them.
 
+### Integration Day Planner and Tasks tags
+
+This tags is used for integrating the [Tasks and Day Planner](https://github.com/ivan-lednev/obsidian-day-planner?tab=readme-ov-file#2-tasks-community-plugin-integration-showing-events-from-other-files-in-your-vault ) plugins with iCal. Add this tag to tasks with a Scheduled ⏳ date so they appear in Day Planner and iCal. Ensure that the same tag is specified in the Day Planner settings for proper synchronization. The time specified in the task will be used for its display in the calendar.
+
 ### Save calendar to GitHub Gist?
 
 Enabling this will unlock the [Save calendar to GitHub Gist](README.md#save-calendar-to-gitHub-gist) settings.

@@ -151,6 +151,23 @@ export class SettingTab extends PluginSettingTab {
           })
       )
 
+    if (settings.isDayPlannerPluginFormatEnabled) {
+      new Setting(containerEl)
+        .setName('Integration Day Planner and Tasks tags')
+        .setDesc(
+          'This tags is used for integrating the Tasks and Day Planner plugins with iCal. Add this tag to tasks with a Scheduled ⏳ date so they appear in Day Planner and iCal. Ensure that the same tag is specified in the Day Planner settings for proper synchronization. The time specified in the task will be used for its display in the calendar.'
+        )
+        .addText((text) =>
+          text
+            .setValue(settings.dayPlannerTags.toString())
+            .setPlaceholder(DEFAULT_SETTINGS.dayPlannerTags)
+            .onChange(async (dayPlannerTags) => {
+              dayPlannerTags = this.cleanTags(dayPlannerTags)
+              settings.dayPlannerTags = dayPlannerTags
+            })
+        )
+    }
+
     new Setting(containerEl)
       .setName('Periodically save your calendar')
       .setDesc(
