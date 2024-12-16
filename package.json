@@ -1,32 +1,39 @@
 {
   "name": "ical",
-  "version": "1.19.0",
+  "version": "1.20.0",
   "author": "https://github.com/andrewbrereton",
   "homepage": "https://github.com/andrewbrereton/obsidian-to-ical-plugin",
   "main": "main.js",
-  "devDependencies": {
-    "@types/node": "^20.11",
-    "@typescript-eslint/eslint-plugin": "^7.0",
-    "@typescript-eslint/parser": "^7.0",
-    "builtin-modules": "3.3.0",
-    "esbuild": "^0.20",
-    "fs-extra": "^11.2.0",
-    "ical.js": "^1.5.0",
-    "jest": "^29.7.0",
-    "obsidian": "latest",
-    "tslib": "^2.6",
-    "typescript": "^5.3"
-  },
+  "type": "module",
   "description": "Scans your vault for tasks. Creates an iCal file which can be saved to disk and/or stored on Gist. You can then show this calendar in any iCal compatible client such as Outlook, Google Calendar, Apple Calendar, etc.",
   "keywords": [],
   "license": "MIT",
   "scripts": {
     "dev": "bun esbuild.config.mjs",
-    "test": "jest",
+    "test": "bun test",
     "build": "tsc -noEmit -skipLibCheck && bun esbuild.config.mjs production",
-    "version": "bun version-bump.mjs && git add manifest.json versions.json"
+    "version": "bun version-bump.mjs && git add manifest.json versions.json",
+    "build-and-copy": "bun run build && bun ./test/.obsidian/scripts/copyFiles.ts",
+    "eslint:info": "eslint .",
+    "eslint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@octokit/rest": "^20.0.2"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.14",
+    "@types/node": "^20.11",
+    "@typescript-eslint/eslint-plugin": "^7.0",
+    "@typescript-eslint/parser": "^7.0",
+    "builtin-modules": "3.3.0",
+    "esbuild": "^0.20",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "fs-extra": "^11.2.0",
+    "ical.js": "^1.5.0",
+    "obsidian": "latest",
+    "prettier": "^3.4.2",
+    "tslib": "^2.6",
+    "typescript": "^5.3"
   }
 }
