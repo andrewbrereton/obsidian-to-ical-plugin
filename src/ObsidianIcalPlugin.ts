@@ -1,20 +1,20 @@
-import { Plugin } from 'obsidian';
-import { Main } from 'src/Main';
-import { log, logger } from './Logger';
-import { SettingTab } from './SettingTab';
-import { initSettingsManager, settings } from './SettingsManager';
+import { Plugin } from 'obsidian'
+import { Main } from 'src/Main'
+import { log, logger } from './Logger'
+import { SettingTab } from './SettingTab'
+import { initSettingsManager, settings } from './SettingsManager'
 
 export default class ObsidianIcalPlugin extends Plugin {
-  main: Main;
-  periodicSaveInterval: number|null;
+  main: Main
+  periodicSaveInterval: number | null
 
   async onload() {
     // Initialise SettingsManager
-    await initSettingsManager(this);
+    await initSettingsManager(this)
     // Initialise Logger
-    logger(settings.isDebug);
+    logger(settings.isDebug)
 
-    log('SettingsManager and Logger initialised');
+    log('SettingsManager and Logger initialised')
 
     // // This creates an icon in the left ribbon.
     // const ribbonIconEl = this.addRibbonIcon(
@@ -73,7 +73,7 @@ export default class ObsidianIcalPlugin extends Plugin {
     // });
 
     // This adds a settings tab so the user can configure various aspects of the plugin
-    this.addSettingTab(new SettingTab(this.app, this));
+    this.addSettingTab(new SettingTab(this.app, this))
 
     // // If the plugin hooks up any global DOM events (on parts of the app that doesn't belong to this plugin)
     // // Using this function will automatically remove the event listener when this plugin is disabled.
@@ -84,40 +84,47 @@ export default class ObsidianIcalPlugin extends Plugin {
     // I've run into an issue when calling Main.start() here
     // It is as though the vault is not ready because it always finds 0 Markdown files
     // Therefore, Main.start() is called during onLayoutReady to give Obsidian some time to be ready
-    this.app.workspace.onLayoutReady(this.onLayoutReady.bind(this));
+    this.app.workspace.onLayoutReady(this.onLayoutReady.bind(this))
   }
 
   // Once the Obsidian layout is ready, kick off a scan and configure periodic save
   async onLayoutReady(): Promise<void> {
-    this.main = new Main(this.app);
-    await this.main.start();
+    this.main = new Main(this.app)
+    await this.main.start()
 
-    await this.configurePeriodicSave();
+    await this.configurePeriodicSave()
   }
 
   onunload() {
-    this.clearPeriodicSaveInterval();
+    this.clearPeriodicSaveInterval()
   }
 
   clearPeriodicSaveInterval() {
-    window.clearInterval(this.periodicSaveInterval ?? 0);
-    this.periodicSaveInterval = null;
+    window.clearInterval(this.periodicSaveInterval ?? 0)
+    this.periodicSaveInterval = null
   }
 
   // Trigger a save every now and then
   async configurePeriodicSave() {
     // Clear any existing period save intervals before we do anything else
-    this.clearPeriodicSaveInterval();
+    this.clearPeriodicSaveInterval()
 
     if (settings.isPeriodicSaveEnabled && settings.periodicSaveInterval > 0) {
-      log(`Periodic save enabled and will run every ${settings.periodicSaveInterval} minute(s)`);
-      this.periodicSaveInterval = window.setInterval(async () => {
-        log(`Periodic save triggers every ${settings.periodicSaveInterval} minute(s)`);
-        await this.main.start();
-      }, settings.periodicSaveInterval * 1000 * 60);
+      log(
+        `Periodic save enabled and will run every ${settings.periodicSaveInterval} minute(s)`
+      )
+      this.periodicSaveInterval = window.setInterval(
+        async () => {
+          log(
+            `Periodic save triggers every ${settings.periodicSaveInterval} minute(s)`
+          )
+          await this.main.start()
+        },
+        settings.periodicSaveInterval * 1000 * 60
+      )
 
       // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-      this.registerInterval(this.periodicSaveInterval);
+      this.registerInterval(this.periodicSaveInterval)
     }
   }
 }
