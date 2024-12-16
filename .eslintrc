@@ -25,17 +25,6 @@
     "@typescript-eslint/ban-ts-comment": "off",
     "no-prototype-builtins": "off",
     "@typescript-eslint/no-empty-function": "off",
-    "no-useless-escape": "off",
-    "indent": [
-      "error",
-      2,
-      {
-        "SwitchCase": 1
-      }
-    ],
-    "linebreak-style": [
-      "error",
-      "unix"
-    ]
+    "no-useless-escape": "off"
   }
 }
