@@ -27,6 +27,6 @@
     "version": "bun version-bump.mjs && git add manifest.json versions.json"
   },
   "dependencies": {
-    "@octokit/rest": "^20.0.2"
+    "@octokit/rest": "^21.1.1"
   }
 }
