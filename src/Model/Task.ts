@@ -62,6 +62,8 @@ export class Task {
     // If the Task has its time set, then it has been set because we are have found a Day Planner plugin
     // task. The time is in local timezone, so we need to convert it to UTC.
     if (hasTime(matchingTaskDate)) {
+      // NOTE: This is adding the local timezone to the time. i.e.: we no longer need to use the utc() method.
+      // return moment(matchingTaskDate.date).utc().format(format);
       return moment(matchingTaskDate.date).format(format);
     } else {
       return moment(matchingTaskDate.date).format(format);
