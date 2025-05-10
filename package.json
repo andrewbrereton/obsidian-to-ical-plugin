@@ -1,6 +1,6 @@
 {
   "name": "ical",
-  "version": "1.19.1",
+  "version": "1.19.2",
   "author": "https://github.com/andrewbrereton",
   "homepage": "https://github.com/andrewbrereton/obsidian-to-ical-plugin",
   "main": "main.js",
