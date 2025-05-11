@@ -28,6 +28,12 @@ This plugin supports [Day Planner](https://github.com/ivan-lednev/obsidian-day-p
 
 iCal has various settings which I will try to explain.
 
+### Target directory
+
+This allows you to configure the plugin to scan for tasks in certain directories (or folders). For example, you might have a large vault with lots of information, but you only want to a calendar for tasks contains in your "Diary" directory. In this case, you would choose "/Diary".
+
+The default behaviour is to scan the entire vault for tasks, which is the "**/**" option.
+
 ### Processing internal links
 
 Obsidian supports two types of [internal link](https://help.obsidian.md/Linking+notes+and+files/Internal+links): wikilinks and markdown.

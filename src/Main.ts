@@ -27,13 +27,21 @@ export class Main {
   }
 
   async start() {
-    const markdownFiles = this.app.vault.getMarkdownFiles();
+    let markdownFiles = this.app.vault.getMarkdownFiles();
+
+    // Filter files based on the root path setting
+    if (settings.rootPath !== '/') {
+      markdownFiles = markdownFiles.filter(file =>
+        file.path.startsWith(settings.rootPath)
+      );
+    }
+
     const taskPromises = [];
 
     log('Performing a scan');
     log('Settings', { settings: settings.settingsWithoutSecrets() });
 
-    log(`Found ${markdownFiles.length} Markdown files`, markdownFiles);
+    log(`Found ${markdownFiles.length} Markdown files in ${settings.rootPath}`, { markdownFiles, settings });
 
     // Iterate over all of the Markdown files in this vault
     for (const file of markdownFiles) {
