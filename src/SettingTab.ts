@@ -2,9 +2,11 @@ import {
   App,
   ButtonComponent,
   DropdownComponent,
+  normalizePath,
   PluginSettingTab,
   Setting,
   TextComponent,
+  TFolder,
   ToggleComponent
 } from 'obsidian';
 import * as path from 'path';
@@ -21,12 +23,44 @@ export class SettingTab extends PluginSettingTab {
     this.plugin = plugin;
   }
 
+  // This function returns all of the directories in the current vault
+  async getAllDirectories(): Promise<string[]> {
+    const files = this.app.vault.getAllLoadedFiles();
+    const directories = files
+        .filter((file) => file instanceof TFolder)
+        .map((folder) => folder.path)
+        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+    return directories;
+}
+
   async display(): Promise<void> {
     const { containerEl } = this;
 
     containerEl.empty();
 
     containerEl.createEl('p', { cls: 'setting-item-description', text: 'This plugin finds all of the tasks in your vault that contain a date and generates a calendar in iCalendar format. The calendar can be saved to a file and/or saved in a Gist on GitHub so that it can be added to your iCalendar calendar of choice.' });
+
+    const directories = await this.getAllDirectories();
+
+    new Setting(containerEl)
+      .setName('Target directory')
+      .setDesc('Specify where we should look for tasks. Choose "/" to look in the whole vault.')
+      .addDropdown((dropdown: DropdownComponent) => {
+        directories.forEach((dir) => {
+          dropdown.addOption(dir, dir);
+        });
+
+        dropdown
+          .onChange(async (value) => {
+            value = normalizePath(value);
+            settings.rootPath = value;
+            log(`${value}`);
+          });
+
+          return dropdown;
+        }
+      );
 
     new Setting(containerEl)
       .setName('Processing internal links')
