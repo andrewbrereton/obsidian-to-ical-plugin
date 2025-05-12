@@ -55,7 +55,6 @@ export class SettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             value = normalizePath(value);
             settings.rootPath = value;
-            log(`${value}`);
           });
 
           return dropdown;
