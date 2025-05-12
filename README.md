@@ -62,7 +62,9 @@ This is to allow you to exclude completed tasks from being added to your calenda
 
 ### Add tasks as TODO items to your calendar
 
-Enabling this will append all of your tasks as TODO items to the end of your calendar file. Some iCalendar clients are able to render these tasks separate to the calendar events. Some clients that support this include Google Tasks, Microsoft Outlook, Microsoft To Do, Mozilla Thunderbird with Lightning Calendar, Android CalDAV-Sync, Calendars by Readdle, Todoist and OmniFocus.
+By default the tasks discovered in your vault are treated as calendar events. This option allows you to also create calendar todo tasks. You have the option of choosing to just create calendar events, to just create TODO items, or to create both. Previously, there was an option to create just events or events and tasks. This has been expended to include just tasks as well. The default option is to create just calendar events.
+
+Some clients that support TODO items include Google Tasks, Microsoft Outlook, Microsoft To Do, Mozilla Thunderbird with Lightning Calendar, Android CalDAV-Sync, Calendars by Readdle, Todoist and OmniFocus.
 
 ### Only tasks without dates are TODO items
 

@@ -5,6 +5,12 @@ export const HOW_TO_PARSE_INTERNAL_LINKS = {
   RemoveThem: 'Remove them',
 };
 
+export const INCLUDE_EVENTS_OR_TODOS = {
+  EventsOnly: 'Events only',
+  EventsAndTodos: 'Events and TODO items',
+  TodosOnly: 'TODO items only',
+};
+
 export const HOW_TO_PROCESS_MULTIPLE_DATES = {
   PreferDueDate: 'Prefer due date (default)',
   PreferStartDate: 'Prefer start date',
@@ -26,7 +32,7 @@ export interface Settings {
   howToParseInternalLinks: string;
   ignoreCompletedTasks: boolean;
   isDebug: boolean;
-  isIncludeTodos: boolean;
+  includeEventsOrTodos: string;
   isOnlyTasksWithoutDatesAreTodos: boolean;
   ignoreOldTasks: boolean;
   oldTaskInDays: number;
@@ -54,7 +60,7 @@ export const DEFAULT_SETTINGS: Settings = {
   howToParseInternalLinks: 'DoNotModifyThem', // HOW_TO_PARSE_INTERNAL_LINKS.DoNotModifyThem,
   ignoreCompletedTasks: false,
   isDebug: false,
-  isIncludeTodos: false,
+  includeEventsOrTodos: 'EventsOnly', // INCLUDE_EVENTS_OR_TODOS.EventsOnly
   isOnlyTasksWithoutDatesAreTodos: true,
   ignoreOldTasks: false,
   oldTaskInDays: 365,

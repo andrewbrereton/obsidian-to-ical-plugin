@@ -200,12 +200,12 @@ class SettingsManager {
     this.saveSettings();
   }
 
-  public get isIncludeTodos(): boolean {
-    return this.settings.isIncludeTodos;
+  public get includeEventsOrTodos(): string {
+    return this.settings.includeEventsOrTodos;
   }
 
-  public set isIncludeTodos(isIncludeTodos: boolean) {
-    this.settings.isIncludeTodos = isIncludeTodos;
+  public set includeEventsOrTodos(includeEventsOrTodos: string) {
+    this.settings.includeEventsOrTodos = includeEventsOrTodos;
     this.saveSettings();
   }
 

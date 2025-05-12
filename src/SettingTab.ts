@@ -10,7 +10,7 @@ import {
   ToggleComponent
 } from 'obsidian';
 import * as path from 'path';
-import { DEFAULT_SETTINGS, HOW_TO_PARSE_INTERNAL_LINKS, HOW_TO_PROCESS_MULTIPLE_DATES } from 'src/Model/Settings';
+import { DEFAULT_SETTINGS, HOW_TO_PARSE_INTERNAL_LINKS, HOW_TO_PROCESS_MULTIPLE_DATES, INCLUDE_EVENTS_OR_TODOS } from 'src/Model/Settings';
 import { log } from './Logger';
 import ObsidianIcalPlugin from './ObsidianIcalPlugin';
 import { settings } from './SettingsManager';
@@ -88,20 +88,21 @@ export class SettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Add tasks as TODO items to your calendar')
-      .setDesc('As well as adding your tasks as calendar events, you can choose to add your tasks as todo items to your calendar')
-      .addToggle((toggle: ToggleComponent) =>
-        toggle
-          .setValue(settings.isIncludeTodos)
+      .setDesc('Normally, we add your tasks as normal calendar events. You can choose to add your tasks as TODO items as well. Or you could add your tasks as calendar events as well as TODO items.')
+      .addDropdown((dropdown: DropdownComponent) =>
+        dropdown
+          .addOptions(INCLUDE_EVENTS_OR_TODOS)
+          .setValue(settings.includeEventsOrTodos)
           .onChange(async (value) => {
-            settings.isIncludeTodos = value;
+            settings.includeEventsOrTodos = value;
             this.display();
           })
       );
 
-    if (settings.isIncludeTodos) {
+    if (settings.includeEventsOrTodos === 'EventsAndTodos' || settings.includeEventsOrTodos === 'TodosOnly') {
       new Setting(containerEl)
         .setName('Only tasks without dates are TODO items')
-        .setDesc('When adding the TODO items to your iCalendar, should we only consider tasks without dates as TODO items?')
+        .setDesc('When adding the TODO items to your calendar, should we only consider tasks without dates as TODO items?')
         .addToggle((toggle: ToggleComponent) =>
           toggle
             .setValue(settings.isOnlyTasksWithoutDatesAreTodos)

@@ -4,6 +4,7 @@ import { TaskDate, TaskDateName, getTaskDatesFromMarkdown, hasTime } from './Tas
 import { TaskStatus, getTaskStatusEmoji, getTaskStatusFromMarkdown } from './TaskStatus';
 import { getSummaryFromMarkdown } from './TaskSummary';
 import { settings } from '../SettingsManager';
+import { INCLUDE_EVENTS_OR_TODOS } from './Settings';
 
 export class Task {
   public status: TaskStatus;
@@ -101,7 +102,7 @@ export function createTaskFromLine(line: string, fileUri: string, dateOverride: 
   const dateMatch = [...line.matchAll(dateRegExp)][0] ?? null;
 
   // This task doesn't have a date and we are not including TODO items. Bail.
-  if ((dateMatch === null && dateOverride === null) && settings.isIncludeTodos === false) {
+  if ((dateMatch === null && dateOverride === null) && settings.includeEventsOrTodos === 'EventsOnly') {
     return null;
   }
 

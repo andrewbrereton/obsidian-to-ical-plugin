@@ -1,3 +1,4 @@
+import { INCLUDE_EVENTS_OR_TODOS } from './Model/Settings';
 import { Task } from './Model/Task';
 import { TaskDateName } from './Model/TaskDate';
 import { TaskStatus } from './Model/TaskStatus';
@@ -5,8 +6,12 @@ import { settings } from './SettingsManager';
 
 export class IcalService {
   getCalendar(tasks: Task[]): string {
-    const events = this.getEvents(tasks);
-    const toDos = settings.isIncludeTodos ? this.getToDos(tasks) : '';
+
+    const includeEvents = settings.includeEventsOrTodos === 'EventsAndTodos' || settings.includeEventsOrTodos === 'EventsOnly';
+    const includeTodos = settings.includeEventsOrTodos === 'EventsAndTodos' || settings.includeEventsOrTodos === 'TodosOnly';
+
+    const events = includeEvents ? this.getEvents(tasks) : '';
+    const toDos = includeTodos ? this.getToDos(tasks) : '';
 
     let calendar = '' +
       'BEGIN:VCALENDAR\r\n' +
@@ -37,7 +42,7 @@ export class IcalService {
     // console.log({task});
 
     // This task does not have a date.
-    // Therefore it must be included because it is a TODO and isIncludeTodos setting is true.
+    // Therefore it must be included because it is a TODO and includeEventsOrTodos setting is configured to include them.
     // Don't add it to the VEVENT block, as it will be added to the VTODO block later.
     if (task.hasAnyDate() === false) {
       return '';
