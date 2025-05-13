@@ -271,6 +271,15 @@ class SettingsManager {
     this.settings.rootPath = rootPath;
     this.saveSettings();
   }
+
+  public get isIncludeLinkInDescription(): boolean {
+    return this.settings.isIncludeLinkInDescription;
+  }
+
+  public set isIncludeLinkInDescription(isIncludeLinkInDescription: boolean) {
+    this.settings.isIncludeLinkInDescription = isIncludeLinkInDescription;
+    this.saveSettings();
+  }
 }
 
 export let settings: SettingsManager = SettingsManager.settingsManager;

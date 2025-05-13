@@ -146,6 +146,10 @@ You can enter one or more tags. If a task contains any of these tags, then it wi
 
 If you have include tags and exclude tags, then exclude tags take priority.
 
+### Add link to Obsidian in event description
+
+If this is enabled, a link to the file that contains the task will be added to the event description. This is useful for clients such as Thunderbird and Evolution, as they do not support links in the event location.
+
 ### Save calendar to GitHub Gist
 
 Saving to GitHub Gist means you will be given a URL that you can import into your calendar applications.

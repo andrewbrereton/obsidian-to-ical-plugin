@@ -272,6 +272,18 @@ export class SettingTab extends PluginSettingTab {
         );
     }
 
+    new Setting(containerEl)
+      .setName('Add link to Obsidian in event description')
+      .setDesc('Include a link to open the task in Obsidian in the event description. This is useful for clients such as Thunderbird or Evolution.')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isIncludeLinkInDescription)
+          .onChange(async (value) => {
+            settings.isIncludeLinkInDescription = value;
+            this.display();
+          })
+      );
+
     if (settings.isSaveToGistEnabled) {
       containerEl.createEl('h1', { text: 'Save calendar to GitHub Gist' });
 

@@ -135,6 +135,7 @@ export class IcalService {
 
     event += '' +
       'SUMMARY:' + prependSummary + task.getSummary() + '\r\n' +
+      (settings.isIncludeLinkInDescription ? 'DESCRIPTION:' + encodeURI(task.getLocation()) + '\r\n' : '') +
       'LOCATION:ALTREP="' + encodeURI(task.getLocation()) + '":' + encodeURI(task.getLocation()) + '\r\n' +
       'END:VEVENT\r\n';
 
@@ -184,6 +185,11 @@ export class IcalService {
       case TaskStatus.Cancelled:
         toDo += 'STATUS:CANCELLED\r\n';
         break;
+    }
+
+
+    if (settings.isIncludeLinkInDescription) {
+      toDo += 'DESCRIPTION:' + encodeURI(task.getLocation()) + '\r\n';
     }
 
     toDo += 'END:VTODO\r\n';
