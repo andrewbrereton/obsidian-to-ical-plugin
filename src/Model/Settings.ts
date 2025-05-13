@@ -43,6 +43,7 @@ export interface Settings {
   isExcludeTasksWithTags: boolean;
   excludeTasksWithTags: string;
   rootPath: string;
+  isIncludeLinkInDescription: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -71,4 +72,5 @@ export const DEFAULT_SETTINGS: Settings = {
   isExcludeTasksWithTags: false,
   excludeTasksWithTags: '#ignore',
   rootPath: '/',
+  isIncludeLinkInDescription: false,
 };
