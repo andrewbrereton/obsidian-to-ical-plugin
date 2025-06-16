@@ -5,7 +5,7 @@
   "homepage": "https://github.com/andrewbrereton/obsidian-to-ical-plugin",
   "main": "main.js",
   "devDependencies": {
-    "@types/node": "^22.15.17",
+    "@types/node": "^24.0.2",
     "@typescript-eslint/eslint-plugin": "^8.32.0",
     "@typescript-eslint/parser": "^8.32.0",
     "builtin-modules": "^5.0.0",
