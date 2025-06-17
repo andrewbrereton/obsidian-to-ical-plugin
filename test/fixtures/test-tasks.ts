@@ -1,131 +1,82 @@
 import { Task } from '../../src/Model/Task';
-import { TaskDate } from '../../src/Model/TaskDate';
+import { TaskDate, TaskDateName } from '../../src/Model/TaskDate';
 import { TaskStatus } from '../../src/Model/TaskStatus';
 
 export const mockTasks: Task[] = [
   new Task(
+    TaskStatus.ToDo,
+    [],
     'Basic todo task',
-    '',
-    TaskStatus.TODO,
-    undefined,
-    undefined,
-    undefined,
-    [],
-    'test.md',
-    1
+    'test.md'
   ),
   new Task(
+    TaskStatus.ToDo,
+    [new TaskDate(new Date('2024-01-01'), TaskDateName.Due)],
     'Task with due date',
-    '',
-    TaskStatus.TODO,
-    new TaskDate(new Date('2024-01-01'), false),
-    undefined,
-    undefined,
-    [],
-    'test.md',
-    2
+    'test.md'
   ),
   new Task(
+    TaskStatus.Done,
+    [new TaskDate(new Date('2024-01-01'), TaskDateName.Due)],
     'Completed task',
-    '',
-    TaskStatus.DONE,
-    new TaskDate(new Date('2024-01-01'), false),
-    undefined,
-    undefined,
-    [],
-    'test.md',
-    3
+    'test.md'
   ),
   new Task(
+    TaskStatus.ToDo,
+    [new TaskDate(new Date('2024-01-01'), TaskDateName.Due)],
     'Task with tags',
-    '',
-    TaskStatus.TODO,
-    new TaskDate(new Date('2024-01-01'), false),
-    undefined,
-    undefined,
-    ['important', 'work'],
-    'test.md',
-    4
+    'test.md'
   ),
   new Task(
+    TaskStatus.Cancelled,
+    [new TaskDate(new Date('2024-01-01'), TaskDateName.Due)],
     'Cancelled task',
-    '',
-    TaskStatus.CANCELLED,
-    new TaskDate(new Date('2024-01-01'), false),
-    undefined,
-    undefined,
-    [],
-    'test.md',
-    5
+    'test.md'
   ),
   new Task(
+    TaskStatus.InProgress,
+    [new TaskDate(new Date('2024-01-01'), TaskDateName.Due)],
     'In progress task',
-    '',
-    TaskStatus.IN_PROGRESS,
-    new TaskDate(new Date('2024-01-01'), false),
-    undefined,
-    undefined,
-    [],
-    'test.md',
-    6
+    'test.md'
   ),
   new Task(
+    TaskStatus.ToDo,
+    [
+      new TaskDate(new Date('2024-01-01'), TaskDateName.Start),
+      new TaskDate(new Date('2024-01-02'), TaskDateName.Due)
+    ],
     'Task with start and due dates',
-    '',
-    TaskStatus.TODO,
-    new TaskDate(new Date('2024-01-01'), false),
-    new TaskDate(new Date('2024-01-01'), false),
-    new TaskDate(new Date('2024-01-02'), false),
-    [],
-    'test.md',
-    7
+    'test.md'
   ),
   new Task(
+    TaskStatus.ToDo,
+    [new TaskDate(new Date('2024-01-01'), TaskDateName.Due)],
     'Task with description',
-    'This is a detailed description of the task',
-    TaskStatus.TODO,
-    new TaskDate(new Date('2024-01-01'), false),
-    undefined,
-    undefined,
-    [],
-    'test.md',
-    8
+    'test.md'
   ),
   new Task(
+    TaskStatus.ToDo,
+    [
+      new TaskDate(new Date('2024-01-01T10:00:00'), TaskDateName.Start),
+      new TaskDate(new Date('2024-01-01T11:00:00'), TaskDateName.Due)
+    ],
     'Task with timed dates',
-    '',
-    TaskStatus.TODO,
-    new TaskDate(new Date('2024-01-01T10:00:00'), true),
-    new TaskDate(new Date('2024-01-01T10:00:00'), true),
-    new TaskDate(new Date('2024-01-01T11:00:00'), true),
-    [],
-    'test.md',
-    9
+    'test.md'
   )
 ];
 
 export const mockTasksWithExcludedTags: Task[] = [
   new Task(
+    TaskStatus.ToDo,
+    [new TaskDate(new Date('2024-01-01'), TaskDateName.Due)],
     'Task with excluded tag',
-    '',
-    TaskStatus.TODO,
-    new TaskDate(new Date('2024-01-01'), false),
-    undefined,
-    undefined,
-    ['excluded'],
-    'test.md',
-    10
+    'test.md'
   ),
   new Task(
+    TaskStatus.ToDo,
+    [new TaskDate(new Date('2024-01-01'), TaskDateName.Due)],
     'Task with mixed tags',
-    '',
-    TaskStatus.TODO,
-    new TaskDate(new Date('2024-01-01'), false),
-    undefined,
-    undefined,
-    ['important', 'excluded'],
-    'test.md',
-    11
+    'test.md'
   )
 ];
 

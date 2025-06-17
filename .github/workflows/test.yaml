@@ -25,5 +25,8 @@ jobs:
           bun install
           bun run build
 
-      - name: Run tests
+      - name: Run legacy iCal tests
+        run: bun test
+
+      - name: Run Jest test suite
         run: bun run test

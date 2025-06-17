@@ -1,8 +1,7 @@
 // Jest setup file for global test configuration
-declare const jest: any;
 
 // Mock Obsidian APIs
-global.require = jest.fn();
+(global as any).require = jest.fn();
 
 // Mock console methods if needed for cleaner test output
 const originalConsole = global.console;
