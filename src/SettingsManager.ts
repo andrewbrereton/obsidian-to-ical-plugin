@@ -280,6 +280,24 @@ class SettingsManager {
     this.settings.isIncludeLinkInDescription = isIncludeLinkInDescription;
     this.saveSettings();
   }
+
+  public get secretKey(): string {
+    return this.settings.secretKey;
+  }
+
+  public set secretKey(secretKey: string) {
+    this.settings.secretKey = secretKey;
+    this.saveSettings();
+  }
+
+  public get isSaveToWebEnabled(): boolean {
+    return this.settings.isSaveToWebEnabled;
+  }
+
+  public set isSaveToWebEnabled(isSaveToWebEnabled: boolean) {
+    this.settings.isSaveToWebEnabled = isSaveToWebEnabled;
+    this.saveSettings();
+  }
 }
 
 export let settings: SettingsManager = SettingsManager.settingsManager;

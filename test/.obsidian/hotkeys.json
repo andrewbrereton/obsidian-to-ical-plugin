@@ -1,1 +1,10 @@
-{}
+{
+  "hot-reload:scan-for-changes": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "R"
+    }
+  ]
+}

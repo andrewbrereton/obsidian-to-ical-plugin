@@ -14,9 +14,15 @@ import { DEFAULT_SETTINGS, HOW_TO_PARSE_INTERNAL_LINKS, HOW_TO_PROCESS_MULTIPLE_
 import { log } from './Logger';
 import ObsidianIcalPlugin from './ObsidianIcalPlugin';
 import { settings } from './SettingsManager';
+import {apiClient} from "./ApiClient";
 
 export class SettingTab extends PluginSettingTab {
   plugin: ObsidianIcalPlugin;
+  isSecretKeyValid: boolean = false;
+  calendarUrl: string | null = null;
+  subscriptionStatus: string | null = null;
+  subscriptionExpiresAt: string | null = null;
+  calendarUpdatedAt: string | null = null;
 
   constructor(app: App, plugin: ObsidianIcalPlugin) {
     super(app, plugin);
@@ -32,14 +38,114 @@ export class SettingTab extends PluginSettingTab {
         .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
     return directories;
-}
+  }
+
+  private clearMemberStatus(): void {
+    this.isSecretKeyValid = false;
+    this.subscriptionStatus = null;
+    this.subscriptionExpiresAt = null;
+    this.calendarUrl = null;
+    this.calendarUpdatedAt = null;
+  }
+
+  private updateMemberStatusFromCache(): void {
+    if (!settings.secretKey || settings.secretKey.length !== 32) {
+      this.clearMemberStatus();
+      return;
+    }
+
+    const client = apiClient(this.app.vault.getName(), settings.secretKey);
+    const cachedValidation = client.getCachedValidation();
+
+    if (cachedValidation) {
+      this.isSecretKeyValid = cachedValidation.isSubscriptionActive();
+      this.subscriptionStatus = cachedValidation.status;
+      this.subscriptionExpiresAt = cachedValidation.expiresAt?.toISOString() || null;
+
+      // Get calendar info
+      client.getCalendar().then(calendarResponse => {
+        if (calendarResponse.found) {
+          this.calendarUrl = calendarResponse.url;
+          this.calendarUpdatedAt = calendarResponse.updatedAt;
+        }
+      }).catch(() => {
+        // Ignore calendar fetch errors
+      });
+    } else {
+      // No cache yet - trigger background validation for valid-looking secret key
+      this.validateSecretKeyInBackground(settings.secretKey);
+    }
+  }
+
+  private async validateSecretKeyInBackground(secretKey: string): Promise<void> {
+    if (secretKey.length !== 32) {
+      this.clearMemberStatus();
+      return;
+    }
+
+    try {
+      const client = apiClient(this.app.vault.getName(), secretKey);
+      const response = await client.isActive(true); // Force fresh validation
+      
+      if (response.isSubscriptionActive()) {
+        // Valid - update UI and configure refresh
+        this.updateMemberStatusFromCache();
+        await this.plugin.configureValidationRefresh();
+        this.display(); // Refresh UI to show member status
+      } else {
+        this.clearMemberStatus();
+      }
+    } catch (error) {
+      log('Background secret key validation failed:', error);
+      this.clearMemberStatus();
+    }
+  }
+
+  private async validateSecretKey(secretKey: string): Promise<void> {
+    if (secretKey.length !== 32) {
+      return; // Invalid length, don't validate
+    }
+
+    try {
+      const client = apiClient(this.app.vault.getName(), secretKey);
+      client.clearValidationCache(); // Clear old cache
+
+      const response = await client.isActive(true); // Force fresh validation
+
+      if (response.isSubscriptionActive()) {
+        // Valid - cache will be automatically populated by isActive call
+        this.updateMemberStatusFromCache();
+        await this.plugin.configureValidationRefresh();
+      }
+    } catch (error) {
+      log('Secret key validation failed:', error);
+      // Leave member status cleared
+    }
+  }
+
 
   async display(): Promise<void> {
     const { containerEl } = this;
 
     containerEl.empty();
 
-    containerEl.createEl('p', { cls: 'setting-item-description', text: 'This plugin finds all of the tasks in your vault that contain a date and generates a calendar in iCalendar format. The calendar can be saved to a file and/or saved in a Gist on GitHub so that it can be added to your iCalendar calendar of choice.' });
+    // Update member status from cache
+    this.updateMemberStatusFromCache();
+
+    containerEl.createEl('p', {
+      text: createFragment((fragment) => {
+        fragment.append('This plugin finds all of the ');
+        fragment.append(fragment.createEl('a', {
+          text: 'Task Lists',
+          title: 'Link to Task Lists on on obsidian.md (https://help.obsidian.md/syntax#Task+lists)',
+          href: 'https://help.obsidian.md/syntax#Task+lists',
+          cls: 'search-result und',
+        }));
+        fragment.append(' in your vault that contain a date and generates a calendar in iCalendar format. Your calendar can be saved and imported into your preferred calendar application.');
+      })
+    });
+
+    containerEl.createEl('h2', { text: 'Quick Start & Essential Settings' });
 
     const directories = await this.getAllDirectories();
 
@@ -61,18 +167,150 @@ export class SettingTab extends PluginSettingTab {
         }
       );
 
+    containerEl.createEl('h3', { text: 'Save Destinations' });
+
     new Setting(containerEl)
-      .setName('Processing internal links')
-      .setDesc('How should [[wikilinks]] and [markdown links](markdown links) be processed if they are encountered in a task?')
-      .addDropdown((dropdown: DropdownComponent) =>
-        dropdown
-          .addOptions(HOW_TO_PARSE_INTERNAL_LINKS)
-          .setValue(settings.howToParseInternalLinks)
+      .setName('Save calendar to disk?')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isSaveToFileEnabled)
           .onChange(async (value) => {
-            settings.howToParseInternalLinks = value;
+            settings.isSaveToFileEnabled = value;
             this.display();
           })
       );
+
+    new Setting(containerEl)
+      .setName('Save calendar to GitHub Gist?')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isSaveToGistEnabled)
+          .onChange(async (value) => {
+            settings.isSaveToGistEnabled = value;
+            this.display();
+          })
+      );
+
+    containerEl.createEl('h3', { text: 'Member Area' });
+    containerEl.createEl('p', {
+      cls: 'setting-item-description',
+      text: createFragment((fragment) => {
+        fragment.append('Optionally, you can become a member to unlock more features such as calendar hosting. ');
+        fragment.append(fragment.createEl('a', {
+          text: 'Create an account on obsidian-ical.com',
+          href: 'https://obsidian-ical.com/',
+          cls: 'search-result',
+        }));
+      })
+    });
+
+    new Setting(containerEl)
+      .setName('Secret Key')
+      .setDesc(createFragment((fragment) => {
+        fragment.append('Copy and paste your ');
+        fragment.append(fragment.createEl('a', {
+          text: 'Secret Key',
+          href: 'https://obsidian-ical.com/member/secret-key',
+          cls: 'search-result',
+        }));
+        fragment.append(' here to unlock member features');
+      }))
+      .addText((text) =>
+        text
+          .setValue(settings.secretKey.toString())
+          .setPlaceholder(DEFAULT_SETTINGS.secretKey)
+          .onChange(async (secretKey) => {
+            settings.secretKey = secretKey;
+            
+            // Clear member status when key changes
+            this.clearMemberStatus();
+            
+            // Only validate if exactly 32 characters
+            if (secretKey.length === 32) {
+              await this.validateSecretKey(secretKey);
+              this.display();
+            }
+          })
+      );
+
+    // Secret Key is active so show member status and pro settings
+    if (this.isSecretKeyValid) {
+      // Member Status Section
+      containerEl.createEl('h4', { text: 'Member Status', cls: 'setting-item-name' });
+
+      // Subscription Status
+      const subscriptionStatusText = this.subscriptionStatus === 'active' ? '✅ Active' :
+                                   this.subscriptionStatus === 'trialing' ? '🆓 Trial' :
+                                   `⚠️ ${this.subscriptionStatus}`;
+
+      new Setting(containerEl)
+        .setName('Subscription')
+        .setDesc(createFragment((fragment) => {
+          fragment.createEl('span', { text: subscriptionStatusText });
+          if (this.subscriptionExpiresAt) {
+            const expiryDate = new Date(this.subscriptionExpiresAt);
+            fragment.createEl('br');
+            fragment.createEl('small', {
+              text: `Renews: ${expiryDate.toLocaleDateString()}`,
+              cls: 'setting-item-description'
+            });
+          }
+        }));
+
+      // Calendar Status and URL
+      if (this.calendarUrl) {
+        new Setting(containerEl)
+          .setName('Calendar URL')
+          .setDesc(createFragment((fragment) => {
+            fragment.createEl('a', {
+              text: this.calendarUrl!,
+              href: this.calendarUrl!,
+              cls: 'search-result'
+            });
+            if (this.calendarUpdatedAt) {
+              const updatedDate = new Date(this.calendarUpdatedAt);
+              fragment.createEl('br');
+              fragment.createEl('small', {
+                text: `Last updated: ${updatedDate.toLocaleString()}`,
+                cls: 'setting-item-description'
+              });
+            }
+          }))
+          .addButton((button: ButtonComponent) => {
+            button
+              .setButtonText('📋 Copy to clipboard')
+              .onClick(() => {
+                navigator.clipboard.writeText(this.calendarUrl!);
+                button.setButtonText('✅ Copied!');
+                window.setTimeout(() => {
+                  button.setButtonText('📋 Copy to clipboard');
+                }, 500);
+              });
+          });
+      } else {
+        containerEl.createEl('p', {
+          cls: 'setting-item-description',
+          text: '📅 Your calendar URL will appear here after your first save to the web.'
+        });
+      }
+
+      containerEl.createEl('h4', { text: 'Pro Settings', cls: 'setting-item-name' });
+
+      new Setting(containerEl)
+        .setName('Save calendar to the web')
+        .setDesc('Turning this on will save your calendar to your private area on https://obsidian-ical.com')
+        .addToggle((toggle: ToggleComponent) =>
+          toggle
+            .setValue(settings.isSaveToWebEnabled)
+            .onChange(async (value) => {
+              settings.isSaveToWebEnabled = value;
+              await this.plugin.configureValidationRefresh();
+              this.display();
+            })
+        );
+    }
+
+    containerEl.createEl('h2', { text: 'Task Processing' });
 
     new Setting(containerEl)
       .setName('Ignore completed tasks?')
@@ -272,6 +510,51 @@ export class SettingTab extends PluginSettingTab {
         );
     }
 
+    containerEl.createEl('h2', { text: 'Automation & Advanced' });
+
+    new Setting(containerEl)
+      .setName('Periodically save your calendar')
+      .setDesc('Do you want the plugin to periodically process your tasks? If you choose not to then a calendar will only be built when Obsidian is loaded.')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isPeriodicSaveEnabled)
+          .onChange(async (value) => {
+            settings.isPeriodicSaveEnabled = value;
+            this.plugin.configurePeriodicSave();
+            this.display();
+          })
+      );
+
+    if (settings.isPeriodicSaveEnabled) {
+      new Setting(containerEl)
+        .setName('How often should we parse and save your calendar? (minutes)')
+        .setDesc('How often do you want to periodically scan for tasks?')
+        .addText((text) =>
+          text
+            .setValue(settings.periodicSaveInterval.toString())
+            .onChange(async (value) => {
+              let minutes: number = parseInt(value, 10);
+              if (minutes < 1) minutes = 1;
+              if (minutes > 1440) minutes = 1440;
+              settings.periodicSaveInterval = minutes;
+              await this.plugin.configurePeriodicSave();
+            })
+        );
+    }
+
+    new Setting(containerEl)
+      .setName('Processing internal links')
+      .setDesc('How should [[wikilinks]] and [markdown links](markdown links) be processed if they are encountered in a task?')
+      .addDropdown((dropdown: DropdownComponent) =>
+        dropdown
+          .addOptions(HOW_TO_PARSE_INTERNAL_LINKS)
+          .setValue(settings.howToParseInternalLinks)
+          .onChange(async (value) => {
+            settings.howToParseInternalLinks = value;
+            this.display();
+          })
+      );
+
     new Setting(containerEl)
       .setName('Add link to Obsidian in event description')
       .setDesc('Include a link to open the task in Obsidian in the event description. This is useful for clients such as Thunderbird or Evolution.')
@@ -284,8 +567,10 @@ export class SettingTab extends PluginSettingTab {
           })
       );
 
+    containerEl.createEl('h2', { text: 'Save Destinations' });
+
     if (settings.isSaveToGistEnabled) {
-      containerEl.createEl('h1', { text: 'Save calendar to GitHub Gist' });
+      containerEl.createEl('h3', { text: 'GitHub Gist Settings' });
 
       containerEl.createEl('p', { cls: 'setting-item-description', text: 'Perform the following steps to get your Personal Access Token and Gist ID:' });
       const ol = containerEl.createEl('ol');
@@ -370,7 +655,7 @@ export class SettingTab extends PluginSettingTab {
     }
 
     if (settings.isSaveToFileEnabled) {
-      containerEl.createEl('h1', { text: 'Save calendar to disk' });
+      containerEl.createEl('h3', { text: 'Local File Settings' });
 
       if (settings.saveFileName === DEFAULT_SETTINGS.saveFileName) {
         settings.saveFileName = this.app.vault.getName();
@@ -438,6 +723,8 @@ export class SettingTab extends PluginSettingTab {
             });
         });
     }
+
+    containerEl.createEl('h2', { text: 'Troubleshooting' });
 
     new Setting(containerEl)
       .setName('Debug mode')

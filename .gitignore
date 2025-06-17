@@ -21,3 +21,10 @@ build
 
 # Ignore Obsidian workspaces file
 test/.obsidian/workspace.json
+
+# Test coverage
+coverage/
+*.lcov
+
+# Jest cache
+.cache/
