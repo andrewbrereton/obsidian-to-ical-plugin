@@ -26,6 +26,7 @@ export interface Settings {
   periodicSaveInterval: number;
   isSaveToGistEnabled: boolean;
   isSaveToFileEnabled: boolean;
+  isSaveToWebEnabled: boolean;
   savePath: string;
   saveFileName: string;
   saveFileExtension: string;
@@ -44,6 +45,7 @@ export interface Settings {
   excludeTasksWithTags: string;
   rootPath: string;
   isIncludeLinkInDescription: boolean;
+  secretKey: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -55,6 +57,7 @@ export const DEFAULT_SETTINGS: Settings = {
   periodicSaveInterval: 5,
   isSaveToGistEnabled: false,
   isSaveToFileEnabled: false,
+  isSaveToWebEnabled: false,
   savePath: '',
   saveFileName: '',
   saveFileExtension: '.ical',
@@ -73,4 +76,5 @@ export const DEFAULT_SETTINGS: Settings = {
   excludeTasksWithTags: '#ignore',
   rootPath: '/',
   isIncludeLinkInDescription: false,
+  secretKey: '',
 };
