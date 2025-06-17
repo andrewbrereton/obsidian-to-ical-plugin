@@ -218,3 +218,9 @@ Each task should have a `id=X` where `X` is a unique number. This is so if I add
 - [ ] id=157 exclude because of #exclude2
 - [ ] id=158 exclude because of #exclude1 and #exclude2
 - [ ] id=159 exclude based of #exclude1 even though there is also a #include1
+
+### Obsidian to iCal
+- [x] Book dentist appointment ✅ 2025-06-03
+- [ ] Plan Oliver's birthday party 📅 2025-06-04
+- [ ] Update LinkedIn profile 📅 2025-06-04
+
