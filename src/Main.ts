@@ -1,6 +1,7 @@
 import { App, TFile } from 'obsidian';
 import { FileClient } from './FileClient';
 import { GithubClient } from './GithubClient';
+import { apiClient, ApiClient } from './ApiClient';
 import { IcalService } from './IcalService';
 import { log } from './Logger';
 import { Task } from './Model/Task';
@@ -14,6 +15,7 @@ export class Main {
   iCalService: IcalService;
   githubClient: GithubClient;
   fileClient: FileClient;
+  apiClient: ApiClient;
   tasks: Task[];
   taskFinder: TaskFinder;
 
@@ -21,6 +23,8 @@ export class Main {
     this.app = app;
     this.iCalService = new IcalService();
     this.githubClient = new GithubClient();
+    // this.apiClient = apiClient(app.vault.getName(), settings.secretKey);
+    this.apiClient = new ApiClient(app.vault.getName(), settings.secretKey);
     this.fileClient = new FileClient(this.app.vault);
     this.tasks = [];
     this.taskFinder = new TaskFinder(this.app.vault);
@@ -106,6 +110,15 @@ export class Main {
     } else {
       log('Skip saving calendar to file');
     }
+
+    // Save to web
+    if (settings.isSaveToWebEnabled) {
+      log('Saving calendar to web...');
+      await this.saveToWeb(calendar);
+      log('Done');
+    } else {
+      log('Skip saving calendar to web');
+    }
   }
 
   async saveToGist(calendar: string) {
@@ -114,6 +127,12 @@ export class Main {
 
   async saveToFile(calendar: string) {
     await this.fileClient.save(calendar);
+  }
+
+  async saveToWeb(calendar: string) {
+    const response = await this.apiClient.save(calendar);
+    log('Calendar saved to web successfully:', response.url);
+    return response;
   }
 
   isSyncthingConflictFile(filename: string) {

@@ -7,6 +7,7 @@ import { initSettingsManager, settings } from './SettingsManager';
 export default class ObsidianIcalPlugin extends Plugin {
   main: Main;
   periodicSaveInterval: number|null;
+  validationRefreshInterval: number|null;
 
   async onload() {
     // Initialise SettingsManager
@@ -93,15 +94,22 @@ export default class ObsidianIcalPlugin extends Plugin {
     await this.main.start();
 
     await this.configurePeriodicSave();
+    await this.configureValidationRefresh();
   }
 
   onunload() {
     this.clearPeriodicSaveInterval();
+    this.clearValidationRefreshInterval();
   }
 
   clearPeriodicSaveInterval() {
     window.clearInterval(this.periodicSaveInterval ?? 0);
     this.periodicSaveInterval = null;
+  }
+
+  clearValidationRefreshInterval() {
+    window.clearInterval(this.validationRefreshInterval ?? 0);
+    this.validationRefreshInterval = null;
   }
 
   // Trigger a save every now and then
@@ -118,6 +126,27 @@ export default class ObsidianIcalPlugin extends Plugin {
 
       // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
       this.registerInterval(this.periodicSaveInterval);
+    }
+  }
+
+  // Refresh validation cache every 5 minutes when web save is enabled
+  async configureValidationRefresh() {
+    // Clear any existing validation refresh intervals before we do anything else
+    this.clearValidationRefreshInterval();
+
+    if (settings.isSaveToWebEnabled && settings.secretKey) {
+      log('Validation refresh enabled and will run every 5 minute');
+      this.validationRefreshInterval = window.setInterval(async () => {
+        log('Validation refresh triggered - refreshing validation cache');
+        try {
+          await this.main.apiClient.isActive(true); // Force refresh
+        } catch (error) {
+          log('Validation refresh failed:', error);
+        }
+      }, 5 * 60 * 1000); // 5 minutes
+
+      // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
+      this.registerInterval(this.validationRefreshInterval);
     }
   }
 }
