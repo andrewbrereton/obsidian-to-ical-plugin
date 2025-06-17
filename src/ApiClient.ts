@@ -11,8 +11,8 @@ import {log} from './Logger';
 export class ApiClient {
   vaultName: string;
   secretKey: string;
-  apiBaseUrl: string = 'http://localhost/api';
-  // apiBaseUrl: string = 'https://obsidian-ical.com/api';
+  // apiBaseUrl: string = 'http://localhost/api';
+  apiBaseUrl: string = 'https://obsidian-ical.com/api';
   private validationCache: ValidationCache;
 
   constructor(vaultName: string, secretKey: string) {
