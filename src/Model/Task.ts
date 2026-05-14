@@ -1,4 +1,3 @@
-import 'crypto';
 import { moment } from 'obsidian';
 import { TaskDate, TaskDateName, getTaskDatesFromMarkdown, hasTime } from './TaskDate';
 import { TaskStatus, getTaskStatusEmoji, getTaskStatusFromMarkdown } from './TaskStatus';
@@ -25,7 +24,7 @@ export class Task {
   }
 
   public getId(): string {
-    return crypto.randomUUID();
+    return globalThis.crypto.randomUUID();
   }
 
   public hasA(taskDateName: TaskDateName): boolean {
