@@ -1,3 +1,5 @@
+import { ApiErrorResponse } from '../Api/ErrorResponse';
+
 export class ApiKeyMissingException extends Error {
   constructor(message: string = "Secret Key is required") {
     super(message);
@@ -7,7 +9,7 @@ export class ApiKeyMissingException extends Error {
     Object.setPrototypeOf(this, ApiKeyMissingException.prototype);
   }
 
-  static fromResponse(response: any): ApiKeyMissingException {
+  static fromResponse(response: ApiErrorResponse): ApiKeyMissingException {
     // Extract message from response if available
     const message = response?.json?.message || "Secret Key is required";
     return new ApiKeyMissingException(message);

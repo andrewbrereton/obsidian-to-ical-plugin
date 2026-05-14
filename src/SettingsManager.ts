@@ -53,7 +53,7 @@ class SettingsManager {
 
   public set githubPersonalAccessToken(githubPersonalAccessToken: string) {
     this.settings.githubPersonalAccessToken = githubPersonalAccessToken;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get githubGistId(): string {
@@ -62,7 +62,7 @@ class SettingsManager {
 
   public set githubGistId(githubGistId: string) {
     this.settings.githubGistId = githubGistId;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get githubUsername(): string {
@@ -71,7 +71,7 @@ class SettingsManager {
 
   public set githubUsername(githubUsername: string) {
     this.settings.githubUsername = githubUsername;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get filename(): string {
@@ -80,7 +80,7 @@ class SettingsManager {
 
   public set filename(filename: string) {
     this.settings.filename = filename;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get isPeriodicSaveEnabled(): boolean {
@@ -89,7 +89,7 @@ class SettingsManager {
 
   public set isPeriodicSaveEnabled(isPeriodicSaveEnabled: boolean) {
     this.settings.isPeriodicSaveEnabled = isPeriodicSaveEnabled;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get periodicSaveInterval(): number {
@@ -98,7 +98,7 @@ class SettingsManager {
 
   public set periodicSaveInterval(periodicSaveInterval: number) {
     this.settings.periodicSaveInterval = periodicSaveInterval;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get isSaveToGistEnabled(): boolean {
@@ -107,7 +107,7 @@ class SettingsManager {
 
   public set isSaveToGistEnabled(isSaveToGistEnabled: boolean) {
     this.settings.isSaveToGistEnabled = isSaveToGistEnabled;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get isSaveToFileEnabled(): boolean {
@@ -116,7 +116,7 @@ class SettingsManager {
 
   public set isSaveToFileEnabled(isSaveToFileEnabled: boolean) {
     this.settings.isSaveToFileEnabled = isSaveToFileEnabled;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get savePath(): string {
@@ -125,7 +125,7 @@ class SettingsManager {
 
   public set savePath(savePath: string) {
     this.settings.savePath = savePath;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get saveFileName(): string {
@@ -134,7 +134,7 @@ class SettingsManager {
 
   public set saveFileName(saveFileName: string) {
     this.settings.saveFileName = saveFileName;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get saveFileExtension(): string {
@@ -143,7 +143,7 @@ class SettingsManager {
 
   public set saveFileExtension(saveFileExtension: string) {
     this.settings.saveFileExtension = saveFileExtension;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get howToParseInternalLinks(): string {
@@ -152,7 +152,7 @@ class SettingsManager {
 
   public set howToParseInternalLinks(howToParseInternalLinks: string) {
     this.settings.howToParseInternalLinks = howToParseInternalLinks;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get ignoreCompletedTasks(): boolean {
@@ -161,7 +161,7 @@ class SettingsManager {
 
   public set ignoreCompletedTasks(ignoreCompletedTasks: boolean) {
     this.settings.ignoreCompletedTasks = ignoreCompletedTasks;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get isDebug(): boolean {
@@ -170,7 +170,7 @@ class SettingsManager {
 
   public set isDebug(isDebug: boolean) {
     this.settings.isDebug = isDebug;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get ignoreOldTasks(): boolean {
@@ -179,7 +179,7 @@ class SettingsManager {
 
   public set ignoreOldTasks(ignoreOldTasks: boolean) {
     this.settings.ignoreOldTasks = ignoreOldTasks;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get oldTaskInDays(): number {
@@ -188,7 +188,7 @@ class SettingsManager {
 
   public set oldTaskInDays(oldTaskInDays: number) {
     this.settings.oldTaskInDays = oldTaskInDays;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get howToProcessMultipleDates(): string {
@@ -197,7 +197,7 @@ class SettingsManager {
 
   public set howToProcessMultipleDates(howToProcessMultipleDates: string) {
     this.settings.howToProcessMultipleDates = howToProcessMultipleDates;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get includeEventsOrTodos(): string {
@@ -206,7 +206,7 @@ class SettingsManager {
 
   public set includeEventsOrTodos(includeEventsOrTodos: string) {
     this.settings.includeEventsOrTodos = includeEventsOrTodos;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get isOnlyTasksWithoutDatesAreTodos(): boolean {
@@ -215,7 +215,7 @@ class SettingsManager {
 
   public set isOnlyTasksWithoutDatesAreTodos(isOnlyTasksWithoutDatesAreTodos: boolean) {
     this.settings.isOnlyTasksWithoutDatesAreTodos = isOnlyTasksWithoutDatesAreTodos;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get isDayPlannerPluginFormatEnabled(): boolean {
@@ -224,7 +224,7 @@ class SettingsManager {
 
   public set isDayPlannerPluginFormatEnabled(isDayPlannerPluginFormatEnabled: boolean) {
     this.settings.isDayPlannerPluginFormatEnabled = isDayPlannerPluginFormatEnabled;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get isIncludeTasksWithTags(): boolean {
@@ -233,7 +233,7 @@ class SettingsManager {
 
   public set isIncludeTasksWithTags(isIncludeTasksWithTags: boolean) {
     this.settings.isIncludeTasksWithTags = isIncludeTasksWithTags;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get includeTasksWithTags(): string {
@@ -242,7 +242,7 @@ class SettingsManager {
 
   public set includeTasksWithTags(includeTasksWithTags: string) {
     this.settings.includeTasksWithTags = includeTasksWithTags;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get isExcludeTasksWithTags(): boolean {
@@ -251,7 +251,7 @@ class SettingsManager {
 
   public set isExcludeTasksWithTags(isExcludeTasksWithTags: boolean) {
     this.settings.isExcludeTasksWithTags = isExcludeTasksWithTags;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get excludeTasksWithTags(): string {
@@ -260,7 +260,7 @@ class SettingsManager {
 
   public set excludeTasksWithTags(excludeTasksWithTags: string) {
     this.settings.excludeTasksWithTags = excludeTasksWithTags;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get rootPath(): string {
@@ -269,7 +269,7 @@ class SettingsManager {
 
   public set rootPath(rootPath: string) {
     this.settings.rootPath = rootPath;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get isIncludeLinkInDescription(): boolean {
@@ -278,7 +278,7 @@ class SettingsManager {
 
   public set isIncludeLinkInDescription(isIncludeLinkInDescription: boolean) {
     this.settings.isIncludeLinkInDescription = isIncludeLinkInDescription;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get secretKey(): string {
@@ -287,7 +287,7 @@ class SettingsManager {
 
   public set secretKey(secretKey: string) {
     this.settings.secretKey = secretKey;
-    this.saveSettings();
+    void this.saveSettings();
   }
 
   public get isSaveToWebEnabled(): boolean {
@@ -296,7 +296,7 @@ class SettingsManager {
 
   public set isSaveToWebEnabled(isSaveToWebEnabled: boolean) {
     this.settings.isSaveToWebEnabled = isSaveToWebEnabled;
-    this.saveSettings();
+    void this.saveSettings();
   }
 }
 

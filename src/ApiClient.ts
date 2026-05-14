@@ -1,10 +1,11 @@
-import {requestUrl, TFile} from 'obsidian';
+import {requestUrl} from 'obsidian';
 import {ApiValidateResponse} from './Model/Api/ValidateResponse';
 import {ApiSaveResponse} from './Model/Api/SaveResponse';
 import {ApiGetCalendarResponse} from './Model/Api/GetCalendarResponse';
 import {ApiKeyMissingException} from './Model/Exception/ApiKeyMissingException';
 import {InvalidUserException} from './Model/Exception/InvalidUserException';
 import {NoActiveSubscriptionException} from './Model/Exception/NoActiveSubscriptionException';
+import {isApiErrorResponse} from './Model/Api/ErrorResponse';
 import {ValidationCache} from './ValidationCache';
 import {log} from './Logger';
 
@@ -126,9 +127,9 @@ export class ApiClient {
       },
     })
       .then(response => ApiGetCalendarResponse.fromResponse(response))
-      .catch(error => {
+      .catch((error: unknown) => {
         // Handle 404 as "not found" rather than error
-        if (error.status === 404) {
+        if (isApiErrorResponse(error) && error.status === 404) {
           return new ApiGetCalendarResponse({
             data: null,
             message: 'Calendar not found for this vault'
@@ -142,9 +143,9 @@ export class ApiClient {
     return response;
   }
 
-  private handleApiError(error: any): never {
+  private handleApiError(error: unknown): never {
     // Handle API exceptions based on status code and message
-    if (error.status === 400 && error.json?.message) {
+    if (isApiErrorResponse(error) && error.status === 400 && error.json?.message) {
       const message = error.json.message;
 
       if (message === 'Secret Key is required') {

@@ -3,7 +3,6 @@ import { TaskDate, TaskDateName, getTaskDatesFromMarkdown, hasTime } from './Tas
 import { TaskStatus, getTaskStatusEmoji, getTaskStatusFromMarkdown } from './TaskStatus';
 import { getSummaryFromMarkdown } from './TaskSummary';
 import { settings } from '../SettingsManager';
-import { INCLUDE_EVENTS_OR_TODOS } from './Settings';
 
 export class Task {
   public status: TaskStatus;
@@ -24,7 +23,7 @@ export class Task {
   }
 
   public getId(): string {
-    return globalThis.crypto.randomUUID();
+    return window.crypto.randomUUID();
   }
 
   public hasA(taskDateName: TaskDateName): boolean {

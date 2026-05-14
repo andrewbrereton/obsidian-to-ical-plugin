@@ -57,7 +57,7 @@ function removeBareWikilinks(markdown: string): string {
 }
 
 function extractMarkdownLinkTitles(markdown: string): string {
-  const regExp = /\[([^\]]+)\]\([^\)]+\)/gi;
+  const regExp = /\[([^\]]+)\]\([^)]+\)/gi;
   markdown = markdown.replace(regExp, '$1');
 
   return markdown;

@@ -1,13 +1,12 @@
-import { App, TFile } from 'obsidian';
+import { App } from 'obsidian';
 import { FileClient } from './FileClient';
 import { GithubClient } from './GithubClient';
-import { apiClient, ApiClient } from './ApiClient';
+import { ApiClient } from './ApiClient';
 import { IcalService } from './IcalService';
 import { log } from './Logger';
 import { Task } from './Model/Task';
 import { settings } from './SettingsManager';
 import { TaskFinder } from './TaskFinder';
-import { Heading } from './Model/Heading';
 import { Headings } from './Model/Headings';
 
 export class Main {
@@ -23,7 +22,6 @@ export class Main {
     this.app = app;
     this.iCalService = new IcalService();
     this.githubClient = new GithubClient();
-    // this.apiClient = apiClient(app.vault.getName(), settings.secretKey);
     this.apiClient = new ApiClient(app.vault.getName(), settings.secretKey);
     this.fileClient = new FileClient(this.app.vault);
     this.tasks = [];
@@ -40,7 +38,7 @@ export class Main {
       );
     }
 
-    const taskPromises = [];
+    const taskPromises: Promise<Task[]>[] = [];
 
     log('Performing a scan');
     log('Settings', { settings: settings.settingsWithoutSecrets() });
@@ -70,9 +68,7 @@ export class Main {
           }
         }
 
-        const tasks = await this.taskFinder.findTasks(file, listItemsCache, headings);
-
-        taskPromises.push(tasks);
+        taskPromises.push(this.taskFinder.findTasks(file, listItemsCache, headings));
       }
     }
 

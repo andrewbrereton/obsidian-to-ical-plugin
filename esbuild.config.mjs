@@ -1,7 +1,7 @@
 import esbuild from 'esbuild';
 import process from 'process';
-import builtins from 'builtin-modules';
-import fs from 'fs-extra';
+import { builtinModules } from 'node:module';
+import { copyFile, mkdir } from 'node:fs/promises';
 
 const banner =
   `/*
@@ -17,7 +17,8 @@ const copyManifestPlugin = {
   name: 'copy-manifest',
   setup(build) {
     build.onStart(async () => {
-      await fs.copy('manifest.json', 'build/manifest.json');
+      await mkdir('build', { recursive: true });
+      await copyFile('manifest.json', 'build/manifest.json');
     });
   },
 };
@@ -42,7 +43,7 @@ const context = await esbuild.context({
     '@lezer/common',
     '@lezer/highlight',
     '@lezer/lr',
-    ...builtins],
+    ...builtinModules],
   format: 'cjs',
   target: 'es2018',
   logLevel: 'info',

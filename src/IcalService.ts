@@ -1,4 +1,3 @@
-import { INCLUDE_EVENTS_OR_TODOS } from './Model/Settings';
 import { Task } from './Model/Task';
 import { TaskDateName } from './Model/TaskDate';
 import { TaskStatus } from './Model/TaskStatus';
