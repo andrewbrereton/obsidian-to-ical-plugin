@@ -23,7 +23,7 @@ export class Task {
   }
 
   public getId(): string {
-    return globalThis.crypto.randomUUID();
+    return window.crypto.randomUUID();
   }
 
   public hasA(taskDateName: TaskDateName): boolean {
