@@ -112,7 +112,7 @@ function removeDates(markdown: string): string {
 }
 
 function trimWhitespace(markdown: string): string {
-  const regExp = /\s{2,}}/gi;
+  const regExp = /\s{2,}/g;
   // Replace duplicate whitespace characters with just one
   markdown = markdown.replace(regExp, ' ');
 
