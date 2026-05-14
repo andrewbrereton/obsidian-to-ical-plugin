@@ -13,7 +13,7 @@ export class IcalService {
     const events = includeEvents ? this.getEvents(tasks) : '';
     const toDos = includeTodos ? this.getToDos(tasks) : '';
 
-    let calendar = '' +
+    const calendar = '' +
       'BEGIN:VCALENDAR\r\n' +
       'VERSION:2.0\r\n' +
       'PRODID:-//Andrew Brereton//obsidian-ical-plugin v2.0.3//EN\r\n' +
@@ -24,8 +24,6 @@ export class IcalService {
       toDos +
       'END:VCALENDAR\r\n'
       ;
-
-    calendar = this.pretty(calendar);
 
     return calendar;
   }
@@ -197,19 +195,4 @@ export class IcalService {
     return toDo;
   }
 
-  private pretty(calendar: string): string {
-    // Replace two or more /r or /n or /r/n with a single CRLF
-    calendar = calendar.replace('/\R{2,}/', '\r\n');
-
-    // Ensure all line endings are CRLF. Have to do 'BSR_ANYCRLF' so we don't break emojis
-    calendar = calendar.replace('~(*BSR_ANYCRLF)\R~', '\r\n');
-
-    // Line length should not be longer than 75 characters (https://icalendar.org/iCalendar-RFC-5545/3-1-content-lines.html)
-    //#TODO I can't be bothered implementing this *should* requirement
-
-    // Ensure we are UTF-8
-    calendar = Buffer.from(calendar, 'utf8').toString('utf8');
-
-    return calendar;
-  }
 }
