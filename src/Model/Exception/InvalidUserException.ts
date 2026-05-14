@@ -1,3 +1,5 @@
+import { ApiErrorResponse } from '../Api/ErrorResponse';
+
 export class InvalidUserException extends Error {
   constructor(message: string = "Invalid user") {
     super(message);
@@ -7,7 +9,7 @@ export class InvalidUserException extends Error {
     Object.setPrototypeOf(this, InvalidUserException.prototype);
   }
 
-  static fromResponse(response: any): InvalidUserException {
+  static fromResponse(response: ApiErrorResponse): InvalidUserException {
     // Extract message from response if available
     const message = response?.json?.message || "Invalid user";
     return new InvalidUserException(message);
