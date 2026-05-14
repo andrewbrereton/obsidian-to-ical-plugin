@@ -16,6 +16,20 @@ If you choose to store your calendar on Gist, you can then use the URL to your G
 
 Your vault will be scanned every now and then for changes to tasks to keep your calendar up-to-date.
 
+## Network activity and privacy
+
+This plugin only makes network requests when you explicitly enable a destination that requires them. No telemetry or analytics are collected.
+
+When **Save calendar to GitHub Gist** is enabled, the plugin sends your generated calendar file to GitHub's Gist API (`api.github.com`) using the personal access token you provide. The destination Gist is the one you specify in settings.
+
+When **Save calendar to a web URL** is enabled, the plugin sends your generated calendar file to the configured web API endpoint, and additionally polls that endpoint every 5 minutes to refresh subscription validation while the plugin is running.
+
+When **Periodically save your calendar** is enabled, the above writes happen on the interval you configure (1–1440 minutes). With periodic save disabled, the plugin only writes when you trigger a save manually.
+
+When **Save calendar to disk** is the only destination enabled, the plugin makes no network requests — the calendar is written to your vault filesystem.
+
+You can disable any destination at any time in the plugin settings, and disabling the plugin stops all network activity immediately.
+
 ## Support for Obsidian Tasks
 
 This plugin has rudimentary support for [Obsidian Tasks emoji format](https://publish.obsidian.md/tasks/Reference/Task+Formats/Tasks+Emoji+Format) and [Obsidian Tasks dataview format](https://publish.obsidian.md/tasks/Reference/Task+Formats/Dataview+Format). However it is not mandatory.
