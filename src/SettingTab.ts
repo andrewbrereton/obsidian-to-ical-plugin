@@ -9,7 +9,6 @@ import {
   TFolder,
   ToggleComponent
 } from 'obsidian';
-import * as path from 'path';
 import { DEFAULT_SETTINGS, HOW_TO_PARSE_INTERNAL_LINKS, HOW_TO_PROCESS_MULTIPLE_DATES, INCLUDE_EVENTS_OR_TODOS } from 'src/Model/Settings';
 import { log } from './Logger';
 import ObsidianIcalPlugin from './ObsidianIcalPlugin';
@@ -703,7 +702,7 @@ export class SettingTab extends PluginSettingTab {
             })
         );
 
-      const savePath = `${settings.savePath ?? settings.savePath + path.sep}${settings.saveFileName}${settings.saveFileExtension}`;
+      const savePath = `${settings.savePath ?? settings.savePath + '/'}${settings.saveFileName}${settings.saveFileExtension}`;
 
       new Setting(containerEl)
         .setName('Your calendar path')
