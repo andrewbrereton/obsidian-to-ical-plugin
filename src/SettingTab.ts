@@ -144,7 +144,7 @@ export class SettingTab extends PluginSettingTab {
       })
     });
 
-    containerEl.createEl('h2', { text: 'Quick Start & Essential Settings' });
+    new Setting(containerEl).setName('Quick Start & Essential Settings').setHeading();
 
     const directories = this.getAllDirectories();
 
@@ -166,7 +166,7 @@ export class SettingTab extends PluginSettingTab {
         }
       );
 
-    containerEl.createEl('h3', { text: 'Save Destinations' });
+    new Setting(containerEl).setName('Save Destinations').setHeading();
 
     new Setting(containerEl)
       .setName('Save calendar to disk?')
@@ -190,7 +190,7 @@ export class SettingTab extends PluginSettingTab {
           })
       );
 
-    containerEl.createEl('h3', { text: 'Member Area' });
+    new Setting(containerEl).setName('Member Area').setHeading();
     containerEl.createEl('p', {
       cls: 'setting-item-description',
       text: createFragment((fragment) => {
@@ -235,7 +235,7 @@ export class SettingTab extends PluginSettingTab {
     // Secret Key is active so show member status and pro settings
     if (this.isSecretKeyValid) {
       // Member Status Section
-      containerEl.createEl('h4', { text: 'Member Status', cls: 'setting-item-name' });
+      new Setting(containerEl).setName('Member Status').setHeading();
 
       // Subscription Status
       const subscriptionStatusText = this.subscriptionStatus === 'active' ? '✅ Active' :
@@ -293,7 +293,7 @@ export class SettingTab extends PluginSettingTab {
         });
       }
 
-      containerEl.createEl('h4', { text: 'Pro Settings', cls: 'setting-item-name' });
+      new Setting(containerEl).setName('Pro Settings').setHeading();
 
       new Setting(containerEl)
         .setName('Save calendar to the web')
@@ -309,7 +309,7 @@ export class SettingTab extends PluginSettingTab {
         );
     }
 
-    containerEl.createEl('h2', { text: 'Task Processing' });
+    new Setting(containerEl).setName('Task Processing').setHeading();
 
     new Setting(containerEl)
       .setName('Ignore completed tasks?')
@@ -509,7 +509,7 @@ export class SettingTab extends PluginSettingTab {
         );
     }
 
-    containerEl.createEl('h2', { text: 'Automation & Advanced' });
+    new Setting(containerEl).setName('Automation & Advanced').setHeading();
 
     new Setting(containerEl)
       .setName('Periodically save your calendar')
@@ -566,10 +566,10 @@ export class SettingTab extends PluginSettingTab {
           })
       );
 
-    containerEl.createEl('h2', { text: 'Save Destinations' });
+    new Setting(containerEl).setName('Save Destinations').setHeading();
 
     if (settings.isSaveToGistEnabled) {
-      containerEl.createEl('h3', { text: 'GitHub Gist Settings' });
+      new Setting(containerEl).setName('GitHub Gist Settings').setHeading();
 
       containerEl.createEl('p', { cls: 'setting-item-description', text: 'Perform the following steps to get your Personal Access Token and Gist ID:' });
       const ol = containerEl.createEl('ol');
@@ -654,7 +654,7 @@ export class SettingTab extends PluginSettingTab {
     }
 
     if (settings.isSaveToFileEnabled) {
-      containerEl.createEl('h3', { text: 'Local File Settings' });
+      new Setting(containerEl).setName('Local File Settings').setHeading();
 
       if (settings.saveFileName === DEFAULT_SETTINGS.saveFileName) {
         settings.saveFileName = this.app.vault.getName();
@@ -724,7 +724,7 @@ export class SettingTab extends PluginSettingTab {
         });
     }
 
-    containerEl.createEl('h2', { text: 'Troubleshooting' });
+    new Setting(containerEl).setName('Troubleshooting').setHeading();
 
     new Setting(containerEl)
       .setName('Debug mode')
