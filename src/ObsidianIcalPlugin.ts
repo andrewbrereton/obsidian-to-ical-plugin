@@ -119,9 +119,9 @@ export default class ObsidianIcalPlugin extends Plugin {
 
     if (settings.isPeriodicSaveEnabled && settings.periodicSaveInterval > 0) {
       log(`Periodic save enabled and will run every ${settings.periodicSaveInterval} minute(s)`);
-      this.periodicSaveInterval = window.setInterval(async () => {
+      this.periodicSaveInterval = window.setInterval(() => {
         log(`Periodic save triggers every ${settings.periodicSaveInterval} minute(s)`);
-        await this.main.start();
+        void this.main.start();
       }, settings.periodicSaveInterval * 1000 * 60);
 
       // When registering intervals, this function will automatically clear the interval when the plugin is disabled.
@@ -136,13 +136,11 @@ export default class ObsidianIcalPlugin extends Plugin {
 
     if (settings.isSaveToWebEnabled && settings.secretKey) {
       log('Validation refresh enabled and will run every 5 minute');
-      this.validationRefreshInterval = window.setInterval(async () => {
+      this.validationRefreshInterval = window.setInterval(() => {
         log('Validation refresh triggered - refreshing validation cache');
-        try {
-          await this.main.apiClient.isActive(true); // Force refresh
-        } catch (error) {
+        void this.main.apiClient.isActive(true).catch((error) => {
           log('Validation refresh failed:', error);
-        }
+        });
       }, 5 * 60 * 1000); // 5 minutes
 
       // When registering intervals, this function will automatically clear the interval when the plugin is disabled.

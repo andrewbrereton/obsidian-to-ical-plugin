@@ -29,7 +29,7 @@ export class SettingTab extends PluginSettingTab {
   }
 
   // This function returns all of the directories in the current vault
-  async getAllDirectories(): Promise<string[]> {
+  getAllDirectories(): string[] {
     const files = this.app.vault.getAllLoadedFiles();
     const directories = files
         .filter((file) => file instanceof TFolder)
@@ -72,7 +72,7 @@ export class SettingTab extends PluginSettingTab {
       });
     } else {
       // No cache yet - trigger background validation for valid-looking secret key
-      this.validateSecretKeyInBackground(settings.secretKey);
+      void this.validateSecretKeyInBackground(settings.secretKey);
     }
   }
 
@@ -123,7 +123,7 @@ export class SettingTab extends PluginSettingTab {
   }
 
 
-  async display(): Promise<void> {
+  display(): void {
     const { containerEl } = this;
 
     containerEl.empty();
@@ -146,7 +146,7 @@ export class SettingTab extends PluginSettingTab {
 
     containerEl.createEl('h2', { text: 'Quick Start & Essential Settings' });
 
-    const directories = await this.getAllDirectories();
+    const directories = this.getAllDirectories();
 
     new Setting(containerEl)
       .setName('Target directory')
@@ -279,7 +279,7 @@ export class SettingTab extends PluginSettingTab {
             button
               .setButtonText('📋 Copy to clipboard')
               .onClick(() => {
-                navigator.clipboard.writeText(this.calendarUrl!);
+                void navigator.clipboard.writeText(this.calendarUrl!);
                 button.setButtonText('✅ Copied!');
                 window.setTimeout(() => {
                   button.setButtonText('📋 Copy to clipboard');
@@ -433,7 +433,7 @@ export class SettingTab extends PluginSettingTab {
           .setValue(settings.isPeriodicSaveEnabled)
           .onChange(async (value) => {
             settings.isPeriodicSaveEnabled = value;
-            this.plugin.configurePeriodicSave();
+            void this.plugin.configurePeriodicSave();
             this.display();
           })
       );
@@ -519,7 +519,7 @@ export class SettingTab extends PluginSettingTab {
           .setValue(settings.isPeriodicSaveEnabled)
           .onChange(async (value) => {
             settings.isPeriodicSaveEnabled = value;
-            this.plugin.configurePeriodicSave();
+            void this.plugin.configurePeriodicSave();
             this.display();
           })
       );
@@ -644,7 +644,7 @@ export class SettingTab extends PluginSettingTab {
           button
             .setButtonText('📋 Copy to clipboard')
             .onClick(() => {
-              navigator.clipboard.writeText(url);
+              void navigator.clipboard.writeText(url);
               button.setButtonText('✅ Copied!');
               window.setTimeout(() => {
                 button.setButtonText('📋 Copy to clipboard');
@@ -715,7 +715,7 @@ export class SettingTab extends PluginSettingTab {
           button
             .setButtonText('📋 Copy to clipboard')
             .onClick(() => {
-              navigator.clipboard.writeText(savePath);
+              void navigator.clipboard.writeText(savePath);
               button.setButtonText('✅ Copied!');
               window.setTimeout(() => {
                 button.setButtonText('📋 Copy to clipboard');
