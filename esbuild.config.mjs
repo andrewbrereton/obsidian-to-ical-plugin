@@ -1,7 +1,7 @@
 import esbuild from 'esbuild';
 import process from 'process';
 import { builtinModules } from 'node:module';
-import { copyFile } from 'node:fs/promises';
+import { copyFile, mkdir } from 'node:fs/promises';
 
 const banner =
   `/*
@@ -17,6 +17,7 @@ const copyManifestPlugin = {
   name: 'copy-manifest',
   setup(build) {
     build.onStart(async () => {
+      await mkdir('build', { recursive: true });
       await copyFile('manifest.json', 'build/manifest.json');
     });
   },
