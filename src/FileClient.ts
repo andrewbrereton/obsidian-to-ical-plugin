@@ -10,7 +10,8 @@ export class FileClient {
   }
 
     async save(calendar: string) {
-      const fileRelativePath = `${settings.savePath ?? settings.savePath + '/'}${settings.saveFileName}${settings.saveFileExtension}`;
+      const dir = settings.savePath ? settings.savePath.replace(/\/$/, '') + '/' : '';
+      const fileRelativePath = `${dir}${settings.saveFileName}${settings.saveFileExtension}`;
       const file = this.vault.getAbstractFileByPath(fileRelativePath);
 
       if (file instanceof TFile) {

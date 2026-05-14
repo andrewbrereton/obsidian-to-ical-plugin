@@ -702,7 +702,8 @@ export class SettingTab extends PluginSettingTab {
             })
         );
 
-      const savePath = `${settings.savePath ?? settings.savePath + '/'}${settings.saveFileName}${settings.saveFileExtension}`;
+      const dir = settings.savePath ? settings.savePath.replace(/\/$/, '') + '/' : '';
+      const savePath = `${dir}${settings.saveFileName}${settings.saveFileExtension}`;
 
       new Setting(containerEl)
         .setName('Your calendar path')
