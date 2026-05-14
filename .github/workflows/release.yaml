@@ -9,6 +9,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+
     steps:
       - uses: actions/checkout@v6
 
@@ -19,6 +24,13 @@ jobs:
         run: |
           bun install
           bun run build
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: |
+            build/main.js
+            build/manifest.json
 
       - name: Create release
         env:
