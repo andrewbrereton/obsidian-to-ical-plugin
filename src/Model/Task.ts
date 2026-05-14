@@ -3,7 +3,6 @@ import { TaskDate, TaskDateName, getTaskDatesFromMarkdown, hasTime } from './Tas
 import { TaskStatus, getTaskStatusEmoji, getTaskStatusFromMarkdown } from './TaskStatus';
 import { getSummaryFromMarkdown } from './TaskSummary';
 import { settings } from '../SettingsManager';
-import { INCLUDE_EVENTS_OR_TODOS } from './Settings';
 
 export class Task {
   public status: TaskStatus;

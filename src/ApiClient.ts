@@ -1,4 +1,4 @@
-import {requestUrl, TFile} from 'obsidian';
+import {requestUrl} from 'obsidian';
 import {ApiValidateResponse} from './Model/Api/ValidateResponse';
 import {ApiSaveResponse} from './Model/Api/SaveResponse';
 import {ApiGetCalendarResponse} from './Model/Api/GetCalendarResponse';
