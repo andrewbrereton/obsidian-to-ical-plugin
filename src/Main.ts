@@ -38,7 +38,7 @@ export class Main {
       );
     }
 
-    const taskPromises = [];
+    const taskPromises: Promise<Task[]>[] = [];
 
     log('Performing a scan');
     log('Settings', { settings: settings.settingsWithoutSecrets() });
@@ -68,9 +68,7 @@ export class Main {
           }
         }
 
-        const tasks = await this.taskFinder.findTasks(file, listItemsCache, headings);
-
-        taskPromises.push(tasks);
+        taskPromises.push(this.taskFinder.findTasks(file, listItemsCache, headings));
       }
     }
 
