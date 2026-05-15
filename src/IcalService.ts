@@ -15,7 +15,7 @@ export class IcalService {
     const calendar = '' +
       'BEGIN:VCALENDAR\r\n' +
       'VERSION:2.0\r\n' +
-      'PRODID:-//Andrew Brereton//obsidian-ical-plugin v2.2.1//EN\r\n' +
+      'PRODID:-//Andrew Brereton//obsidian-ical-plugin v2.2.2//EN\r\n' +
       'X-WR-CALNAME:Obsidian Calendar\r\n' +
       'NAME:Obsidian Calendar\r\n' +
       'CALSCALE:GREGORIAN\r\n' +
