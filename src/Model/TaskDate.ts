@@ -30,9 +30,13 @@ const TaskDateEmojiMap: Record<TaskDateName, string> = {
   [TaskDateName.TimeEnd]: '',
 };
 
+// Multiple TaskDateNames map to '' (Unknown, TimeStart, TimeEnd); skip those so the
+// reverse lookup of an absent emoji falls through to the `?? Unknown` default below.
 const EmojiToTaskDateNameMap: Record<string, TaskDateName> = Object.entries(TaskDateEmojiMap).reduce(
   (acc, [key, emoji]) => {
-    acc[emoji] = key as TaskDateName;
+    if (emoji !== '') {
+      acc[emoji] = key as TaskDateName;
+    }
     return acc;
   },
   {} as Record<string, TaskDateName>
@@ -85,41 +89,27 @@ function convertDataviewToEmoji(markdown: string): string {
   return markdown;
 }
 
+// Day Planner mode: the line sits under a date heading, so we accept loose formats
+// including a bare hour ("3pm", "09") as the first numeric token.
+const dayPlannerTimeRegExp = /\b(\d{1,2}(?::\d{2})?(?::\d{2})?\s*[ap]m|\d{1,2}(?::\d{2})?(?::\d{2})?)(?:\s*-\s*(\d{1,2}(?::\d{2})?(?::\d{2})?\s*[ap]m|\d{1,2}(?::\d{2})?(?::\d{2})?))?\b/i;
+
+// Inline mode: require HH:MM or H[H][AM/PM] so plain numbers in descriptions don't
+// match. The lookbehind blocks digits inside dates like "2026-04-20".
+const inlineTimeRegExp = /\b(?<!\d{4}-(?:\d{2}-)?)(\d{1,2}:\d{2}(?::\d{2})?(?:\s*[ap]m)?|\d{1,2}\s*[ap]m)(?:\s*-\s*(\d{1,2}:\d{2}(?::\d{2})?(?:\s*[ap]m)?|\d{1,2}\s*[ap]m))?\b/i;
+
 export function getTaskDatesFromMarkdown(markdown: string, dateOverride: Date|null): TaskDate[] {
   // Convert Dataview Format to Emoji Format
   markdown = convertDataviewToEmoji(markdown);
 
   // If we have an override date, then just use that instead of trying to derive them
   if (dateOverride !== null) {
-    const timeRegExp = /\b(\d{1,2}(?::\d{2})?(?::\d{2})?\s*[ap]m|\d{1,2}(?::\d{2})?(?::\d{2})?)(?:\s*-\s*(\d{1,2}(?::\d{2})?(?::\d{2})?\s*[ap]m|\d{1,2}(?::\d{2})?(?::\d{2})?))?\b/i;
-    // const timeRegExp = /\b((?<!\d{4}-\d{2}-)\d{1,2}:(\d{2})(?::\d{2})?\s*(?:[ap][m])?|(?<!\d{4}-\d{2}-)\d{1,2}\s*[ap][m])\b/gi;
-    const match = markdown.match(timeRegExp);
-
-    if (!match) {
-      return [];
-    }
-
-    let timeStartString = match[1];
-    let timeEndString = match[2]; // The second time, if present
-
-    if (!timeEndString) {
-      // If the second time is not present, calculate it
-      timeEndString = calculateEndTime(timeStartString);
-    }
-
-    const timeStart = createTimeDate(dateOverride, timeStartString);
-    const timeEnd = createTimeDate(dateOverride, timeEndString);
-
-    return [
-      new TaskDate(timeStart, TaskDateName.TimeStart),
-      new TaskDate(timeEnd, TaskDateName.TimeEnd),
-    ];
+    return extractTimeRange(markdown, dateOverride, dayPlannerTimeRegExp);
   }
 
   const dateRegExp = /(?<emoji>➕|⏳|🛫|📅|✅)?\s?(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\b/gi;
   const dateMatches = [...markdown.matchAll(dateRegExp)];
 
-  const taskDates = dateMatches
+  const taskDates: TaskDate[] = dateMatches
     .filter((dateMatch) => {
       // Validate (emoji is optional)
       return  dateMatch?.groups?.day &&
@@ -137,7 +127,30 @@ export function getTaskDatesFromMarkdown(markdown: string, dateOverride: Date|nu
       return new TaskDate(date, taskDateName);
     });
 
+  if (taskDates.length > 0) {
+    taskDates.push(...extractTimeRange(markdown, taskDates[0].date, inlineTimeRegExp));
+  }
+
   return taskDates;
+}
+
+function extractTimeRange(markdown: string, baseDate: Date, regExp: RegExp): TaskDate[] {
+  const match = markdown.match(regExp);
+
+  if (!match) {
+    return [];
+  }
+
+  const timeStartString = match[1];
+  const timeEndString = match[2] ?? calculateEndTime(timeStartString);
+
+  const timeStart = createTimeDate(baseDate, timeStartString);
+  const timeEnd = createTimeDate(baseDate, timeEndString);
+
+  return [
+    new TaskDate(timeStart, TaskDateName.TimeStart),
+    new TaskDate(timeEnd, TaskDateName.TimeEnd),
+  ];
 }
 
 function calculateEndTime(startTime: string): string {
