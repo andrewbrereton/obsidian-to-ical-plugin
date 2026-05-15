@@ -33,6 +33,11 @@ export function getSummaryFromMarkdown(markdown: string, howToParseInternalLinks
   // Remove Dataview dates
   markdown = removeDataviewDates(markdown);
 
+  // Strip inline time ranges (e.g. "17:00-19:00") only when a date is also present,
+  // since TaskDate has anchored that time to the date and produced TimeStart/TimeEnd.
+  // Must run before removeDates so the date is still visible for the check.
+  markdown = removeTimeRanges(markdown);
+
   // Remove any leftover dates
   markdown = removeDates(markdown);
 
@@ -109,6 +114,15 @@ function removeDates(markdown: string): string {
   markdown = markdown.replace(regExp, '');
 
   return markdown;
+}
+
+function removeTimeRanges(markdown: string): string {
+  if (!/\d{4}-\d{2}-\d{1,2}/.test(markdown)) {
+    return markdown;
+  }
+
+  const regExp = /\s*\b(?<!\d{4}-(?:\d{2}-)?)(?:\d{1,2}:\d{2}(?::\d{2})?(?:\s*[ap]m)?|\d{1,2}\s*[ap]m)(?:\s*-\s*(?:\d{1,2}:\d{2}(?::\d{2})?(?:\s*[ap]m)?|\d{1,2}\s*[ap]m))?\b\s*/gi;
+  return markdown.replace(regExp, ' ');
 }
 
 function trimWhitespace(markdown: string): string {

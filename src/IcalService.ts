@@ -58,13 +58,14 @@ export class IcalService {
         // If a start date does not exist, take the due date
         // If a due date does not exist, take any old date that we can find
         case 'PreferStartDate':
-          if (task.hasA(TaskDateName.Start)) {
+          // An inline time range anchors to the task's date, so prefer it over an all-day emit.
+          if (task.hasA(TaskDateName.TimeStart) && task.hasA(TaskDateName.TimeEnd)) {
+            event += 'DTSTART:' + task.getDate(TaskDateName.TimeStart, 'YYYYMMDD[T]HHmmss') + '\r\n';
+            event += 'DTEND:' + task.getDate(TaskDateName.TimeEnd, 'YYYYMMDD[T]HHmmss') + '\r\n';
+          } else if (task.hasA(TaskDateName.Start)) {
             event += 'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDD') + '\r\n';
           } else if (task.hasA(TaskDateName.Due)) {
             event += 'DTSTART:' + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
-          } else if (task.hasA(TaskDateName.TimeStart) && task.hasA(TaskDateName.TimeEnd)) {
-            event += 'DTSTART:' + task.getDate(TaskDateName.TimeStart, 'YYYYMMDD[T]HHmmss') + '\r\n';
-            event += 'DTEND:' + task.getDate(TaskDateName.TimeEnd, 'YYYYMMDD[T]HHmmss') + '\r\n';
           } else {
             event += 'DTSTART:' + task.getDate(null, 'YYYYMMDD') + '\r\n';
           }
@@ -104,7 +105,11 @@ export class IcalService {
         // If a start date does not exist, take any old date that we can find
         case 'PreferDueDate':
         default:
-          if (task.hasA(TaskDateName.Start) && task.hasA(TaskDateName.Due)) {
+          // An inline time range anchors to the task's date, so prefer it over an all-day emit.
+          if (task.hasA(TaskDateName.TimeStart) && task.hasA(TaskDateName.TimeEnd)) {
+            event += 'DTSTART:' + task.getDate(TaskDateName.TimeStart, 'YYYYMMDD[T]HHmmss') + '\r\n';
+            event += 'DTEND:' + task.getDate(TaskDateName.TimeEnd, 'YYYYMMDD[T]HHmmss') + '\r\n';
+          } else if (task.hasA(TaskDateName.Start) && task.hasA(TaskDateName.Due)) {
             event += '' +
               'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDDTHHmmss') + '\r\n' +
               'DTEND:' + task.getDate(TaskDateName.Due, 'YYYYMMDDTHHmmss') + '\r\n';
@@ -114,9 +119,6 @@ export class IcalService {
           } else if (task.hasA(TaskDateName.Start)) {
             event += '' +
               'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDD') + '\r\n';
-          } else if (task.hasA(TaskDateName.TimeStart) && task.hasA(TaskDateName.TimeEnd)) {
-            event += 'DTSTART:' + task.getDate(TaskDateName.TimeStart, 'YYYYMMDD[T]HHmmss') + '\r\n';
-            event += 'DTEND:' + task.getDate(TaskDateName.TimeEnd, 'YYYYMMDD[T]HHmmss') + '\r\n';
           } else {
             event += '' +
               'DTSTART:' + task.getDate(null, 'YYYYMMDD') + '\r\n';
