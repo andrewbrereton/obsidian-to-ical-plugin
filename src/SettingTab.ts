@@ -567,6 +567,18 @@ export class SettingTab extends PluginSettingTab {
           })
       );
 
+    new Setting(containerEl)
+      .setName('Include link to Obsidian as event location')
+      .setDesc('Include a link to open the task in Obsidian as the event location. Disable this if your calendar client treats the LOCATION field as a physical address.')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isIncludeLocation)
+          .onChange(async (value) => {
+            settings.isIncludeLocation = value;
+            this.display();
+          })
+      );
+
     if (settings.isSaveToGistEnabled || settings.isSaveToFileEnabled || settings.isSaveToWebEnabled) {
       new Setting(containerEl).setName('Save Destination Details').setHeading();
     }

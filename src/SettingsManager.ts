@@ -281,6 +281,15 @@ class SettingsManager {
     void this.saveSettings();
   }
 
+  public get isIncludeLocation(): boolean {
+    return this.settings.isIncludeLocation;
+  }
+
+  public set isIncludeLocation(isIncludeLocation: boolean) {
+    this.settings.isIncludeLocation = isIncludeLocation;
+    void this.saveSettings();
+  }
+
   public get secretKey(): string {
     return this.settings.secretKey;
   }
