@@ -87,6 +87,10 @@ export class Task {
 }
 
 export function createTaskFromLine(line: string, fileUri: string, dateOverride: Date|null): Task|null {
+  if (!line) {
+    return null;
+  }
+
   const taskRegExp = /(\*|-)\s*(?<taskStatus>\[.?])\s*(?<summary>.*)\s*/gi;
   const dateRegExp = /\b(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{1,2})\b/gi;
 

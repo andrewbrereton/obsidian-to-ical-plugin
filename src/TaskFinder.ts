@@ -28,6 +28,11 @@ export class TaskFinder {
           'markdownLine': lines[markdownLineNumber],
         };
       })
+      // Obsidian's metadata cache can lag behind cachedRead, so listItemsCache may reference
+      // line indices that no longer exist in the file. Drop those before they hit createTaskFromLine.
+      .filter((lineAndHeading) => {
+        return typeof lineAndHeading.markdownLine === 'string' && lineAndHeading.markdownLine.length > 0;
+      })
       // Create a Task from the line
       .map((lineAndHeading) => {
         // If the Day Planner plugin format is enabled and the line contains at least one time,
