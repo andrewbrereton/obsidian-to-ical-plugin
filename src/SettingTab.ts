@@ -567,7 +567,9 @@ export class SettingTab extends PluginSettingTab {
           })
       );
 
-    new Setting(containerEl).setName('Save Destinations').setHeading();
+    if (settings.isSaveToGistEnabled || settings.isSaveToFileEnabled || settings.isSaveToWebEnabled) {
+      new Setting(containerEl).setName('Save Destination Details').setHeading();
+    }
 
     if (settings.isSaveToGistEnabled) {
       new Setting(containerEl).setName('GitHub Gist Settings').setHeading();
