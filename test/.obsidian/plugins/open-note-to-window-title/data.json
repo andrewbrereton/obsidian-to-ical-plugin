@@ -1,7 +1,0 @@
-{
-  "titleTemplate": "Obsidian | {{vault}} | {{basename}}",
-  "titleTemplateEmpty": "Obsidian | {{vault}}",
-  "titleSeparator": " - ",
-  "delimStr": "~~",
-  "overrideYamlField": "title"
-}

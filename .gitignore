@@ -22,6 +22,12 @@ build
 # Ignore Obsidian workspaces file
 test/.obsidian/workspace.json
 
+# Ignore 3rd-party plugins in the test vault — they are not part of this
+# plugin and shouldn't be flagged by the Obsidian community scan.
+# Keep only the symlink to our own build output.
+test/.obsidian/plugins/*
+!test/.obsidian/plugins/obsidian-ical-plugin
+
 # Test coverage
 coverage/
 *.lcov

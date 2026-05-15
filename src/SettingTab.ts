@@ -144,7 +144,7 @@ export class SettingTab extends PluginSettingTab {
       })
     });
 
-    new Setting(containerEl).setName('Quick Start & Essential Settings').setHeading();
+    new Setting(containerEl).setName('Quick start & essentials').setHeading();
 
     const directories = this.getAllDirectories();
 
@@ -294,7 +294,7 @@ export class SettingTab extends PluginSettingTab {
         });
       }
 
-      new Setting(containerEl).setName('Pro Settings').setHeading();
+      new Setting(containerEl).setName('Pro features').setHeading();
 
       new Setting(containerEl)
         .setName('Save calendar to the web')
@@ -584,7 +584,7 @@ export class SettingTab extends PluginSettingTab {
     }
 
     if (settings.isSaveToGistEnabled) {
-      new Setting(containerEl).setName('GitHub Gist Settings').setHeading();
+      new Setting(containerEl).setName('GitHub Gist').setHeading();
 
       containerEl.createEl('p', { cls: 'setting-item-description', text: 'Perform the following steps to get your Personal Access Token and Gist ID:' });
       const ol = containerEl.createEl('ol');
@@ -669,7 +669,7 @@ export class SettingTab extends PluginSettingTab {
     }
 
     if (settings.isSaveToFileEnabled) {
-      new Setting(containerEl).setName('Local File Settings').setHeading();
+      new Setting(containerEl).setName('Local file').setHeading();
 
       if (settings.saveFileName === DEFAULT_SETTINGS.saveFileName) {
         settings.saveFileName = this.app.vault.getName();
