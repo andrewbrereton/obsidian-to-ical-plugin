@@ -36,6 +36,7 @@ describe('Settings', () => {
       expect(DEFAULT_SETTINGS).toHaveProperty('excludeTasksWithTags');
       expect(DEFAULT_SETTINGS).toHaveProperty('rootPath');
       expect(DEFAULT_SETTINGS).toHaveProperty('isIncludeLinkInDescription');
+      expect(DEFAULT_SETTINGS).toHaveProperty('isIncludeLocation');
       expect(DEFAULT_SETTINGS).toHaveProperty('secretKey');
     });
 
@@ -61,6 +62,7 @@ describe('Settings', () => {
       expect(DEFAULT_SETTINGS.excludeTasksWithTags).toBe('#ignore');
       expect(DEFAULT_SETTINGS.rootPath).toBe('/');
       expect(DEFAULT_SETTINGS.isIncludeLinkInDescription).toBe(false);
+      expect(DEFAULT_SETTINGS.isIncludeLocation).toBe(true);
     });
 
     it('should have empty strings for sensitive data by default', () => {
