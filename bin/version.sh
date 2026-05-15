@@ -15,12 +15,12 @@ ensureOnMainBranch() {
 
 ensureCleanBranch() {
   # Check for uncommitted changes
-  if [ -n "$(git status --porcelain)" ]
+  if [ -n "$(git status --porcelain --untracked-files=no)" ]
   then
-    echo "Error: There are uncommitted changes in the current directory." >&2
+    echo "Error: There are uncommitted changes to tracked files." >&2
     exit 1
   else
-    echo "Confirmed: No uncommitted changes"
+    echo "Confirmed: No uncommitted changes to tracked files"
   fi
 
   # Check for not pushed changes
