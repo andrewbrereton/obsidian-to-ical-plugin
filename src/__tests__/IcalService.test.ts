@@ -86,3 +86,43 @@ describe('IcalService location toggle', () => {
     expect(ical).not.toContain('LOCATION:');
   });
 });
+
+describe('IcalService CreateMultipleEvents — Done date', () => {
+  beforeEach(() => {
+    mockSettings.isIncludeLocation = true;
+    mockSettings.includeEventsOrTodos = 'EventsOnly';
+    mockSettings.howToProcessMultipleDates = 'CreateMultipleEvents';
+    mockSettings.isIncludeLinkInDescription = false;
+  });
+
+  it('emits an event on the done date', () => {
+    const dueDate = new Date(2026, 4, 15);
+    const doneDate = new Date(2026, 4, 18);
+    const task = new Task(
+      TaskStatus.Done,
+      [
+        { name: TaskDateName.Due, date: dueDate, isDateOnly: true } as any,
+        { name: TaskDateName.Done, date: doneDate, isDateOnly: true } as any,
+      ],
+      'Sample task',
+      'obsidian://open?vault=v&file=f',
+    );
+    const ical = new IcalService().getCalendar([task]);
+    expect(ical).toContain('DTSTART:20260515');
+    expect(ical).toContain('DTSTART:20260518');
+    expect(ical).toContain('SUMMARY:✅ ');
+  });
+
+  it('does not emit a done event when no done date is present', () => {
+    const dueDate = new Date(2026, 4, 15);
+    const task = new Task(
+      TaskStatus.ToDo,
+      [{ name: TaskDateName.Due, date: dueDate, isDateOnly: true } as any],
+      'Sample task',
+      'obsidian://open?vault=v&file=f',
+    );
+    const ical = new IcalService().getCalendar([task]);
+    expect(ical).toContain('DTSTART:20260515');
+    expect(ical).not.toContain('SUMMARY:✅ ');
+  });
+});

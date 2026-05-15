@@ -92,6 +92,10 @@ export class IcalService {
             event += this.getEvent(task, task.getDate(TaskDateName.Due, 'YYYYMMDD'), '📅 ');
           }
 
+          if (task.hasA(TaskDateName.Done)) {
+            event += this.getEvent(task, task.getDate(TaskDateName.Done, 'YYYYMMDD'), '✅ ');
+          }
+
           if (event === '') {
             event += this.getEvent(task, task.getDate(null, 'YYYYMMDD'), '');
           }
