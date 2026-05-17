@@ -23,7 +23,15 @@ export class Task {
   }
 
   public getId(): string {
-    return window.crypto.randomUUID();
+    const input = `${this.fileUri}::${this.summary}`;
+    let h1 = 0x811c9dc5 >>> 0;
+    let h2 = 0x9e3779b9 >>> 0;
+    for (let i = 0; i < input.length; i++) {
+      const c = input.charCodeAt(i);
+      h1 = Math.imul(h1 ^ c, 0x01000193) >>> 0;
+      h2 = Math.imul(h2 ^ c, 0x85ebca6b) >>> 0;
+    }
+    return h1.toString(16).padStart(8, '0') + h2.toString(16).padStart(8, '0') + '@obsidian-ical-plugin';
   }
 
   public hasA(taskDateName: TaskDateName): boolean {
