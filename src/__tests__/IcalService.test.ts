@@ -126,3 +126,36 @@ describe('IcalService CreateMultipleEvents — Done date', () => {
     expect(ical).not.toContain('SUMMARY:✅ ');
   });
 });
+
+describe('IcalService UID stability across exports', () => {
+  beforeEach(() => {
+    mockSettings.isIncludeLocation = true;
+    mockSettings.includeEventsOrTodos = 'EventsOnly';
+    mockSettings.howToProcessMultipleDates = 'PreferDueDate';
+    mockSettings.isIncludeLinkInDescription = false;
+  });
+
+  it('emits the same UID for the same task across two exports', () => {
+    const extractUids = (ical: string) => ical.match(/^UID:.*$/gm) ?? [];
+    const first = new IcalService().getCalendar([buildTaskWithDueDate()]);
+    const second = new IcalService().getCalendar([buildTaskWithDueDate()]);
+    const firstUids = extractUids(first);
+    const secondUids = extractUids(second);
+    expect(firstUids.length).toBeGreaterThan(0);
+    expect(firstUids).toEqual(secondUids);
+  });
+
+  it('emits a different UID when summary changes', () => {
+    const extractUids = (ical: string) => ical.match(/^UID:.*$/gm) ?? [];
+    const original = new IcalService().getCalendar([buildTaskWithDueDate()]);
+    const edited = new IcalService().getCalendar([
+      new Task(
+        TaskStatus.ToDo,
+        [{ name: TaskDateName.Due, date: new Date(2026, 4, 15), isDateOnly: true } as any],
+        'Sample task — edited',
+        'obsidian://open?vault=v&file=f',
+      ),
+    ]);
+    expect(extractUids(original)).not.toEqual(extractUids(edited));
+  });
+});
