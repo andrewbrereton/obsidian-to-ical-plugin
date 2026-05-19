@@ -15,7 +15,7 @@
     "obsidian": "^1.8.7",
     "ts-jest": "^29.4.0",
     "tslib": "^2.8.1",
-    "typescript": "^5.8.3"
+    "typescript": "^6.0.3"
   },
   "description": "Scans your vault for tasks. Creates an iCal file which can be saved to disk and/or stored on Gist. You can then show this calendar in any iCal compatible client such as Outlook, Google Calendar, Apple Calendar, etc.",
   "keywords": [],
