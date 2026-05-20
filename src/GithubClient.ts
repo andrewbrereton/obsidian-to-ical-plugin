@@ -2,24 +2,17 @@ import { Octokit } from '@octokit/rest';
 import { settings } from './SettingsManager';
 
 export class GithubClient {
-  octokit: Octokit;
-
-  constructor() {
-    this.octokit = new Octokit({
+  async save(calendar: string) {
+    const octokit = new Octokit({
       auth: settings.githubPersonalAccessToken,
     });
-  }
-
-  async save(calendar: string) {
-    const f = settings.filename;
-    const options = {
+    await octokit.rest.gists.update({
       gist_id: settings.githubGistId,
       files: {
-        [f]: {
+        [settings.filename]: {
           content: calendar,
-        }
-      }
-    };
-    await this.octokit.rest.gists.update(options);
+        },
+      },
+    });
   }
 }
