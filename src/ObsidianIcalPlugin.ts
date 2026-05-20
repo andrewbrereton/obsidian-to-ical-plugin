@@ -3,9 +3,11 @@ import { Main } from 'src/Main';
 import { log, logger } from './Logger';
 import { SettingTab } from './SettingTab';
 import { initSettingsManager, settings } from './SettingsManager';
+import { StatusBar } from './StatusBar';
 
 export default class ObsidianIcalPlugin extends Plugin {
   main: Main;
+  statusBar: StatusBar;
   periodicSaveInterval: number|null;
   validationRefreshInterval: number|null;
 
@@ -30,9 +32,8 @@ export default class ObsidianIcalPlugin extends Plugin {
     // // Perform additional things with the ribbon
     // ribbonIconEl.addClass("my-plugin-ribbon-class");
 
-    // // This adds a status bar item to the bottom of the app. Does not work on mobile apps.
-    // const statusBarItemEl = this.addStatusBarItem();
-    // statusBarItemEl.setText("Status Bar Text");
+    // Status bar item (no-op on mobile, where addStatusBarItem returns an element that doesn't render)
+    this.statusBar = new StatusBar(this.addStatusBarItem());
 
     // // This adds a simple command that can be triggered anywhere
     // this.addCommand({
@@ -90,7 +91,7 @@ export default class ObsidianIcalPlugin extends Plugin {
 
   // Once the Obsidian layout is ready, kick off a scan and configure periodic save
   async onLayoutReady(): Promise<void> {
-    this.main = new Main(this.app);
+    this.main = new Main(this.app, this.statusBar);
     await this.main.start();
 
     await this.configurePeriodicSave();

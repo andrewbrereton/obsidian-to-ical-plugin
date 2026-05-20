@@ -6,11 +6,13 @@ import { IcalService } from './IcalService';
 import { log } from './Logger';
 import { Task } from './Model/Task';
 import { settings } from './SettingsManager';
+import { StatusBar } from './StatusBar';
 import { TaskFinder } from './TaskFinder';
 import { Headings } from './Model/Headings';
 
 export class Main {
   app: App;
+  statusBar: StatusBar;
   iCalService: IcalService;
   githubClient: GithubClient;
   fileClient: FileClient;
@@ -18,8 +20,9 @@ export class Main {
   tasks: Task[];
   taskFinder: TaskFinder;
 
-  constructor(app: App) {
+  constructor(app: App, statusBar: StatusBar) {
     this.app = app;
+    this.statusBar = statusBar;
     this.iCalService = new IcalService();
     this.githubClient = new GithubClient();
     this.apiClient = new ApiClient(app.vault.getName(), settings.secretKey);
@@ -29,6 +32,16 @@ export class Main {
   }
 
   async start() {
+    try {
+      await this.scanAndSave();
+    } catch (error) {
+      log('Unexpected failure during scan/save', error);
+      this.statusBar.scanError(error);
+    }
+  }
+
+  private async scanAndSave() {
+    this.statusBar.scanning();
     let markdownFiles = this.app.vault.getMarkdownFiles();
 
     // Filter files based on the root path setting
@@ -84,37 +97,55 @@ export class Main {
     });
 
     log(`Found ${this.tasks.length} tasks`, this.tasks);
+    this.statusBar.building(this.tasks.length);
 
     // Build the calendar
     const calendar = this.iCalService.getCalendar(this.tasks);
     log('Calendar has been built', {calendar});
 
-    // Save to Gist
     if (settings.isSaveToGistEnabled) {
+      this.statusBar.saving('Gist');
       log('Saving calendar to Gist...');
-      await this.saveToGist(calendar);
-      log('Done');
+      try {
+        await this.saveToGist(calendar);
+        log('Done');
+      } catch (error) {
+        log('Failed to save calendar to Gist', error);
+        this.statusBar.saveError('Gist', error);
+      }
     } else {
       log('Skip saving calendar to Gist');
     }
 
-    // Save to file
     if (settings.isSaveToFileEnabled) {
+      this.statusBar.saving('File');
       log('Saving calendar to file...');
-      await this.saveToFile(calendar);
-      log('Done');
+      try {
+        await this.saveToFile(calendar);
+        log('Done');
+      } catch (error) {
+        log('Failed to save calendar to file', error);
+        this.statusBar.saveError('File', error);
+      }
     } else {
       log('Skip saving calendar to file');
     }
 
-    // Save to web
     if (settings.isSaveToWebEnabled) {
+      this.statusBar.saving('Web');
       log('Saving calendar to web...');
-      await this.saveToWeb(calendar);
-      log('Done');
+      try {
+        await this.saveToWeb(calendar);
+        log('Done');
+      } catch (error) {
+        log('Failed to save calendar to web', error);
+        this.statusBar.saveError('Web', error);
+      }
     } else {
       log('Skip saving calendar to web');
     }
+
+    this.statusBar.synced();
   }
 
   async saveToGist(calendar: string) {
