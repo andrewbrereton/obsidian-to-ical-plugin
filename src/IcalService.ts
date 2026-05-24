@@ -78,6 +78,15 @@ export class IcalService {
         // If there is a due date, then create an event for it
         // If there are no events, then take any old date that we can find
         case 'CreateMultipleEvents':
+          // An inline or Day Planner time range pins the task to a specific moment,
+          // so emit a single timed event instead of splitting into per-date all-day
+          // entries. Matches the short-circuit in PreferStartDate / PreferDueDate.
+          if (task.hasA(TaskDateName.TimeStart) && task.hasA(TaskDateName.TimeEnd)) {
+            event += 'DTSTART:' + task.getDate(TaskDateName.TimeStart, 'YYYYMMDD[T]HHmmss') + '\r\n';
+            event += 'DTEND:' + task.getDate(TaskDateName.TimeEnd, 'YYYYMMDD[T]HHmmss') + '\r\n';
+            break;
+          }
+
           event = '';
 
           if (task.hasA(TaskDateName.Start)) {
