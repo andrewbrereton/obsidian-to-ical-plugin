@@ -44,6 +44,7 @@ class SettingsManager {
       githubPersonalAccessToken: '<redacted>',
       githubGistId: '<redacted>',
       githubUsername: '<redacted>',
+      secretKey: '<redacted>',
     });
   }
 
