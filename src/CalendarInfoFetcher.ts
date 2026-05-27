@@ -5,6 +5,12 @@ export interface CalendarInfo {
   updatedAt: string;
 }
 
+// Tracks why the last fetch attempt returned what it did, so callers (e.g.
+// the SettingTab Refresh button) can distinguish "the server says no
+// calendar exists" from "we couldn't reach the server" — those need
+// different Notice messages.
+export type FetchOutcome = 'idle' | 'found' | 'not-found' | 'error';
+
 // Gate around ApiClient.getCalendar() so the Settings tab only hits the
 // network once per validation cycle. Previously getCalendar() fired on every
 // SettingTab.display() re-render — which happens for every toggle click —
@@ -14,10 +20,12 @@ export class CalendarInfoFetcher {
   private hasAttemptedFetch: boolean = false;
   private isFetching: boolean = false;
   private cached: CalendarInfo | null = null;
+  private outcome: FetchOutcome = 'idle';
 
   reset(): void {
     this.hasAttemptedFetch = false;
     this.cached = null;
+    this.outcome = 'idle';
   }
 
   get info(): CalendarInfo | null {
@@ -26,6 +34,10 @@ export class CalendarInfoFetcher {
 
   get hasAttempted(): boolean {
     return this.hasAttemptedFetch;
+  }
+
+  get lastOutcome(): FetchOutcome {
+    return this.outcome;
   }
 
   async fetchOnce(client: ApiClient): Promise<CalendarInfo | null> {
@@ -49,13 +61,16 @@ export class CalendarInfoFetcher {
       const response = await client.getCalendar();
       if (response.found && response.url && response.updatedAt) {
         this.cached = { url: response.url, updatedAt: response.updatedAt };
+        this.outcome = 'found';
       } else {
         this.cached = null;
+        this.outcome = 'not-found';
       }
     } catch {
-      // Swallow — calendar URL just won't appear. The validation status is
-      // owned by the separate ApiClient.isActive cache.
+      // The validation status is owned by the separate ApiClient.isActive
+      // cache; failures here only affect the calendar URL display.
       this.cached = null;
+      this.outcome = 'error';
     } finally {
       this.isFetching = false;
       this.hasAttemptedFetch = true;
