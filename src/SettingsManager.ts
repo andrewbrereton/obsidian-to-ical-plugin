@@ -1,6 +1,7 @@
 import { Plugin } from 'obsidian';
 import { log } from './Logger';
 import { DEFAULT_SETTINGS, Settings } from './Model/Settings';
+import { migrateSecretsToStore, SecretStore } from './SecretStore';
 
 // Settings class in instantiated using a singleton pattern
 class SettingsManager {
@@ -9,9 +10,11 @@ class SettingsManager {
   // anyone can read settings — strict-mode definite-assignment is safe here.
   private settings!: Settings;
   private plugin: Plugin;
+  private secretStore: SecretStore;
 
   private constructor(plugin: Plugin) {
     this.plugin = plugin;
+    this.secretStore = new SecretStore();
   }
 
   public static async createInstance(plugin: Plugin): Promise<SettingsManager> {
@@ -28,6 +31,14 @@ class SettingsManager {
   public async loadSettings() {
     log('Load settings');
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.plugin.loadData());
+
+    // One-shot migration: lift secret fields out of data.json into the
+    // SecretStore so they live in per-device localStorage instead of the
+    // synced/committable vault data file. Idempotent — if a secret already
+    // exists in the store, the legacy value is dropped.
+    if (migrateSecretsToStore(this.settings, this.secretStore)) {
+      log('Secrets migrated from data.json to SecretStore');
+    }
 
     // Because we may be applying new default settings to the settings that were loaded from the filesystem,
     // I think we should save these settings back to the filesystem.
@@ -49,12 +60,11 @@ class SettingsManager {
   }
 
   public get githubPersonalAccessToken(): string {
-    return this.settings.githubPersonalAccessToken;
+    return this.secretStore.get('githubPersonalAccessToken');
   }
 
   public set githubPersonalAccessToken(githubPersonalAccessToken: string) {
-    this.settings.githubPersonalAccessToken = githubPersonalAccessToken;
-    void this.saveSettings();
+    this.secretStore.set('githubPersonalAccessToken', githubPersonalAccessToken);
   }
 
   public get githubGistId(): string {
@@ -301,12 +311,11 @@ class SettingsManager {
   }
 
   public get secretKey(): string {
-    return this.settings.secretKey;
+    return this.secretStore.get('secretKey');
   }
 
   public set secretKey(secretKey: string) {
-    this.settings.secretKey = secretKey;
-    void this.saveSettings();
+    this.secretStore.set('secretKey', secretKey);
   }
 
   public get isSaveToWebEnabled(): boolean {
