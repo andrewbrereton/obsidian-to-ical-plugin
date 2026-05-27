@@ -1,9 +1,10 @@
-import { Plugin } from 'obsidian';
+import { Notice, Plugin } from 'obsidian';
 import { Main } from 'src/Main';
 import { log, logger } from './Logger';
 import { SettingTab } from './SettingTab';
 import { initSettingsManager, settings } from './SettingsManager';
 import { StatusBar } from './StatusBar';
+import { maybeShowCancelledTasksNotice } from './CancelledTasksNotice';
 
 export default class ObsidianIcalPlugin extends Plugin {
   main!: Main;
@@ -18,6 +19,14 @@ export default class ObsidianIcalPlugin extends Plugin {
     logger(settings.isDebug);
 
     log('SettingsManager and Logger initialised');
+
+    // One-time announcement of the ignoreCancelledTasks=true default. After
+    // this fires once it's a no-op for the rest of the plugin's lifetime.
+    maybeShowCancelledTasksNotice({
+      hasSeen: settings.hasSeenCancelledTasksNotice,
+      markSeen: () => { settings.hasSeenCancelledTasksNotice = true; },
+      showNotice: (msg) => { new Notice(msg, 15000); },
+    });
 
     // // This creates an icon in the left ribbon.
     // const ribbonIconEl = this.addRibbonIcon(

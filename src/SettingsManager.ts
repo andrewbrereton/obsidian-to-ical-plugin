@@ -184,6 +184,15 @@ class SettingsManager {
     void this.saveSettings();
   }
 
+  public get hasSeenCancelledTasksNotice(): boolean {
+    return this.settings.hasSeenCancelledTasksNotice;
+  }
+
+  public set hasSeenCancelledTasksNotice(hasSeenCancelledTasksNotice: boolean) {
+    this.settings.hasSeenCancelledTasksNotice = hasSeenCancelledTasksNotice;
+    void this.saveSettings();
+  }
+
   public get isDebug(): boolean {
     return this.settings.isDebug;
   }
