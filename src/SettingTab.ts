@@ -58,7 +58,9 @@ export class SettingTab extends PluginSettingTab {
 
     if (cachedValidation) {
       this.isSecretKeyValid = cachedValidation.isSubscriptionActive();
-      this.subscriptionStatus = cachedValidation.status;
+      // Use the raw API status string so genuinely unknown statuses are still
+      // shown verbatim instead of as the literal 'unknown' enum value.
+      this.subscriptionStatus = cachedValidation.rawStatus || cachedValidation.status;
       this.subscriptionExpiresAt = cachedValidation.expiresAt?.toISOString() || null;
 
       // Get calendar info
