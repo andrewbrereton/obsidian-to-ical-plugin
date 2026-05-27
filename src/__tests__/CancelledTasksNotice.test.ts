@@ -63,4 +63,9 @@ describe('maybeShowCancelledTasksNotice', () => {
     expect(CANCELLED_TASKS_NOTICE_MESSAGE).toContain('Settings');
     expect(CANCELLED_TASKS_NOTICE_MESSAGE).toContain('Ignore cancelled tasks');
   });
+
+  it('does not use change-announcement wording so it reads cleanly for fresh installs', () => {
+    // 'now' implies a 'before' that brand-new users have no context for.
+    expect(CANCELLED_TASKS_NOTICE_MESSAGE).not.toMatch(/\bnow\b/i);
+  });
 });

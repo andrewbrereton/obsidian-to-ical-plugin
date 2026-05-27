@@ -16,7 +16,7 @@ export interface CancelledTasksNoticeContext {
 }
 
 export const CANCELLED_TASKS_NOTICE_MESSAGE =
-  'obsidian-to-ical: cancelled tasks (- [-]) are now hidden from your calendar by default. ' +
+  'obsidian-to-ical: cancelled tasks (- [-]) are hidden from your calendar by default. ' +
   'You can re-enable them in Settings → "Ignore cancelled tasks?".';
 
 // Show the one-time notice if it hasn't been shown yet. Returns true when the
