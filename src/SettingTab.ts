@@ -325,6 +325,18 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
+      .setName('Ignore cancelled tasks?')
+      .setDesc('Choose if you want your calendar to ignore tasks that have been cancelled (e.g. - [-] in Obsidian Tasks). Defaults to true since cancelled work is usually not something you want on your calendar.')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.ignoreCancelledTasks)
+          .onChange(async (value) => {
+            settings.ignoreCancelledTasks = value;
+            this.display();
+          })
+      );
+
+    new Setting(containerEl)
       .setName('Add tasks as TODO items to your calendar')
       .setDesc('Normally, we add your tasks as normal calendar events. You can choose to add your tasks as TODO items as well. Or you could add your tasks as calendar events as well as TODO items.')
       .addDropdown((dropdown: DropdownComponent) =>

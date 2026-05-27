@@ -165,6 +165,15 @@ class SettingsManager {
     void this.saveSettings();
   }
 
+  public get ignoreCancelledTasks(): boolean {
+    return this.settings.ignoreCancelledTasks;
+  }
+
+  public set ignoreCancelledTasks(ignoreCancelledTasks: boolean) {
+    this.settings.ignoreCancelledTasks = ignoreCancelledTasks;
+    void this.saveSettings();
+  }
+
   public get isDebug(): boolean {
     return this.settings.isDebug;
   }

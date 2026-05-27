@@ -124,6 +124,11 @@ export function createTaskFromLine(line: string, fileUri: string, dateOverride: 
     return null;
   }
 
+  // Task is cancelled and user wants to ignore cancelled tasks. Bail.
+  if (taskStatus === TaskStatus.Cancelled && settings.ignoreCancelledTasks === true) {
+    return null;
+  }
+
   const taskDates = getTaskDatesFromMarkdown(line, dateOverride);
 
   // Ignore old tasks is enabled, and all of the task's dates are after the retention period. Bail.
