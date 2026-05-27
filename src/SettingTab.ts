@@ -317,11 +317,17 @@ export class SettingTab extends PluginSettingTab {
                   this.calendarUrl = info.url;
                   this.calendarUpdatedAt = info.updatedAt;
                 } else {
-                  // forceRefetch returns null for both 'no calendar yet' and
-                  // network/auth errors. Surface this so the user knows the
-                  // refresh didn't pick up anything — without a Notice the
-                  // button just snaps back and looks like a no-op.
-                  new Notice('Couldn\'t refresh calendar info. Check your secret key, network, and that you\'ve saved at least once.');
+                  // Refresh failed. Clear the on-screen URL so the user isn't
+                  // shown a stale link alongside a Notice that says they
+                  // couldn't refresh it — that combination is more confusing
+                  // than useful. The Refresh button stays available for retry.
+                  this.calendarUrl = null;
+                  this.calendarUpdatedAt = null;
+                  if (this.calendarFetcher.lastOutcome === 'not-found') {
+                    new Notice('No calendar found yet. Enable "Save calendar to the web" and trigger a save to create one.');
+                  } else {
+                    new Notice('Couldn\'t refresh calendar info. Check your secret key and network connection.');
+                  }
                 }
                 this.display();
               });

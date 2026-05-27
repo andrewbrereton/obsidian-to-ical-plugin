@@ -135,3 +135,73 @@ describe('CalendarInfoFetcher', () => {
     expect(getCalendar).toHaveBeenCalledTimes(2);
   });
 });
+
+describe('CalendarInfoFetcher.lastOutcome', () => {
+  it('is idle before any fetch attempt', () => {
+    const fetcher = new CalendarInfoFetcher();
+    expect(fetcher.lastOutcome).toBe('idle');
+  });
+
+  it('is found after a successful fetch', async () => {
+    const { client } = makeClient([
+      { found: true, url: 'https://x.com/cal', updatedAt: '2026-05-27T10:00:00Z' },
+    ]);
+    const fetcher = new CalendarInfoFetcher();
+    await fetcher.fetchOnce(client);
+    expect(fetcher.lastOutcome).toBe('found');
+  });
+
+  it('is not-found when the server returns no calendar', async () => {
+    const { client } = makeClient([{ found: false, url: null, updatedAt: null }]);
+    const fetcher = new CalendarInfoFetcher();
+    await fetcher.fetchOnce(client);
+    expect(fetcher.lastOutcome).toBe('not-found');
+  });
+
+  it('is error when getCalendar throws', async () => {
+    const { client } = makeClient([new Error('network down')]);
+    const fetcher = new CalendarInfoFetcher();
+    await fetcher.fetchOnce(client);
+    expect(fetcher.lastOutcome).toBe('error');
+  });
+
+  it('resets to idle on reset()', async () => {
+    const { client } = makeClient([
+      { found: true, url: 'https://x.com/cal', updatedAt: '2026-05-27T10:00:00Z' },
+    ]);
+    const fetcher = new CalendarInfoFetcher();
+    await fetcher.fetchOnce(client);
+    expect(fetcher.lastOutcome).toBe('found');
+    fetcher.reset();
+    expect(fetcher.lastOutcome).toBe('idle');
+  });
+
+  it('forceRefetch updates outcome to reflect the new result', async () => {
+    const { client } = makeClient([
+      { found: true, url: 'https://x.com/cal', updatedAt: '2026-05-27T10:00:00Z' },
+      { found: false, url: null, updatedAt: null },
+    ]);
+    const fetcher = new CalendarInfoFetcher();
+
+    await fetcher.fetchOnce(client);
+    expect(fetcher.lastOutcome).toBe('found');
+
+    await fetcher.forceRefetch(client);
+    expect(fetcher.lastOutcome).toBe('not-found');
+    expect(fetcher.info).toBeNull();
+  });
+
+  it('an error after a previous success replaces the outcome', async () => {
+    const { client } = makeClient([
+      { found: true, url: 'https://x.com/cal', updatedAt: '2026-05-27T10:00:00Z' },
+      new Error('network down'),
+    ]);
+    const fetcher = new CalendarInfoFetcher();
+
+    await fetcher.fetchOnce(client);
+    expect(fetcher.lastOutcome).toBe('found');
+
+    await fetcher.forceRefetch(client);
+    expect(fetcher.lastOutcome).toBe('error');
+  });
+});
