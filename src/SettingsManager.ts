@@ -5,13 +5,13 @@ import { DEFAULT_SETTINGS, Settings } from './Model/Settings';
 // Settings class in instantiated using a singleton pattern
 class SettingsManager {
   private static instance: SettingsManager;
-  private settings: Settings;
+  // Populated by loadSettings() which is awaited from createInstance() before
+  // anyone can read settings — strict-mode definite-assignment is safe here.
+  private settings!: Settings;
   private plugin: Plugin;
 
-  private constructor(plugin?: Plugin) {
-    if (plugin instanceof Plugin) {
-      this.plugin = plugin;
-    }
+  private constructor(plugin: Plugin) {
+    this.plugin = plugin;
   }
 
   public static async createInstance(plugin: Plugin): Promise<SettingsManager> {
