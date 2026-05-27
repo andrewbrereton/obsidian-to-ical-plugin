@@ -325,6 +325,52 @@ describe('CalendarInfoFetcher stale-completion guard', () => {
     expect(fetcher.hasAttempted).toBe(true);
   });
 
+  it('reset() releases isFetching so a new fetchOnce can start without waiting for the old fetch', async () => {
+    let resolveOld!: (v: FoundCalendar) => void;
+    const oldPending = new Promise<FoundCalendar>((res) => {
+      resolveOld = res;
+    });
+    let resolveNew!: (v: FoundCalendar) => void;
+    const newPending = new Promise<FoundCalendar>((res) => {
+      resolveNew = res;
+    });
+    const getCalendar = jest.fn()
+      .mockReturnValueOnce(oldPending)
+      .mockReturnValueOnce(newPending);
+    const client = { getCalendar } as unknown as ApiClient;
+    const fetcher = new CalendarInfoFetcher();
+
+    const oldFetch = fetcher.fetchOnce(client);
+    expect(fetcher.isCurrentlyFetching).toBe(true);
+
+    // Simulate a secret-key change — clearMemberStatus calls reset().
+    // The gate should release so a new fetchOnce can start.
+    fetcher.reset();
+    expect(fetcher.isCurrentlyFetching).toBe(false);
+
+    const newFetch = fetcher.fetchOnce(client);
+    expect(fetcher.isCurrentlyFetching).toBe(true);
+    expect(getCalendar).toHaveBeenCalledTimes(2);
+
+    // New fetch resolves first with the new key's data.
+    resolveNew({ found: true, url: 'https://x.com/new', updatedAt: '2026-05-27T12:00:00Z' });
+    const newResult = await newFetch;
+    expect(newResult?.url).toBe('https://x.com/new');
+    expect(fetcher.info?.url).toBe('https://x.com/new');
+    expect(fetcher.lastOutcome).toBe('found');
+    expect(fetcher.isCurrentlyFetching).toBe(false);
+
+    // Old fetch resolves late with the abandoned key's data. The token
+    // check must drop it without corrupting the new state and without
+    // touching isFetching (which is now false from the new fetch's
+    // completion).
+    resolveOld({ found: true, url: 'https://x.com/old', updatedAt: '2026-05-27T10:00:00Z' });
+    const oldResult = await oldFetch;
+    expect(oldResult).toBeNull();
+    expect(fetcher.info?.url).toBe('https://x.com/new');
+    expect(fetcher.isCurrentlyFetching).toBe(false);
+  });
+
   it('a subsequent fresh fetch after a stale drop still applies normally', async () => {
     // Click 1 fetch is dropped because of a reset, then a normal fetchOnce
     // should still work for the new context.

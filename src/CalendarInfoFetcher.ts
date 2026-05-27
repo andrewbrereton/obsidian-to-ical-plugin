@@ -33,6 +33,12 @@ export class CalendarInfoFetcher {
     this.cached = null;
     this.outcome = 'idle';
     this.currentToken++;
+    // Abandon the tracking for any in-flight fetch. The actual network call
+    // keeps running but its result will be dropped via the token check —
+    // letting it block isFetching would gate the next fetchOnce until the
+    // old call resolves, which can strand the UI on the empty-state
+    // placeholder after a key-change race.
+    this.isFetching = false;
   }
 
   get info(): CalendarInfo | null {
@@ -84,13 +90,13 @@ export class CalendarInfoFetcher {
       // cache; failures here only affect the calendar URL display.
       nextOutcome = 'error';
     }
-    this.isFetching = false;
-    // If the token changed (reset() / secretKey change), our result is
-    // stale and shouldn't clobber the post-reset state. Return null so
-    // callers can detect the silent-drop case too.
+    // Stale completion: a reset() (and possibly a new runFetch) happened
+    // while we were awaiting. Don't apply state — and don't touch
+    // isFetching, since a newer fetch may now own it.
     if (myToken !== this.currentToken) {
       return null;
     }
+    this.isFetching = false;
     this.cached = nextCached;
     this.outcome = nextOutcome;
     this.hasAttemptedFetch = true;
