@@ -6,10 +6,10 @@ import { initSettingsManager, settings } from './SettingsManager';
 import { StatusBar } from './StatusBar';
 
 export default class ObsidianIcalPlugin extends Plugin {
-  main: Main;
-  statusBar: StatusBar;
-  periodicSaveInterval: number|null;
-  validationRefreshInterval: number|null;
+  main!: Main;
+  statusBar!: StatusBar;
+  periodicSaveInterval: number | null = null;
+  validationRefreshInterval: number | null = null;
 
   async onload() {
     // Initialise SettingsManager

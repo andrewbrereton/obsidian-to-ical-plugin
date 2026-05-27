@@ -597,7 +597,8 @@ export class SettingTab extends PluginSettingTab {
                 settings.githubPersonalAccessToken = value;
               } catch(error) {
                 log('Error!', error);
-                githubPersonalAccessTokenErrorElement.innerText = `${error.message ?? 'Unknown error'}`;
+                const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+                githubPersonalAccessTokenErrorElement.innerText = errorMessage;
               }
             })
         );
