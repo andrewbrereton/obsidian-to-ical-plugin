@@ -3,6 +3,7 @@ import {
   ButtonComponent,
   DropdownComponent,
   normalizePath,
+  Notice,
   PluginSettingTab,
   Setting,
   TextComponent,
@@ -315,6 +316,12 @@ export class SettingTab extends PluginSettingTab {
                 if (info) {
                   this.calendarUrl = info.url;
                   this.calendarUpdatedAt = info.updatedAt;
+                } else {
+                  // forceRefetch returns null for both 'no calendar yet' and
+                  // network/auth errors. Surface this so the user knows the
+                  // refresh didn't pick up anything — without a Notice the
+                  // button just snaps back and looks like a no-op.
+                  new Notice('Couldn\'t refresh calendar info. Check your secret key, network, and that you\'ve saved at least once.');
                 }
                 this.display();
               });
