@@ -33,6 +33,7 @@ export interface Settings {
   howToParseInternalLinks: string;
   ignoreCompletedTasks: boolean;
   ignoreCancelledTasks: boolean;
+  hasSeenCancelledTasksNotice: boolean;
   isDebug: boolean;
   includeEventsOrTodos: string;
   isOnlyTasksWithoutDatesAreTodos: boolean;
@@ -66,6 +67,7 @@ export const DEFAULT_SETTINGS: Settings = {
   howToParseInternalLinks: 'DoNotModifyThem', // HOW_TO_PARSE_INTERNAL_LINKS.DoNotModifyThem,
   ignoreCompletedTasks: false,
   ignoreCancelledTasks: true,
+  hasSeenCancelledTasksNotice: false,
   isDebug: false,
   includeEventsOrTodos: 'EventsOnly', // INCLUDE_EVENTS_OR_TODOS.EventsOnly
   isOnlyTasksWithoutDatesAreTodos: true,
