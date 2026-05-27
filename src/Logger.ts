@@ -22,8 +22,10 @@ class Logger {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public log(message: string, object?: any) {
     if (this.isDebug) {
+      // eslint-disable-next-line obsidianmd/rule-custom-message -- intentional: gated behind the isDebug user setting
       console.log('[' + moment().format('YYYY-MM-DD-HH:mm:ss.SSS') + '][info][ical] ' + message);
       if (object) {
+        // eslint-disable-next-line obsidianmd/rule-custom-message -- intentional: gated behind the isDebug user setting
         console.log(object);
       }
     }

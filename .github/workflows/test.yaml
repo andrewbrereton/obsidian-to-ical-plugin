@@ -25,6 +25,9 @@ jobs:
           bun install
           bun run build
 
+      - name: Run lint
+        run: bun run lint
+
       - name: Run legacy iCal tests
         run: bun test
 

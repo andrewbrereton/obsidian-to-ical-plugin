@@ -80,7 +80,7 @@ export class ApiClient {
       },
       body: JSON.stringify({
         vaultName: this.vaultName,
-      calendar,
+        calendar,
       })
     })
       .then(response => ApiSaveResponse.fromResponse(response))

@@ -1,9 +1,9 @@
 import { ApiErrorResponse } from '../Api/ErrorResponse';
 
 export class InvalidUserException extends Error {
-  constructor(message: string = "Invalid user") {
+  constructor(message: string = 'Invalid user') {
     super(message);
-    this.name = "InvalidUserException";
+    this.name = 'InvalidUserException';
 
     // This is necessary for extending Error in TypeScript
     Object.setPrototypeOf(this, InvalidUserException.prototype);
@@ -11,7 +11,7 @@ export class InvalidUserException extends Error {
 
   static fromResponse(response: ApiErrorResponse): InvalidUserException {
     // Extract message from response if available
-    const message = response?.json?.message || "Invalid user";
+    const message = response?.json?.message || 'Invalid user';
     return new InvalidUserException(message);
   }
 }

@@ -13,7 +13,7 @@ import { DEFAULT_SETTINGS, HOW_TO_PARSE_INTERNAL_LINKS, HOW_TO_PROCESS_MULTIPLE_
 import { log } from './Logger';
 import ObsidianIcalPlugin from './ObsidianIcalPlugin';
 import { settings } from './SettingsManager';
-import {apiClient} from "./ApiClient";
+import {apiClient} from './ApiClient';
 import { CalendarInfoFetcher } from './CalendarInfoFetcher';
 
 export class SettingTab extends PluginSettingTab {
@@ -34,9 +34,9 @@ export class SettingTab extends PluginSettingTab {
   getAllDirectories(): string[] {
     const files = this.app.vault.getAllLoadedFiles();
     const directories = files
-        .filter((file) => file instanceof TFolder)
-        .map((folder) => folder.path)
-        .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+      .filter((file) => file instanceof TFolder)
+      .map((folder) => folder.path)
+      .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
     return directories;
   }
@@ -179,8 +179,8 @@ export class SettingTab extends PluginSettingTab {
             settings.rootPath = value;
           });
 
-          return dropdown;
-        }
+        return dropdown;
+      }
       );
 
     new Setting(containerEl).setName('Save Destinations').setHeading();
@@ -256,8 +256,8 @@ export class SettingTab extends PluginSettingTab {
 
       // Subscription Status
       const subscriptionStatusText = this.subscriptionStatus === 'active' ? '✅ Active' :
-                                   this.subscriptionStatus === 'trialing' ? '🆓 Trial' :
-                                   `⚠️ ${this.subscriptionStatus}`;
+        this.subscriptionStatus === 'trialing' ? '🆓 Trial' :
+          `⚠️ ${this.subscriptionStatus}`;
 
       new Setting(containerEl)
         .setName('Subscription')
@@ -643,7 +643,7 @@ export class SettingTab extends PluginSettingTab {
 
       new Setting(containerEl)
         .setName('Your calendar URL')
-      // eslint-disable-next-line no-undef
+       
         .setDesc(createFragment((fragment) => {
           fragment.createEl('a', { text: url, href: url, cls: 'search-result'});
         }))
@@ -714,7 +714,7 @@ export class SettingTab extends PluginSettingTab {
 
       new Setting(containerEl)
         .setName('Your calendar path')
-      // eslint-disable-next-line no-undef
+       
         .setDesc(createFragment((fragment) => {
           fragment.createEl('a', { text: savePath, href: `file:///${savePath}`, cls: 'search-result'});
         }))
