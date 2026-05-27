@@ -61,7 +61,7 @@ export class TaskFinder {
         return createTaskFromLine(lineAndHeading.markdownLine, fileUri, dateOverride);
       })
       // Filter out the nulls
-      .filter((task: Task | null) => task !== null) as Task[]
+      .filter((task: Task | null) => task !== null)
       ;
 
     return tasks;

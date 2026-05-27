@@ -64,15 +64,17 @@ export class ApiValidateResponse {
   private parseStatus(status: string): SubscriptionStatus {
     const normalizedStatus = (status ?? '').toLowerCase();
 
-    // Match against a known status. Stripe may introduce new statuses, and the
-    // API may return values from a non-Stripe billing source — those land in
-    // UNKNOWN rather than getting silently coerced to CANCELED.
-    if (Object.values(SubscriptionStatus).includes(normalizedStatus as SubscriptionStatus)
-      && normalizedStatus !== SubscriptionStatus.UNKNOWN) {
+    // Match against a known Stripe status. UNKNOWN is excluded from the match
+    // set so the literal string 'unknown' from the API still gets classified
+    // as a genuinely unknown status rather than being mistaken for a real one.
+    const knownStatuses: string[] = Object.values(SubscriptionStatus)
+      .filter((s) => s !== SubscriptionStatus.UNKNOWN);
+
+    if (knownStatuses.includes(normalizedStatus)) {
       return normalizedStatus as SubscriptionStatus;
     }
 
-    log(`Unrecognized subscription status:`, status);
+    log('Unrecognized subscription status:', status);
     return SubscriptionStatus.UNKNOWN;
   }
 

@@ -1,6 +1,6 @@
 import { RequestUrlResponse } from 'obsidian';
 import { log } from '../../Logger';
-import { ApiErrorResponse } from "./ValidateResponse";
+import { ApiErrorResponse } from './ValidateResponse';
 
 export interface ApiSaveResponseData {
   data: {
