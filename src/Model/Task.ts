@@ -3,6 +3,7 @@ import { TaskDate, TaskDateName, getTaskDatesFromMarkdown, hasTime } from './Tas
 import { TaskStatus, getTaskStatusEmoji, getTaskStatusFromMarkdown } from './TaskStatus';
 import { getSummaryFromMarkdown } from './TaskSummary';
 import { settings } from '../SettingsManager';
+import { escapeICalText } from '../iCalText';
 
 export class Task {
   public status: TaskStatus;
@@ -78,14 +79,8 @@ export class Task {
   }
 
   public getSummary(): string {
-    const summary = this.summary
-      .replace(/\\/gm, '\\\\')
-      .replace(/\r?\n/gm, '\\n')
-      .replace(/;/gm, '\\;')
-      .replace(/,/gm, '\\,');
-
+    const summary = escapeICalText(this.summary);
     const emoji = getTaskStatusEmoji(this.status);
-
     return `${emoji} ${summary}`;
   }
 
