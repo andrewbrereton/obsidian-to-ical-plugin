@@ -62,7 +62,11 @@ export class Main {
     log('Performing a scan');
     log('Settings', { settings: settings.settingsWithoutSecrets() });
 
-    log(`Found ${markdownFiles.length} Markdown files in ${settings.rootPath}`, { markdownFiles, settings });
+    // Intentionally omit `settings` from the second arg. The SettingsManager
+    // has getters for secretKey / githubPersonalAccessToken that resolve
+    // against localStorage when inspected in DevTools — passing it raw here
+    // would defeat the redaction that line above already prints.
+    log(`Found ${markdownFiles.length} Markdown files in ${settings.rootPath}`, { markdownFiles });
 
     // Iterate over all of the Markdown files in this vault
     for (const file of markdownFiles) {
