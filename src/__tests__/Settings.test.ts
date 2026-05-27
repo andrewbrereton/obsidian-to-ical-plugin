@@ -23,6 +23,7 @@ describe('Settings', () => {
       expect(DEFAULT_SETTINGS).toHaveProperty('saveFileExtension');
       expect(DEFAULT_SETTINGS).toHaveProperty('howToParseInternalLinks');
       expect(DEFAULT_SETTINGS).toHaveProperty('ignoreCompletedTasks');
+      expect(DEFAULT_SETTINGS).toHaveProperty('ignoreCancelledTasks');
       expect(DEFAULT_SETTINGS).toHaveProperty('isDebug');
       expect(DEFAULT_SETTINGS).toHaveProperty('includeEventsOrTodos');
       expect(DEFAULT_SETTINGS).toHaveProperty('isOnlyTasksWithoutDatesAreTodos');
@@ -49,6 +50,7 @@ describe('Settings', () => {
       expect(DEFAULT_SETTINGS.isSaveToWebEnabled).toBe(false);
       expect(DEFAULT_SETTINGS.saveFileExtension).toBe('.ical');
       expect(DEFAULT_SETTINGS.ignoreCompletedTasks).toBe(false);
+      expect(DEFAULT_SETTINGS.ignoreCancelledTasks).toBe(true);
       expect(DEFAULT_SETTINGS.isDebug).toBe(false);
       expect(DEFAULT_SETTINGS.includeEventsOrTodos).toBe('EventsOnly');
       expect(DEFAULT_SETTINGS.isOnlyTasksWithoutDatesAreTodos).toBe(true);

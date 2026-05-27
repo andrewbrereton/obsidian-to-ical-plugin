@@ -32,6 +32,7 @@ export interface Settings {
   saveFileExtension: string;
   howToParseInternalLinks: string;
   ignoreCompletedTasks: boolean;
+  ignoreCancelledTasks: boolean;
   isDebug: boolean;
   includeEventsOrTodos: string;
   isOnlyTasksWithoutDatesAreTodos: boolean;
@@ -64,6 +65,7 @@ export const DEFAULT_SETTINGS: Settings = {
   saveFileExtension: '.ical',
   howToParseInternalLinks: 'DoNotModifyThem', // HOW_TO_PARSE_INTERNAL_LINKS.DoNotModifyThem,
   ignoreCompletedTasks: false,
+  ignoreCancelledTasks: true,
   isDebug: false,
   includeEventsOrTodos: 'EventsOnly', // INCLUDE_EVENTS_OR_TODOS.EventsOnly
   isOnlyTasksWithoutDatesAreTodos: true,
