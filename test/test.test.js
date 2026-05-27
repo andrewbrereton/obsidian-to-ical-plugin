@@ -1,6 +1,72 @@
-const ICAL = require('ical.js');
 const fs = require('fs').promises;
 const path = require('path');
+
+// Minimal RFC 5545 parser producing the subset of jcal-shaped output that
+// these tests rely on: [componentName, [[propName, params, type, value], ...], [subcomponents]].
+// Type is always 'text' — the test only asserts on 'text' for the version row.
+function parseIcal(content) {
+  // Unfold continuation lines (RFC 5545 §3.1): lines beginning with WSP join
+  // the previous line, dropping the WSP.
+  const unfolded = content.replace(/\r?\n[ \t]/g, '');
+  const lines = unfolded.split(/\r?\n/).filter((l) => l.length > 0);
+
+  const cursor = { idx: 0 };
+  return parseComponent(lines, cursor);
+}
+
+function parseComponent(lines, cursor) {
+  const beginLine = lines[cursor.idx];
+  const beginMatch = beginLine && beginLine.match(/^BEGIN:(.+)$/i);
+  if (!beginMatch) {
+    throw new Error(`Expected BEGIN at line ${cursor.idx}: ${beginLine}`);
+  }
+  const name = beginMatch[1].trim().toLowerCase();
+  cursor.idx++;
+
+  const properties = [];
+  const subcomponents = [];
+  const endPattern = new RegExp(`^END:${name}$`, 'i');
+
+  while (cursor.idx < lines.length) {
+    const line = lines[cursor.idx];
+    if (endPattern.test(line.trim())) {
+      cursor.idx++;
+      return [name, properties, subcomponents];
+    }
+    if (/^BEGIN:/i.test(line)) {
+      subcomponents.push(parseComponent(lines, cursor));
+      continue;
+    }
+    const property = parseProperty(line);
+    if (property) properties.push(property);
+    cursor.idx++;
+  }
+  throw new Error(`Unclosed component ${name}`);
+}
+
+function parseProperty(line) {
+  const colonIdx = line.indexOf(':');
+  if (colonIdx === -1) return null;
+
+  const propPart = line.slice(0, colonIdx);
+  const rawValue = line.slice(colonIdx + 1);
+
+  const [propName, ...paramParts] = propPart.split(';');
+  const params = {};
+  paramParts.forEach((p) => {
+    const eq = p.indexOf('=');
+    if (eq > 0) {
+      params[p.slice(0, eq).toLowerCase()] = p.slice(eq + 1);
+    }
+  });
+
+  // Unescape RFC 5545 TEXT: \\, \;, \\ become literal; \n or \N become newline.
+  const value = rawValue.replace(/\\([,;\\])|\\([nN])/g, (_m, lit, nl) =>
+    lit !== undefined ? lit : '\n'
+  );
+
+  return [propName.toLowerCase(), params, 'text', value];
+}
 
 describe('Obsidian iCal Plugin - Legacy Integration Tests', () => {
   let jcalData;
@@ -10,7 +76,7 @@ describe('Obsidian iCal Plugin - Legacy Integration Tests', () => {
     try {
       const outputPath = path.join('test', 'obsidian-ical-plugin.ics');
       const icsContent = await fs.readFile(outputPath, 'utf-8');
-      jcalData = ICAL.parse(icsContent);
+      jcalData = parseIcal(icsContent);
 
       // Dynamically discover task IDs instead of hardcoding
       const allItems = jcalData[2] || [];
