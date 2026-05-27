@@ -1,7 +1,7 @@
 import { App } from 'obsidian';
 import { FileClient } from './FileClient';
 import { GithubClient } from './GithubClient';
-import { ApiClient } from './ApiClient';
+import { ApiClient, apiClient } from './ApiClient';
 import { IcalService } from './IcalService';
 import { log } from './Logger';
 import { Task } from './Model/Task';
@@ -16,7 +16,6 @@ export class Main {
   iCalService: IcalService;
   githubClient: GithubClient;
   fileClient: FileClient;
-  apiClient: ApiClient;
   tasks: Task[];
   taskFinder: TaskFinder;
 
@@ -25,10 +24,17 @@ export class Main {
     this.statusBar = statusBar;
     this.iCalService = new IcalService();
     this.githubClient = new GithubClient();
-    this.apiClient = new ApiClient(app.vault.getName(), settings.secretKey);
     this.fileClient = new FileClient(this.app.vault);
     this.tasks = [];
     this.taskFinder = new TaskFinder(this.app.vault);
+  }
+
+  // Construct an ApiClient on demand so each call reads the current
+  // settings.secretKey. A long-lived snapshot would go stale the moment the
+  // user updates their key in Settings; the ValidationCache singleton handles
+  // caching across instances so there's no per-call performance cost.
+  get apiClient(): ApiClient {
+    return apiClient(this.app.vault.getName(), settings.secretKey);
   }
 
   async start() {
