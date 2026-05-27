@@ -14,6 +14,7 @@ import { log } from './Logger';
 import ObsidianIcalPlugin from './ObsidianIcalPlugin';
 import { settings } from './SettingsManager';
 import {apiClient} from "./ApiClient";
+import { CalendarInfoFetcher } from './CalendarInfoFetcher';
 
 export class SettingTab extends PluginSettingTab {
   plugin: ObsidianIcalPlugin;
@@ -22,6 +23,7 @@ export class SettingTab extends PluginSettingTab {
   subscriptionStatus: string | null = null;
   subscriptionExpiresAt: string | null = null;
   calendarUpdatedAt: string | null = null;
+  private calendarFetcher: CalendarInfoFetcher = new CalendarInfoFetcher();
 
   constructor(app: App, plugin: ObsidianIcalPlugin) {
     super(app, plugin);
@@ -45,6 +47,9 @@ export class SettingTab extends PluginSettingTab {
     this.subscriptionExpiresAt = null;
     this.calendarUrl = null;
     this.calendarUpdatedAt = null;
+    // Reset the fetch gate so a new (or re-validated) key fetches fresh
+    // calendar info next time display() runs.
+    this.calendarFetcher.reset();
   }
 
   private updateMemberStatusFromCache(): void {
@@ -63,15 +68,24 @@ export class SettingTab extends PluginSettingTab {
       this.subscriptionStatus = cachedValidation.rawStatus || cachedValidation.status;
       this.subscriptionExpiresAt = cachedValidation.expiresAt?.toISOString() || null;
 
-      // Get calendar info
-      client.getCalendar().then(calendarResponse => {
-        if (calendarResponse.found) {
-          this.calendarUrl = calendarResponse.url;
-          this.calendarUpdatedAt = calendarResponse.updatedAt;
-        }
-      }).catch(() => {
-        // Ignore calendar fetch errors
-      });
+      // Populate the calendar URL from the fetch cache if we've already
+      // fetched once. Settings re-renders (every toggle, every onChange)
+      // must not re-fire getCalendar() — that's why we gate on hasAttempted.
+      const cachedInfo = this.calendarFetcher.info;
+      if (cachedInfo) {
+        this.calendarUrl = cachedInfo.url;
+        this.calendarUpdatedAt = cachedInfo.updatedAt;
+      }
+
+      if (this.isSecretKeyValid && !this.calendarFetcher.hasAttempted) {
+        void this.calendarFetcher.fetchOnce(client).then((info) => {
+          if (info) {
+            this.calendarUrl = info.url;
+            this.calendarUpdatedAt = info.updatedAt;
+            this.display();
+          }
+        });
+      }
     } else {
       // No cache yet - trigger background validation for valid-looking secret key
       void this.validateSecretKeyInBackground(settings.secretKey);
@@ -287,6 +301,22 @@ export class SettingTab extends PluginSettingTab {
                 window.setTimeout(() => {
                   button.setButtonText('📋 Copy to clipboard');
                 }, 500);
+              });
+          })
+          .addButton((button: ButtonComponent) => {
+            button
+              .setButtonText('🔄 Refresh')
+              .setTooltip('Re-fetch calendar info from the server')
+              .onClick(async () => {
+                if (!settings.secretKey || settings.secretKey.length !== 32) return;
+                const client = apiClient(this.app.vault.getName(), settings.secretKey);
+                button.setButtonText('⏳ Refreshing…');
+                const info = await this.calendarFetcher.forceRefetch(client);
+                if (info) {
+                  this.calendarUrl = info.url;
+                  this.calendarUpdatedAt = info.updatedAt;
+                }
+                this.display();
               });
           });
       } else {
