@@ -13,7 +13,13 @@ export class TaskFinder {
   async findTasks(file: TFile, listItemsCache: ListItemCache[], headings: Headings|undefined): Promise<Task[]> {
     const fileCachedContent: string = await this.vault.cachedRead(file);
     const lines: string[] = fileCachedContent.split('\n');
-    const fileUri: string = 'obsidian://open?vault=' + file.vault.getName() + '&file=' + file.path;
+    // Use encodeURIComponent for the variable parts so reserved URL chars in
+    // the vault name or file path (&, ?, #, +, =, space) get percent-encoded.
+    // Plain concatenation would produce malformed URLs that calendar apps
+    // can't open.
+    const fileUri: string =
+      'obsidian://open?vault=' + encodeURIComponent(file.vault.getName()) +
+      '&file=' + encodeURIComponent(file.path);
 
     const tasks: Task[] = listItemsCache
       // Get the position of each list item

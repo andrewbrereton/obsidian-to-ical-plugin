@@ -195,6 +195,86 @@ describe('TaskFinder.findTasks — Day Planner dateOverride scoping', () => {
     expect(due!.getDate()).toBe(1);
   });
 
+  describe('fileUri URL-encoding', () => {
+    function getFileUriFromTask(task: { fileUri: string }): string {
+      return task.fileUri;
+    }
+
+    it('percent-encodes & in the vault name', async () => {
+      const { vault, listItemsCache } = buildFixture(
+        ['- [ ] Plain task 📅 2024-05-01'].join('\n'),
+      );
+      const file = {
+        path: 'notes.md',
+        vault: { getName: () => 'Personal & Work' },
+        // eslint-disable-next-line obsidianmd/no-tfile-tfolder-cast -- test fixture
+      } as unknown as TFile;
+
+      const finder = new TaskFinder(vault);
+      const tasks = await finder.findTasks(file, listItemsCache, undefined);
+
+      expect(tasks).toHaveLength(1);
+      expect(getFileUriFromTask(tasks[0])).toBe(
+        'obsidian://open?vault=Personal%20%26%20Work&file=notes.md',
+      );
+    });
+
+    it('percent-encodes ? in the file path', async () => {
+      const { vault, listItemsCache } = buildFixture(
+        ['- [ ] Plain task 📅 2024-05-01'].join('\n'),
+      );
+      const file = {
+        path: 'Where is my note?.md',
+        vault: { getName: () => 'v' },
+        // eslint-disable-next-line obsidianmd/no-tfile-tfolder-cast -- test fixture
+      } as unknown as TFile;
+
+      const finder = new TaskFinder(vault);
+      const tasks = await finder.findTasks(file, listItemsCache, undefined);
+
+      expect(getFileUriFromTask(tasks[0])).toBe(
+        'obsidian://open?vault=v&file=Where%20is%20my%20note%3F.md',
+      );
+    });
+
+    it('percent-encodes , in the file path', async () => {
+      const { vault, listItemsCache } = buildFixture(
+        ['- [ ] Plain task 📅 2024-05-01'].join('\n'),
+      );
+      const file = {
+        path: 'Meeting, 2024.md',
+        vault: { getName: () => 'v' },
+        // eslint-disable-next-line obsidianmd/no-tfile-tfolder-cast -- test fixture
+      } as unknown as TFile;
+
+      const finder = new TaskFinder(vault);
+      const tasks = await finder.findTasks(file, listItemsCache, undefined);
+
+      expect(getFileUriFromTask(tasks[0])).toBe(
+        'obsidian://open?vault=v&file=Meeting%2C%202024.md',
+      );
+    });
+
+    it('leaves a plain file path unchanged (only the / separators stay)', async () => {
+      const { vault, listItemsCache } = buildFixture(
+        ['- [ ] Plain task 📅 2024-05-01'].join('\n'),
+      );
+      const file = {
+        path: 'folder/notes.md',
+        vault: { getName: () => 'v' },
+        // eslint-disable-next-line obsidianmd/no-tfile-tfolder-cast -- test fixture
+      } as unknown as TFile;
+
+      const finder = new TaskFinder(vault);
+      const tasks = await finder.findTasks(file, listItemsCache, undefined);
+
+      // encodeURIComponent encodes / to %2F, which is intentional for URL safety.
+      expect(getFileUriFromTask(tasks[0])).toBe(
+        'obsidian://open?vault=v&file=folder%2Fnotes.md',
+      );
+    });
+  });
+
   it('with Day Planner DISABLED the heading-derived override never applies', async () => {
     mockSettings.isDayPlannerPluginFormatEnabled = false;
 
