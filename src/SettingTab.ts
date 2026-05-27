@@ -405,58 +405,6 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
-      .setName('Save calendar to GitHub Gist?')
-      .addToggle((toggle: ToggleComponent) =>
-        toggle
-          .setValue(settings.isSaveToGistEnabled)
-          .onChange(async (value) => {
-            settings.isSaveToGistEnabled = value;
-            this.display();
-          })
-      );
-
-    new Setting(containerEl)
-      .setName('Save calendar to disk?')
-      .addToggle((toggle: ToggleComponent) =>
-        toggle
-          .setValue(settings.isSaveToFileEnabled)
-          .onChange(async (value) => {
-            settings.isSaveToFileEnabled = value;
-            this.display();
-          })
-      );
-
-    new Setting(containerEl)
-      .setName('Periodically save your calendar')
-      .setDesc('Do you want the plugin to periodically process your tasks? If you choose not to then a calendar will only be built when Obsidian is loaded.')
-      .addToggle((toggle: ToggleComponent) =>
-        toggle
-          .setValue(settings.isPeriodicSaveEnabled)
-          .onChange(async (value) => {
-            settings.isPeriodicSaveEnabled = value;
-            void this.plugin.configurePeriodicSave();
-            this.display();
-          })
-      );
-
-    if (settings.isPeriodicSaveEnabled) {
-      new Setting(containerEl)
-        .setName('How often should we parse and save your calendar? (minutes)')
-        .setDesc('How often do you want to periodically scan for tasks?')
-        .addText((text) =>
-          text
-            .setValue(settings.periodicSaveInterval.toString())
-            .onChange(async (value) => {
-              let minutes: number = parseInt(value, 10);
-              if (minutes < 1) minutes = 1;
-              if (minutes > 1440) minutes = 1440;
-              settings.periodicSaveInterval = minutes;
-              await this.plugin.configurePeriodicSave();
-            })
-        );
-    }
-
-    new Setting(containerEl)
       .setName('Only include tasks with certain tags?')
       .setDesc('Do you want your calendar to only include tasks that contain certain tags?')
       .addToggle((toggle: ToggleComponent) =>
