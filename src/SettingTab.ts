@@ -274,9 +274,47 @@ export class SettingTab extends PluginSettingTab {
           }
         }));
 
-      // Calendar Status and URL
+      // Adds a 🔄 Refresh button to the given Setting. Extracted so the same
+      // button can appear on both the success row (alongside Copy) and the
+      // failure rows below — otherwise a Refresh failure would leave the user
+      // with no UI path to retry.
+      const addRefreshButton = (setting: Setting): Setting =>
+        setting.addButton((button: ButtonComponent) => {
+          button
+            .setButtonText('🔄 Refresh')
+            .setTooltip('Re-fetch calendar info from the server')
+            .onClick(async () => {
+              if (!settings.secretKey || settings.secretKey.length !== 32) return;
+              const client = apiClient(this.app.vault.getName(), settings.secretKey);
+              button.setButtonText('⏳ Refreshing…');
+              const info = await this.calendarFetcher.forceRefetch(client);
+              if (info) {
+                this.calendarUrl = info.url;
+                this.calendarUpdatedAt = info.updatedAt;
+              } else {
+                // Refresh failed. Clear the on-screen URL so the user isn't
+                // shown a stale link alongside a Notice that says they
+                // couldn't refresh it.
+                this.calendarUrl = null;
+                this.calendarUpdatedAt = null;
+                if (this.calendarFetcher.lastOutcome === 'not-found') {
+                  new Notice('No calendar found yet. Enable "Save calendar to the web" and trigger a save to create one.');
+                } else {
+                  new Notice('Couldn\'t refresh calendar info. Check your secret key and network connection.');
+                }
+              }
+              this.display();
+            });
+        });
+
+      // Calendar status. Branches on (calendarUrl, lastOutcome):
+      // - URL present: show URL + Copy + Refresh
+      // - no URL, not-found:  show explanatory row + Refresh
+      // - no URL, error:      show explanatory row + Refresh
+      // - no URL, idle:       show the original placeholder (no Refresh yet
+      //                       because we haven't attempted a fetch)
       if (this.calendarUrl) {
-        new Setting(containerEl)
+        const urlSetting = new Setting(containerEl)
           .setName('Calendar URL')
           .setDesc(createFragment((fragment) => {
             fragment.createEl('a', {
@@ -303,35 +341,16 @@ export class SettingTab extends PluginSettingTab {
                   button.setButtonText('📋 Copy to clipboard');
                 }, 500);
               });
-          })
-          .addButton((button: ButtonComponent) => {
-            button
-              .setButtonText('🔄 Refresh')
-              .setTooltip('Re-fetch calendar info from the server')
-              .onClick(async () => {
-                if (!settings.secretKey || settings.secretKey.length !== 32) return;
-                const client = apiClient(this.app.vault.getName(), settings.secretKey);
-                button.setButtonText('⏳ Refreshing…');
-                const info = await this.calendarFetcher.forceRefetch(client);
-                if (info) {
-                  this.calendarUrl = info.url;
-                  this.calendarUpdatedAt = info.updatedAt;
-                } else {
-                  // Refresh failed. Clear the on-screen URL so the user isn't
-                  // shown a stale link alongside a Notice that says they
-                  // couldn't refresh it — that combination is more confusing
-                  // than useful. The Refresh button stays available for retry.
-                  this.calendarUrl = null;
-                  this.calendarUpdatedAt = null;
-                  if (this.calendarFetcher.lastOutcome === 'not-found') {
-                    new Notice('No calendar found yet. Enable "Save calendar to the web" and trigger a save to create one.');
-                  } else {
-                    new Notice('Couldn\'t refresh calendar info. Check your secret key and network connection.');
-                  }
-                }
-                this.display();
-              });
           });
+        addRefreshButton(urlSetting);
+      } else if (this.calendarFetcher.lastOutcome === 'not-found') {
+        addRefreshButton(new Setting(containerEl)
+          .setName('No calendar saved yet')
+          .setDesc('Enable "Save calendar to the web" below and trigger a save, then click Refresh.'));
+      } else if (this.calendarFetcher.lastOutcome === 'error') {
+        addRefreshButton(new Setting(containerEl)
+          .setName('Couldn\'t fetch calendar info')
+          .setDesc('Check your secret key and network connection, then click Refresh.'));
       } else {
         containerEl.createEl('p', {
           cls: 'setting-item-description',
