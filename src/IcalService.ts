@@ -2,6 +2,7 @@ import { Task } from './Model/Task';
 import { TaskDateName } from './Model/TaskDate';
 import { TaskStatus } from './Model/TaskStatus';
 import { settings } from './SettingsManager';
+import { escapeICalText } from './iCalText';
 
 export class IcalService {
   getCalendar(tasks: Task[]): string {
@@ -145,10 +146,15 @@ export class IcalService {
         'DTSTART:' + date + '\r\n';
     }
 
+    // ALTREP parameter values live inside DQUOTE — they're URIs, not TEXT, so
+    // they don't get the comma/semicolon backslash-escaping. The LOCATION
+    // value section (after the ':') IS TEXT and DOES need escaping.
+    const urlEncoded = encodeURI(task.getLocation());
+
     event += '' +
       'SUMMARY:' + prependSummary + task.getSummary() + '\r\n' +
-      (settings.isIncludeLinkInDescription ? 'DESCRIPTION:' + encodeURI(task.getLocation()) + '\r\n' : '') +
-      (settings.isIncludeLocation ? 'LOCATION:ALTREP="' + encodeURI(task.getLocation()) + '":' + encodeURI(task.getLocation()) + '\r\n' : '') +
+      (settings.isIncludeLinkInDescription ? 'DESCRIPTION:' + escapeICalText(urlEncoded) + '\r\n' : '') +
+      (settings.isIncludeLocation ? 'LOCATION:ALTREP="' + urlEncoded + '":' + escapeICalText(urlEncoded) + '\r\n' : '') +
       'END:VEVENT\r\n';
 
     return event;
@@ -168,13 +174,17 @@ export class IcalService {
   }
 
   private getToDo(task: Task): string {
+    // ALTREP value lives inside DQUOTE (URI-rules, no TEXT escaping).
+    // LOCATION value section after ':' is TEXT and DOES need escaping.
+    const urlEncoded = encodeURI(task.getLocation());
+
     let toDo = '' +
       'BEGIN:VTODO\r\n' +
       'UID:' + task.getId() + '\r\n' +
       'SUMMARY:' + task.getSummary() + '\r\n' +
       // If a task does not have a date, do not include the DTSTAMP property
       (task.hasAnyDate() ? 'DTSTAMP:' + task.getDate(null, 'YYYYMMDDTHHmmss') + '\r\n' : '') +
-      (settings.isIncludeLocation ? 'LOCATION:ALTREP="' + encodeURI(task.getLocation()) + '":' + encodeURI(task.getLocation()) + '\r\n' : '');
+      (settings.isIncludeLocation ? 'LOCATION:ALTREP="' + urlEncoded + '":' + escapeICalText(urlEncoded) + '\r\n' : '');
 
     if (task.hasA(TaskDateName.Due)) {
       toDo += 'DUE;VALUE=DATE:' + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
@@ -201,7 +211,7 @@ export class IcalService {
 
 
     if (settings.isIncludeLinkInDescription) {
-      toDo += 'DESCRIPTION:' + encodeURI(task.getLocation()) + '\r\n';
+      toDo += 'DESCRIPTION:' + escapeICalText(urlEncoded) + '\r\n';
     }
 
     toDo += 'END:VTODO\r\n';
