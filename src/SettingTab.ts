@@ -285,6 +285,11 @@ export class SettingTab extends PluginSettingTab {
             .setTooltip('Re-fetch calendar info from the server')
             .onClick(async () => {
               if (!settings.secretKey || settings.secretKey.length !== 32) return;
+              // A previous Refresh click is still in flight. Bail without
+              // doing anything — the in-flight call will paint its own
+              // result. Otherwise this handler reads lastOutcome === 'idle'
+              // and shows a misleading error Notice.
+              if (this.calendarFetcher.isCurrentlyFetching) return;
               const client = apiClient(this.app.vault.getName(), settings.secretKey);
               button.setButtonText('⏳ Refreshing…');
               const info = await this.calendarFetcher.forceRefetch(client);

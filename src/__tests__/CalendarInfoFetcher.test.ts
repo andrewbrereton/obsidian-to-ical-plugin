@@ -191,6 +191,58 @@ describe('CalendarInfoFetcher.lastOutcome', () => {
     expect(fetcher.info).toBeNull();
   });
 
+  it('isCurrentlyFetching is false initially, true while fetching, false after resolution', async () => {
+    let resolve!: (v: FoundCalendar) => void;
+    const pending = new Promise<FoundCalendar>((res) => {
+      resolve = res;
+    });
+    const getCalendar = jest.fn().mockReturnValue(pending);
+    const client = { getCalendar } as unknown as ApiClient;
+    const fetcher = new CalendarInfoFetcher();
+
+    expect(fetcher.isCurrentlyFetching).toBe(false);
+    const pendingFetch = fetcher.fetchOnce(client);
+    expect(fetcher.isCurrentlyFetching).toBe(true);
+
+    resolve({ found: true, url: 'https://x.com/cal', updatedAt: '2026-05-27T10:00:00Z' });
+    await pendingFetch;
+    expect(fetcher.isCurrentlyFetching).toBe(false);
+  });
+
+  it('isCurrentlyFetching is false after a not-found resolution', async () => {
+    let resolve!: (v: NotFoundCalendar) => void;
+    const pending = new Promise<NotFoundCalendar>((res) => {
+      resolve = res;
+    });
+    const getCalendar = jest.fn().mockReturnValue(pending);
+    const client = { getCalendar } as unknown as ApiClient;
+    const fetcher = new CalendarInfoFetcher();
+
+    const pendingFetch = fetcher.fetchOnce(client);
+    expect(fetcher.isCurrentlyFetching).toBe(true);
+
+    resolve({ found: false, url: null, updatedAt: null });
+    await pendingFetch;
+    expect(fetcher.isCurrentlyFetching).toBe(false);
+  });
+
+  it('isCurrentlyFetching is false after an error resolution', async () => {
+    let reject!: (e: Error) => void;
+    const pending = new Promise<FoundCalendar>((_, rej) => {
+      reject = rej;
+    });
+    const getCalendar = jest.fn().mockReturnValue(pending);
+    const client = { getCalendar } as unknown as ApiClient;
+    const fetcher = new CalendarInfoFetcher();
+
+    const pendingFetch = fetcher.fetchOnce(client);
+    expect(fetcher.isCurrentlyFetching).toBe(true);
+
+    reject(new Error('network down'));
+    await pendingFetch;
+    expect(fetcher.isCurrentlyFetching).toBe(false);
+  });
+
   it('an error after a previous success replaces the outcome', async () => {
     const { client } = makeClient([
       { found: true, url: 'https://x.com/cal', updatedAt: '2026-05-27T10:00:00Z' },

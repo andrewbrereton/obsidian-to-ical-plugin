@@ -40,6 +40,10 @@ export class CalendarInfoFetcher {
     return this.outcome;
   }
 
+  get isCurrentlyFetching(): boolean {
+    return this.isFetching;
+  }
+
   async fetchOnce(client: ApiClient): Promise<CalendarInfo | null> {
     if (this.hasAttemptedFetch || this.isFetching) {
       return this.cached;
