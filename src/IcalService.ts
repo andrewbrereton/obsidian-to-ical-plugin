@@ -154,7 +154,7 @@ export class IcalService {
     event += '' +
       'SUMMARY:' + prependSummary + task.getSummary() + '\r\n' +
       (settings.isIncludeLinkInDescription ? 'DESCRIPTION:' + escapeICalText(urlEncoded) + '\r\n' : '') +
-      (settings.isIncludeLocation ? 'LOCATION:ALTREP="' + urlEncoded + '":' + escapeICalText(urlEncoded) + '\r\n' : '') +
+      (settings.isIncludeLocation ? 'LOCATION;ALTREP="' + urlEncoded + '":' + escapeICalText(urlEncoded) + '\r\n' : '') +
       'END:VEVENT\r\n';
 
     return event;
@@ -184,7 +184,7 @@ export class IcalService {
       'SUMMARY:' + task.getSummary() + '\r\n' +
       // If a task does not have a date, do not include the DTSTAMP property
       (task.hasAnyDate() ? 'DTSTAMP:' + task.getDate(null, 'YYYYMMDDTHHmmss') + '\r\n' : '') +
-      (settings.isIncludeLocation ? 'LOCATION:ALTREP="' + urlEncoded + '":' + escapeICalText(urlEncoded) + '\r\n' : '');
+      (settings.isIncludeLocation ? 'LOCATION;ALTREP="' + urlEncoded + '":' + escapeICalText(urlEncoded) + '\r\n' : '');
 
     if (task.hasA(TaskDateName.Due)) {
       toDo += 'DUE;VALUE=DATE:' + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';

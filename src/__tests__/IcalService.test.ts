@@ -68,7 +68,7 @@ describe('IcalService location toggle', () => {
   it('includes LOCATION line in VEVENT when isIncludeLocation is true', () => {
     mockSettings.isIncludeLocation = true;
     const ical = new IcalService().getCalendar([buildTaskWithDueDate()]);
-    expect(ical).toContain('LOCATION:ALTREP=');
+    expect(ical).toContain('LOCATION;ALTREP=');
   });
 
   it('omits LOCATION line in VEVENT when isIncludeLocation is false', () => {
@@ -199,10 +199,10 @@ describe('IcalService DESCRIPTION/LOCATION iCal-escaping', () => {
     ]);
     // The ALTREP parameter (inside DQUOTE) keeps the raw comma — it's a URI,
     // not iCal TEXT. encodeURI URL-encodes the space to %20 but leaves , alone.
-    expect(ical).toMatch(/LOCATION:ALTREP="[^"]*Meeting,%202024\.md"/);
+    expect(ical).toMatch(/LOCATION;ALTREP="[^"]*Meeting,%202024\.md"/);
     // The LOCATION value (after the closing quote and colon) IS TEXT and the
     // comma must be escaped.
-    expect(ical).toMatch(/LOCATION:ALTREP="[^"]*":[^\r\n]*Meeting\\,%202024\.md/);
+    expect(ical).toMatch(/LOCATION;ALTREP="[^"]*":[^\r\n]*Meeting\\,%202024\.md/);
   });
 
   it('passes plain URLs through unchanged (regression for the common case)', () => {
@@ -210,6 +210,6 @@ describe('IcalService DESCRIPTION/LOCATION iCal-escaping', () => {
       buildTaskWithLocation('obsidian://open?vault=v&file=note.md'),
     ]);
     expect(ical).toContain('DESCRIPTION:obsidian://open?vault=v&file=note.md');
-    expect(ical).toContain('LOCATION:ALTREP="obsidian://open?vault=v&file=note.md":obsidian://open?vault=v&file=note.md');
+    expect(ical).toContain('LOCATION;ALTREP="obsidian://open?vault=v&file=note.md":obsidian://open?vault=v&file=note.md');
   });
 });
