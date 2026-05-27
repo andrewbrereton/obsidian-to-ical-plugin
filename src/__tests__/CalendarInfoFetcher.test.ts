@@ -257,3 +257,98 @@ describe('CalendarInfoFetcher.lastOutcome', () => {
     expect(fetcher.lastOutcome).toBe('error');
   });
 });
+
+describe('CalendarInfoFetcher stale-completion guard', () => {
+  it('drops the result when reset() is called during in-flight fetch', async () => {
+    let resolve!: (v: FoundCalendar) => void;
+    const pending = new Promise<FoundCalendar>((res) => {
+      resolve = res;
+    });
+    const getCalendar = jest.fn().mockReturnValue(pending);
+    const client = { getCalendar } as unknown as ApiClient;
+    const fetcher = new CalendarInfoFetcher();
+
+    const pendingFetch = fetcher.fetchOnce(client);
+    expect(fetcher.isCurrentlyFetching).toBe(true);
+
+    // The user changed their secret key mid-fetch — SettingTab's
+    // clearMemberStatus() would call this.
+    fetcher.reset();
+    expect(fetcher.lastOutcome).toBe('idle');
+    expect(fetcher.hasAttempted).toBe(false);
+
+    resolve({ found: true, url: 'https://x.com/old-key-cal', updatedAt: '2026-05-27T10:00:00Z' });
+    const result = await pendingFetch;
+
+    // The stale completion must not have applied — the fetcher should
+    // still be in its post-reset state, not holding the old-key data.
+    expect(result).toBeNull();
+    expect(fetcher.info).toBeNull();
+    expect(fetcher.lastOutcome).toBe('idle');
+    expect(fetcher.hasAttempted).toBe(false);
+    expect(fetcher.isCurrentlyFetching).toBe(false);
+  });
+
+  it('drops an in-flight error result that resolves after reset()', async () => {
+    let reject!: (e: Error) => void;
+    const pending = new Promise<FoundCalendar>((_, rej) => {
+      reject = rej;
+    });
+    const getCalendar = jest.fn().mockReturnValue(pending);
+    const client = { getCalendar } as unknown as ApiClient;
+    const fetcher = new CalendarInfoFetcher();
+
+    const pendingFetch = fetcher.fetchOnce(client);
+    fetcher.reset();
+
+    reject(new Error('network down after reset'));
+    await pendingFetch;
+
+    // Outcome must NOT be 'error' — the reset invalidated the fetch and
+    // the late rejection is irrelevant.
+    expect(fetcher.lastOutcome).toBe('idle');
+    expect(fetcher.hasAttempted).toBe(false);
+  });
+
+  it('still applies the result when no reset() happens during the fetch', async () => {
+    // Sanity check that the guard doesn't break the normal path.
+    const { client } = makeClient([
+      { found: true, url: 'https://x.com/cal', updatedAt: '2026-05-27T10:00:00Z' },
+    ]);
+    const fetcher = new CalendarInfoFetcher();
+
+    const info = await fetcher.fetchOnce(client);
+
+    expect(info).toEqual({ url: 'https://x.com/cal', updatedAt: '2026-05-27T10:00:00Z' });
+    expect(fetcher.info).toEqual(info);
+    expect(fetcher.lastOutcome).toBe('found');
+    expect(fetcher.hasAttempted).toBe(true);
+  });
+
+  it('a subsequent fresh fetch after a stale drop still applies normally', async () => {
+    // Click 1 fetch is dropped because of a reset, then a normal fetchOnce
+    // should still work for the new context.
+    let resolveFirst!: (v: FoundCalendar) => void;
+    const firstPending = new Promise<FoundCalendar>((res) => {
+      resolveFirst = res;
+    });
+    const getCalendar = jest.fn()
+      .mockReturnValueOnce(firstPending)
+      .mockResolvedValueOnce({ found: true, url: 'https://x.com/new', updatedAt: '2026-05-27T12:00:00Z' });
+    const client = { getCalendar } as unknown as ApiClient;
+    const fetcher = new CalendarInfoFetcher();
+
+    const firstFetch = fetcher.fetchOnce(client);
+    fetcher.reset();
+    resolveFirst({ found: true, url: 'https://x.com/old', updatedAt: '2026-05-27T10:00:00Z' });
+    await firstFetch;
+
+    // Now fetch fresh — should land normally.
+    const secondInfo = await fetcher.fetchOnce(client);
+
+    expect(secondInfo).toEqual({ url: 'https://x.com/new', updatedAt: '2026-05-27T12:00:00Z' });
+    expect(fetcher.info?.url).toBe('https://x.com/new');
+    expect(fetcher.lastOutcome).toBe('found');
+    expect(fetcher.hasAttempted).toBe(true);
+  });
+});

@@ -21,11 +21,18 @@ export class CalendarInfoFetcher {
   private isFetching: boolean = false;
   private cached: CalendarInfo | null = null;
   private outcome: FetchOutcome = 'idle';
+  // Incremented by reset(). runFetch captures it at the start and discards
+  // its result on completion if the value has changed — i.e. if a
+  // reset()/secretKey change invalidated the request mid-flight. Without
+  // this guard the in-flight fetch's finally block would overwrite freshly
+  // reset state with the stale-key result.
+  private currentToken: number = 0;
 
   reset(): void {
     this.hasAttemptedFetch = false;
     this.cached = null;
     this.outcome = 'idle';
+    this.currentToken++;
   }
 
   get info(): CalendarInfo | null {
@@ -60,25 +67,33 @@ export class CalendarInfoFetcher {
   }
 
   private async runFetch(client: ApiClient): Promise<CalendarInfo | null> {
+    const myToken = this.currentToken;
     this.isFetching = true;
+    let nextCached: CalendarInfo | null = null;
+    let nextOutcome: FetchOutcome;
     try {
       const response = await client.getCalendar();
       if (response.found && response.url && response.updatedAt) {
-        this.cached = { url: response.url, updatedAt: response.updatedAt };
-        this.outcome = 'found';
+        nextCached = { url: response.url, updatedAt: response.updatedAt };
+        nextOutcome = 'found';
       } else {
-        this.cached = null;
-        this.outcome = 'not-found';
+        nextOutcome = 'not-found';
       }
     } catch {
       // The validation status is owned by the separate ApiClient.isActive
       // cache; failures here only affect the calendar URL display.
-      this.cached = null;
-      this.outcome = 'error';
-    } finally {
-      this.isFetching = false;
-      this.hasAttemptedFetch = true;
+      nextOutcome = 'error';
     }
+    this.isFetching = false;
+    // If the token changed (reset() / secretKey change), our result is
+    // stale and shouldn't clobber the post-reset state. Return null so
+    // callers can detect the silent-drop case too.
+    if (myToken !== this.currentToken) {
+      return null;
+    }
+    this.cached = nextCached;
+    this.outcome = nextOutcome;
+    this.hasAttemptedFetch = true;
     return this.cached;
   }
 }
