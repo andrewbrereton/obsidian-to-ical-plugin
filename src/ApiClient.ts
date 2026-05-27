@@ -44,8 +44,12 @@ export class ApiClient {
     })
       .then(response => {
         const validationResponse = ApiValidateResponse.fromResponse(response);
-        // Cache the successful response
-        this.validationCache.setCachedResponse(this.secretKey, validationResponse);
+        // Only cache active subscriptions. Caching an inactive response would
+        // make the user wait the full TTL (5 min) after fixing their billing
+        // before save() works again.
+        if (validationResponse.isSubscriptionActive()) {
+          this.validationCache.setCachedResponse(this.secretKey, validationResponse);
+        }
         return validationResponse;
       })
       .catch(error => {
