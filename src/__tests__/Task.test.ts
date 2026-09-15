@@ -17,6 +17,7 @@ jest.mock('../SettingsManager', () => ({
 }));
 
 import { Task, createTaskFromLine } from '../Model/Task';
+import { TaskDate, TaskDateName } from '../Model/TaskDate';
 import { TaskStatus } from '../Model/TaskStatus';
 
 describe('createTaskFromLine', () => {
@@ -136,5 +137,44 @@ describe('Task.getId', () => {
     const b = makeTask(longSummary, 'obsidian://open?vault=v&file=notes.md');
     expect(a.getId()).toEqual(b.getId());
     expect(a.getId()).toMatch(/^[0-9a-f]{16}@obsidian-ical-plugin$/);
+  });
+
+  // Fixes #229: old completed instances of a recurring task share a file and a
+  // summary, so without the dates in the hash they all collapse to one UID and
+  // the calendar keeps only one of them.
+  const makeDatedTask = (summary: string, dates: TaskDate[]) =>
+    new Task(TaskStatus.ToDo, dates, summary, 'obsidian://open?vault=v&file=notes.md');
+
+  it('returns different ids for the same task text on different dates', () => {
+    const a = makeDatedTask('Water the plants', [new TaskDate(new Date(2026, 3, 20), TaskDateName.Due)]);
+    const b = makeDatedTask('Water the plants', [new TaskDate(new Date(2026, 3, 27), TaskDateName.Due)]);
+    expect(a.getId()).not.toEqual(b.getId());
+  });
+
+  it('returns the same id for the same task text on the same date', () => {
+    const a = makeDatedTask('Water the plants', [new TaskDate(new Date(2026, 3, 20), TaskDateName.Due)]);
+    const b = makeDatedTask('Water the plants', [new TaskDate(new Date(2026, 3, 20), TaskDateName.Due)]);
+    expect(a.getId()).toEqual(b.getId());
+  });
+
+  it('returns different ids when the same date is attached to a different date name', () => {
+    const a = makeDatedTask('Water the plants', [new TaskDate(new Date(2026, 3, 20), TaskDateName.Due)]);
+    const b = makeDatedTask('Water the plants', [new TaskDate(new Date(2026, 3, 20), TaskDateName.Start)]);
+    expect(a.getId()).not.toEqual(b.getId());
+  });
+
+  it('returns the same id regardless of the order the dates were parsed in', () => {
+    const due = new TaskDate(new Date(2026, 3, 27), TaskDateName.Due);
+    const start = new TaskDate(new Date(2026, 3, 20), TaskDateName.Start);
+    const a = makeDatedTask('Water the plants', [start, due]);
+    const b = makeDatedTask('Water the plants', [due, start]);
+    expect(a.getId()).toEqual(b.getId());
+  });
+
+  it('returns different ids for a dated task and the same task with no dates', () => {
+    const a = makeDatedTask('Water the plants', [new TaskDate(new Date(2026, 3, 20), TaskDateName.Due)]);
+    const b = makeDatedTask('Water the plants', []);
+    expect(a.getId()).not.toEqual(b.getId());
+    expect(b.getId()).toMatch(/^[0-9a-f]{16}@obsidian-ical-plugin$/);
   });
 });
