@@ -36,7 +36,9 @@ export class IcalService {
       .join('');
   }
 
-  private getEvent(task: Task, date: string|null, prependSummary: string): string {
+  // taskDateName is set only when CreateMultipleEvents splits this task into one
+  // VEVENT per date; it discriminates the UIDs so the components don't collide.
+  private getEvent(task: Task, date: string|null, prependSummary: string, taskDateName: TaskDateName|null = null): string {
     // console.log({task});
 
     // This task does not have a date.
@@ -48,7 +50,7 @@ export class IcalService {
 
     let event = '' +
       'BEGIN:VEVENT\r\n' +
-      'UID:' + task.getId() + '\r\n' +
+      'UID:' + task.getId(taskDateName ?? '') + '\r\n' +
       'DTSTAMP:' + task.getDate(null, 'YYYYMMDDTHHmmss') + '\r\n';
 
     if (date === null) {
@@ -91,19 +93,19 @@ export class IcalService {
           event = '';
 
           if (task.hasA(TaskDateName.Start)) {
-            event += this.getEvent(task, task.getDate(TaskDateName.Start, 'YYYYMMDD'), '🛫 ');
+            event += this.getEvent(task, task.getDate(TaskDateName.Start, 'YYYYMMDD'), '🛫 ', TaskDateName.Start);
           }
 
           if (task.hasA(TaskDateName.Scheduled)) {
-            event += this.getEvent(task, task.getDate(TaskDateName.Scheduled, 'YYYYMMDD'), '⏳ ');
+            event += this.getEvent(task, task.getDate(TaskDateName.Scheduled, 'YYYYMMDD'), '⏳ ', TaskDateName.Scheduled);
           }
 
           if (task.hasA(TaskDateName.Due)) {
-            event += this.getEvent(task, task.getDate(TaskDateName.Due, 'YYYYMMDD'), '📅 ');
+            event += this.getEvent(task, task.getDate(TaskDateName.Due, 'YYYYMMDD'), '📅 ', TaskDateName.Due);
           }
 
           if (task.hasA(TaskDateName.Done)) {
-            event += this.getEvent(task, task.getDate(TaskDateName.Done, 'YYYYMMDD'), '✅ ');
+            event += this.getEvent(task, task.getDate(TaskDateName.Done, 'YYYYMMDD'), '✅ ', TaskDateName.Done);
           }
 
           if (event === '') {
@@ -183,7 +185,10 @@ export class IcalService {
 
     let toDo = '' +
       'BEGIN:VTODO\r\n' +
-      'UID:' + task.getId() + '\r\n' +
+      // A dated task can also be emitted as a VEVENT, so its VTODO needs a
+      // distinct UID. An undated task never produces a VEVENT (getEvent bails
+      // on hasAnyDate), so leave those UIDs alone rather than churn them.
+      'UID:' + task.getId(task.hasAnyDate() ? 'VTODO' : '') + '\r\n' +
       'SUMMARY:' + task.getSummary() + '\r\n' +
       // If a task does not have a date, do not include the DTSTAMP property
       (task.hasAnyDate() ? 'DTSTAMP:' + task.getDate(null, 'YYYYMMDDTHHmmss') + '\r\n' : '') +

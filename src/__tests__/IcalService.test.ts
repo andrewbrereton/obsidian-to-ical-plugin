@@ -374,3 +374,70 @@ describe('IcalService — no double URL-encoding (issue #214)', () => {
     expect(ical).not.toMatch(/%25[0-9A-F]{2}/i);
   });
 });
+
+describe('IcalService UID uniqueness across emitted components', () => {
+  const uidsIn = (ical: string) =>
+    ical.split('\r\n').filter((line: string) => line.startsWith('UID:'));
+
+  const buildTaskWithStartAndDueDates = (): Task =>
+    new Task(
+      TaskStatus.ToDo,
+      [
+        { name: TaskDateName.Start, date: new Date(2026, 3, 20) },
+        { name: TaskDateName.Due, date: new Date(2026, 3, 25) },
+      ],
+      'Recurring thing',
+      'obsidian://open?vault=v&file=f',
+    );
+
+  beforeEach(() => {
+    mockSettings.isIncludeLocation = false;
+    mockSettings.isIncludeLinkInDescription = false;
+    mockSettings.includeEventsOrTodos = 'EventsOnly';
+    mockSettings.howToProcessMultipleDates = 'CreateMultipleEvents';
+    mockSettings.isOnlyTasksWithoutDatesAreTodos = true;
+  });
+
+  it('gives each VEVENT its own UID when one task is split across dates', () => {
+    const ical = new IcalService().getCalendar([buildTaskWithStartAndDueDates()]);
+    const uids = uidsIn(ical);
+
+    expect(ical.match(/BEGIN:VEVENT/g)).toHaveLength(2);
+    expect(new Set(uids).size).toEqual(2);
+  });
+
+  it('gives a task a distinct UID for its VEVENT and its VTODO', () => {
+    mockSettings.includeEventsOrTodos = 'EventsAndTodos';
+    mockSettings.isOnlyTasksWithoutDatesAreTodos = false;
+    mockSettings.howToProcessMultipleDates = 'PreferDueDate';
+
+    const ical = new IcalService().getCalendar([buildTaskWithDueDate()]);
+    const uids = uidsIn(ical);
+
+    expect(ical).toContain('BEGIN:VEVENT');
+    expect(ical).toContain('BEGIN:VTODO');
+    expect(uids).toHaveLength(2);
+    expect(new Set(uids).size).toEqual(2);
+  });
+
+  it('keeps every UID unique when a split task is also emitted as a TODO', () => {
+    mockSettings.includeEventsOrTodos = 'EventsAndTodos';
+    mockSettings.isOnlyTasksWithoutDatesAreTodos = false;
+
+    const ical = new IcalService().getCalendar([buildTaskWithStartAndDueDates()]);
+    const uids = uidsIn(ical);
+
+    expect(uids).toHaveLength(3);
+    expect(new Set(uids).size).toEqual(3);
+  });
+
+  it('leaves the UID of an undated TODO untouched', () => {
+    mockSettings.includeEventsOrTodos = 'TodosOnly';
+    mockSettings.isOnlyTasksWithoutDatesAreTodos = true;
+
+    const undatedTask = new Task(TaskStatus.ToDo, [], 'No date here', 'obsidian://open?vault=v&file=f');
+    const ical = new IcalService().getCalendar([undatedTask]);
+
+    expect(uidsIn(ical)).toEqual(['UID:' + undatedTask.getId()]);
+  });
+});

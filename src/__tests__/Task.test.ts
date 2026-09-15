@@ -177,4 +177,19 @@ describe('Task.getId', () => {
     expect(a.getId()).not.toEqual(b.getId());
     expect(b.getId()).toMatch(/^[0-9a-f]{16}@obsidian-ical-plugin$/);
   });
+
+  it('treats an empty discriminator as no discriminator, so single-component ids never move', () => {
+    const a = makeDatedTask('Water the plants', [new TaskDate(new Date(2026, 3, 20), TaskDateName.Due)]);
+    expect(a.getId('')).toEqual(a.getId());
+  });
+
+  it('returns a different id for each discriminator', () => {
+    const a = makeDatedTask('Water the plants', [
+      new TaskDate(new Date(2026, 3, 20), TaskDateName.Start),
+      new TaskDate(new Date(2026, 3, 27), TaskDateName.Due),
+    ]);
+    const ids = [a.getId(), a.getId(TaskDateName.Start), a.getId(TaskDateName.Due), a.getId('VTODO')];
+    expect(new Set(ids).size).toEqual(ids.length);
+    ids.forEach((id) => expect(id).toMatch(/^[0-9a-f]{16}@obsidian-ical-plugin$/));
+  });
 });
