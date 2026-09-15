@@ -24,7 +24,8 @@ export class Task {
   }
 
   public getId(): string {
-    const input = `${this.fileUri}::${this.summary}`;
+    const dateKey = this.dates.map((d) => `${d.name}:${d.date.getTime()}`).join(',');
+    const input = `${this.fileUri}::${this.summary}::${dateKey}`;
     let h1 = 0x811c9dc5 >>> 0;
     let h2 = 0x9e3779b9 >>> 0;
     for (let i = 0; i < input.length; i++) {
