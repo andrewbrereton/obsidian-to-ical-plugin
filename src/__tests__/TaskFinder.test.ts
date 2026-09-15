@@ -57,7 +57,6 @@ function buildFixture(content: string): {
   const file = {
     path: 'test.md',
     vault: { getName: () => 'test-vault' },
-    // eslint-disable-next-line obsidianmd/no-tfile-tfolder-cast -- test fixture, not a real TFile
   } as unknown as TFile;
   const listItemsCache: ListItemCache[] = lines
     .map((line, idx) => ({ line, idx }))
@@ -207,7 +206,6 @@ describe('TaskFinder.findTasks — Day Planner dateOverride scoping', () => {
       const file = {
         path: 'notes.md',
         vault: { getName: () => 'Personal & Work' },
-        // eslint-disable-next-line obsidianmd/no-tfile-tfolder-cast -- test fixture
       } as unknown as TFile;
 
       const finder = new TaskFinder(vault);
@@ -226,7 +224,6 @@ describe('TaskFinder.findTasks — Day Planner dateOverride scoping', () => {
       const file = {
         path: 'Where is my note?.md',
         vault: { getName: () => 'v' },
-        // eslint-disable-next-line obsidianmd/no-tfile-tfolder-cast -- test fixture
       } as unknown as TFile;
 
       const finder = new TaskFinder(vault);
@@ -244,7 +241,6 @@ describe('TaskFinder.findTasks — Day Planner dateOverride scoping', () => {
       const file = {
         path: 'Meeting, 2024.md',
         vault: { getName: () => 'v' },
-        // eslint-disable-next-line obsidianmd/no-tfile-tfolder-cast -- test fixture
       } as unknown as TFile;
 
       const finder = new TaskFinder(vault);
@@ -262,7 +258,6 @@ describe('TaskFinder.findTasks — Day Planner dateOverride scoping', () => {
       const file = {
         path: 'folder/notes.md',
         vault: { getName: () => 'v' },
-        // eslint-disable-next-line obsidianmd/no-tfile-tfolder-cast -- test fixture
       } as unknown as TFile;
 
       const finder = new TaskFinder(vault);

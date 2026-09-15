@@ -19,13 +19,14 @@ class Logger {
     return Logger.instance;
   }
 
+  // console.debug (rather than console.log) so the output lands in the
+  // browser console's Verbose level, which is hidden by default. Obsidian's
+  // plugin guidelines disallow console.log; debug/warn/error are permitted.
   public log(message: string, object?: unknown) {
     if (this.isDebug) {
-      // eslint-disable-next-line obsidianmd/rule-custom-message -- intentional: gated behind the isDebug user setting
-      console.log('[' + moment().format('YYYY-MM-DD-HH:mm:ss.SSS') + '][info][ical] ' + message);
+      console.debug('[' + moment().format('YYYY-MM-DD-HH:mm:ss.SSS') + '][info][ical] ' + message);
       if (object) {
-        // eslint-disable-next-line obsidianmd/rule-custom-message -- intentional: gated behind the isDebug user setting
-        console.log(object);
+        console.debug(object);
       }
     }
   }

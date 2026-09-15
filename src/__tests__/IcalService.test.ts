@@ -356,7 +356,6 @@ describe('IcalService — no double URL-encoding (issue #214)', () => {
     const file = {
       path: '07–Fachberater/2026-27/KT QuaMath/INFO.md',
       vault: { getName: () => 'AL' },
-      // eslint-disable-next-line obsidianmd/no-tfile-tfolder-cast -- test fixture
     } as unknown as TFile;
     const listItemsCache = [{ position: { start: { line: 0 } } } as any];
 

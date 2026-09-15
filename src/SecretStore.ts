@@ -21,14 +21,12 @@ export class SecretStore {
   }
 
   private static defaultStorage(): StorageLike {
-    // The Obsidian renderer process always has window.localStorage. In tests
-    // (or unusual host environments) we fall back to an in-memory shim so the
-    // plugin doesn't crash on access — secrets just won't persist.
-    // globalThis (rather than window) so this file is also importable from
-    // Node-based test environments where window is undefined; localStorage is
-    // a single per-process store either way.
-    // eslint-disable-next-line obsidianmd/no-global-this -- intentional: cross-env access
-    const ls = (globalThis as { localStorage?: StorageLike }).localStorage;
+    // The Obsidian renderer process always has window.localStorage. The
+    // typeof guard keeps this file importable from Node-based test
+    // environments where window is undefined; there (or in any unusual host)
+    // we fall back to an in-memory shim so the plugin doesn't crash on
+    // access — secrets just won't persist.
+    const ls = typeof window === 'undefined' ? undefined : window.localStorage;
     if (ls) return ls;
     return new MemoryStorage();
   }

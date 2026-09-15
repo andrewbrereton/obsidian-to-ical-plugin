@@ -74,13 +74,6 @@ export default [
       // existing UI strings is a user-visible behaviour change with subtle
       // proper-noun handling. Deferring to a dedicated UI-text PR.
       'obsidianmd/ui/sentence-case': 'off',
-
-      // eslint-plugin-obsidianmd 0.4.1 forbids inline-disabling several rules.
-      // We rely on a handful of deliberate, individually-commented disables
-      // (console logging gated behind the debug setting, cross-env globalThis
-      // access, TFile casts in test fixtures). require-description stays on, so
-      // every disable must still explain itself — we just allow them to exist.
-      'eslint-comments/no-restricted-disable': 'off',
     },
   },
 
@@ -97,6 +90,11 @@ export default [
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       'obsidianmd/no-global-this': 'off',
+      // Test fixtures build minimal object literals and cast them to TFile
+      // rather than constructing real vault files. Turned off here (instead
+      // of via inline disables) because eslint-plugin-obsidianmd forbids
+      // inline-disabling its own rules.
+      'obsidianmd/no-tfile-tfolder-cast': 'off',
     },
   },
 ];
