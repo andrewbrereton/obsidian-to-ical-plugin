@@ -263,7 +263,7 @@ export class SettingTab extends PluginSettingTab {
       new Setting(containerEl)
         .setName('Subscription')
         .setDesc(createFragment((fragment) => {
-          fragment.createEl('span', { text: subscriptionStatusText });
+          fragment.createSpan({ text: subscriptionStatusText });
           if (this.subscriptionExpiresAt) {
             const expiryDate = new Date(this.subscriptionExpiresAt);
             fragment.createEl('br');
