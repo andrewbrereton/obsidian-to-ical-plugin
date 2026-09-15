@@ -23,13 +23,20 @@ export class Task {
     this.fileUri = fileUri;
   }
 
-  public getId(): string {
+  // One Task can be emitted as several calendar components: CreateMultipleEvents
+  // splits it into one VEVENT per date, and a dated task can also appear as a
+  // VTODO. Each of those needs its own UID, so callers that emit more than one
+  // component per Task pass a discriminator. An empty discriminator hashes to
+  // exactly what a single-component Task produces, so the common case is stable.
+  public getId(discriminator = ''): string {
     // Sorted so a task keeps its UID when its dates are reordered within the line.
     const dateKey = this.dates
       .map((taskDate: TaskDate) => `${taskDate.name}:${taskDate.date.getTime()}`)
       .sort()
       .join(',');
-    const input = `${this.fileUri}::${this.summary}::${dateKey}`;
+    const input = discriminator === ''
+      ? `${this.fileUri}::${this.summary}::${dateKey}`
+      : `${this.fileUri}::${this.summary}::${dateKey}::${discriminator}`;
     let h1 = 0x811c9dc5 >>> 0;
     let h2 = 0x9e3779b9 >>> 0;
     for (let i = 0; i < input.length; i++) {
