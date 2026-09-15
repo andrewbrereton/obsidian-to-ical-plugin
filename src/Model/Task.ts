@@ -24,7 +24,11 @@ export class Task {
   }
 
   public getId(): string {
-    const dateKey = this.dates.map((d) => `${d.name}:${d.date.getTime()}`).join(',');
+    // Sorted so a task keeps its UID when its dates are reordered within the line.
+    const dateKey = this.dates
+      .map((taskDate: TaskDate) => `${taskDate.name}:${taskDate.date.getTime()}`)
+      .sort()
+      .join(',');
     const input = `${this.fileUri}::${this.summary}::${dateKey}`;
     let h1 = 0x811c9dc5 >>> 0;
     let h2 = 0x9e3779b9 >>> 0;
