@@ -1,3 +1,4 @@
+import { moment } from 'obsidian';
 import { Task } from './Model/Task';
 import { TaskDateName } from './Model/TaskDate';
 import { TaskStatus } from './Model/TaskStatus';
@@ -53,6 +54,8 @@ export class IcalService {
       'UID:' + task.getId(taskDateName ?? '') + '\r\n' +
       'DTSTAMP:' + task.getDate(null, 'YYYYMMDDTHHmmss') + '\r\n';
 
+    const allDayPrefix = settings.isAllDayFormattingEnabled ? 'DTSTART;VALUE=DATE:' : 'DTSTART:';
+
     if (date === null) {
 
       switch (settings.howToProcessMultipleDates) {
@@ -66,11 +69,11 @@ export class IcalService {
             event += 'DTSTART:' + task.getDate(TaskDateName.TimeStart, 'YYYYMMDD[T]HHmmss') + '\r\n';
             event += 'DTEND:' + task.getDate(TaskDateName.TimeEnd, 'YYYYMMDD[T]HHmmss') + '\r\n';
           } else if (task.hasA(TaskDateName.Start)) {
-            event += 'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDD') + '\r\n';
+            event += allDayPrefix + task.getDate(TaskDateName.Start, 'YYYYMMDD') + '\r\n';
           } else if (task.hasA(TaskDateName.Due)) {
-            event += 'DTSTART:' + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
+            event += allDayPrefix + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
           } else {
-            event += 'DTSTART:' + task.getDate(null, 'YYYYMMDD') + '\r\n';
+            event += allDayPrefix + task.getDate(null, 'YYYYMMDD') + '\r\n';
           }
 
           break;
@@ -126,18 +129,29 @@ export class IcalService {
             event += 'DTSTART:' + task.getDate(TaskDateName.TimeStart, 'YYYYMMDD[T]HHmmss') + '\r\n';
             event += 'DTEND:' + task.getDate(TaskDateName.TimeEnd, 'YYYYMMDD[T]HHmmss') + '\r\n';
           } else if (task.hasA(TaskDateName.Start) && task.hasA(TaskDateName.Due)) {
-            event += '' +
-              'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDDTHHmmss') + '\r\n' +
-              'DTEND:' + task.getDate(TaskDateName.Due, 'YYYYMMDDTHHmmss') + '\r\n';
+            if (settings.isAllDayFormattingEnabled) {
+              // All-day ranges use an exclusive DTEND per RFC 5545, so the
+              // due date itself needs to be included by pushing DTEND one
+              // day past it.
+              const dueRaw = task.dates.find((d) => d.name === TaskDateName.Due)!.date;
+              const dueEndStr = moment(dueRaw).add(1, 'day').format('YYYYMMDD');
+              event += '' +
+                'DTSTART;VALUE=DATE:' + task.getDate(TaskDateName.Start, 'YYYYMMDD') + '\r\n' +
+                'DTEND;VALUE=DATE:' + dueEndStr + '\r\n';
+            } else {
+              event += '' +
+                'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDDTHHmmss') + '\r\n' +
+                'DTEND:' + task.getDate(TaskDateName.Due, 'YYYYMMDDTHHmmss') + '\r\n';
+            }
           } else if (task.hasA(TaskDateName.Due)) {
             event += '' +
-              'DTSTART:' + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
+              allDayPrefix + task.getDate(TaskDateName.Due, 'YYYYMMDD') + '\r\n';
           } else if (task.hasA(TaskDateName.Start)) {
             event += '' +
-              'DTSTART:' + task.getDate(TaskDateName.Start, 'YYYYMMDD') + '\r\n';
+              allDayPrefix + task.getDate(TaskDateName.Start, 'YYYYMMDD') + '\r\n';
           } else {
             event += '' +
-              'DTSTART:' + task.getDate(null, 'YYYYMMDD') + '\r\n';
+              allDayPrefix + task.getDate(null, 'YYYYMMDD') + '\r\n';
           }
 
           break;
@@ -145,7 +159,7 @@ export class IcalService {
     } else {
       // Date has been given to this function which means we are being called recursively due to CreateMultipleEvents
       event += '' +
-        'DTSTART:' + date + '\r\n';
+        allDayPrefix + date + '\r\n';
     }
 
     // task.getLocation() is already percent-encoded at construction time in

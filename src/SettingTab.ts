@@ -102,7 +102,7 @@ export class SettingTab extends PluginSettingTab {
     try {
       const client = apiClient(this.app.vault.getName(), secretKey);
       const response = await client.isActive(true); // Force fresh validation
-      
+
       if (response.isSubscriptionActive()) {
         // Valid - update UI and configure refresh
         this.updateMemberStatusFromCache();
@@ -238,10 +238,10 @@ export class SettingTab extends PluginSettingTab {
           .setPlaceholder(DEFAULT_SETTINGS.secretKey)
           .onChange(async (secretKey) => {
             settings.secretKey = secretKey;
-            
+
             // Clear member status when key changes
             this.clearMemberStatus();
-            
+
             // Only validate if exactly 32 characters
             if (secretKey.length === 32) {
               await this.validateSecretKey(secretKey);
@@ -480,6 +480,18 @@ export class SettingTab extends PluginSettingTab {
       );
 
     new Setting(containerEl)
+      .setName('Enable all-day events')
+      .setDesc('Export tasks without a time as all-day events instead of starting at midnight.')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isAllDayFormattingEnabled)
+          .onChange(async (value) => {
+            settings.isAllDayFormattingEnabled = value;
+            this.display();
+          })
+      );
+
+    new Setting(containerEl)
       .setName('Support Day Planner plugin?')
       .setDesc('Turn this on if you want to support the Day Planner plugin format.')
       .addToggle((toggle: ToggleComponent) =>
@@ -687,7 +699,7 @@ export class SettingTab extends PluginSettingTab {
 
       new Setting(containerEl)
         .setName('Your calendar URL')
-       
+
         .setDesc(createFragment((fragment) => {
           fragment.createEl('a', { text: url, href: url, cls: 'search-result'});
         }))
@@ -758,7 +770,7 @@ export class SettingTab extends PluginSettingTab {
 
       new Setting(containerEl)
         .setName('Your calendar path')
-       
+
         .setDesc(createFragment((fragment) => {
           fragment.createEl('a', { text: savePath, href: `file:///${savePath}`, cls: 'search-result'});
         }))

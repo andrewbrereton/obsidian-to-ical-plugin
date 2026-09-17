@@ -49,6 +49,7 @@ export interface Settings {
   isIncludeLinkInDescription: boolean;
   isIncludeLocation: boolean;
   secretKey: string;
+  isAllDayFormattingEnabled: boolean;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -83,4 +84,5 @@ export const DEFAULT_SETTINGS: Settings = {
   isIncludeLinkInDescription: false,
   isIncludeLocation: true,
   secretKey: '',
+  isAllDayFormattingEnabled: false,
 };
