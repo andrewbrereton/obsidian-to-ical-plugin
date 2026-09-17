@@ -335,6 +335,15 @@ class SettingsManager {
     this.settings.isSaveToWebEnabled = isSaveToWebEnabled;
     void this.saveSettings();
   }
+
+  public get isAllDayFormattingEnabled(): boolean {
+    return this.settings.isAllDayFormattingEnabled;
+  }
+
+  public set isAllDayFormattingEnabled(isAllDayFormattingEnabled: boolean) {
+    this.settings.isAllDayFormattingEnabled = isAllDayFormattingEnabled;
+    void this.saveSettings();
+  }
 }
 
 export let settings: SettingsManager = SettingsManager.settingsManager;
