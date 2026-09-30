@@ -49,6 +49,9 @@ export interface Settings {
   isIncludeLinkInDescription: boolean;
   isIncludeLocation: boolean;
   secretKey: string;
+  isAlarmsEnabled: boolean;
+  timedEventAlarmOffsetMinutes: number;
+  allDayAlarmOffsetHours: number;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -83,4 +86,7 @@ export const DEFAULT_SETTINGS: Settings = {
   isIncludeLinkInDescription: false,
   isIncludeLocation: true,
   secretKey: '',
+  isAlarmsEnabled: false,
+  timedEventAlarmOffsetMinutes: 0,
+  allDayAlarmOffsetHours: 9,
 };

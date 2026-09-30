@@ -545,6 +545,46 @@ export class SettingTab extends PluginSettingTab {
         );
     }
 
+    new Setting(containerEl).setName('Reminders').setHeading();
+
+    new Setting(containerEl)
+      .setName('Enable reminders')
+      .setDesc('Add a reminder to each exported event.')
+      .addToggle((toggle: ToggleComponent) =>
+        toggle
+          .setValue(settings.isAlarmsEnabled)
+          .onChange(async (value) => {
+            settings.isAlarmsEnabled = value;
+            this.display();
+          })
+      );
+
+    if (settings.isAlarmsEnabled) {
+      new Setting(containerEl)
+        .setName('Minutes before timed events')
+        .setDesc('Minutes before the event. Use a negative number for after instead.')
+        .addText((text) =>
+          text
+            .setValue(settings.timedEventAlarmOffsetMinutes.toString())
+            .onChange(async (value) => {
+              const minutes = parseInt(value, 10);
+              settings.timedEventAlarmOffsetMinutes = isNaN(minutes) ? 0 : minutes;
+            })
+        );
+
+      new Setting(containerEl)
+        .setName('Reminder hour for tasks without a time')
+        .setDesc('Hours after midnight. Use a negative number for hours before midnight, i.e. the previous evening.')
+        .addText((text) =>
+          text
+            .setValue(settings.allDayAlarmOffsetHours.toString())
+            .onChange(async (value) => {
+              const hours = parseInt(value, 10);
+              settings.allDayAlarmOffsetHours = isNaN(hours) ? 9 : hours;
+            })
+        );
+    }
+
     new Setting(containerEl).setName('Automation & Advanced').setHeading();
 
     new Setting(containerEl)

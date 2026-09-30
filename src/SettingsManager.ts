@@ -335,6 +335,33 @@ class SettingsManager {
     this.settings.isSaveToWebEnabled = isSaveToWebEnabled;
     void this.saveSettings();
   }
+
+  public get isAlarmsEnabled(): boolean {
+    return this.settings.isAlarmsEnabled;
+  }
+
+  public set isAlarmsEnabled(isAlarmsEnabled: boolean) {
+    this.settings.isAlarmsEnabled = isAlarmsEnabled;
+    void this.saveSettings();
+  }
+
+  public get timedEventAlarmOffsetMinutes(): number {
+    return this.settings.timedEventAlarmOffsetMinutes;
+  }
+
+  public set timedEventAlarmOffsetMinutes(timedEventAlarmOffsetMinutes: number) {
+    this.settings.timedEventAlarmOffsetMinutes = timedEventAlarmOffsetMinutes;
+    void this.saveSettings();
+  }
+
+  public get allDayAlarmOffsetHours(): number {
+    return this.settings.allDayAlarmOffsetHours;
+  }
+
+  public set allDayAlarmOffsetHours(allDayAlarmOffsetHours: number) {
+    this.settings.allDayAlarmOffsetHours = allDayAlarmOffsetHours;
+    void this.saveSettings();
+  }
 }
 
 export let settings: SettingsManager = SettingsManager.settingsManager;

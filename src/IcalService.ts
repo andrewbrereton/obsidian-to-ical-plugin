@@ -156,10 +156,28 @@ export class IcalService {
     // value after ':' IS iCal TEXT and gets the comma/semicolon escape.
     const location = task.getLocation();
 
+    // Reminders are opt-in. Timed tasks get a relative trigger (offset in
+    // minutes from the event's own time); dateless tasks get a trigger
+    // relative to midnight instead, since there's no time to count from.
+    let alarm = '';
+    const hasRealTime = task.hasA(TaskDateName.TimeStart) && task.hasA(TaskDateName.TimeEnd);
+    if (settings.isAlarmsEnabled && task.status !== TaskStatus.Done && task.status !== TaskStatus.Cancelled) {
+      if (hasRealTime) {
+        const offsetMin = settings.timedEventAlarmOffsetMinutes || 0;
+        const trigger = offsetMin > 0 ? '-PT' + offsetMin + 'M' : 'PT' + Math.abs(offsetMin) + 'M';
+        alarm = 'BEGIN:VALARM\r\nACTION:DISPLAY\r\nDESCRIPTION:' + escapeICalText(task.getSummary()) + '\r\nTRIGGER:' + trigger + '\r\nEND:VALARM\r\n';
+      } else {
+        const offsetHrs = settings.allDayAlarmOffsetHours ?? 9;
+        const trigger = offsetHrs >= 0 ? 'PT' + offsetHrs + 'H' : '-PT' + Math.abs(offsetHrs) + 'H';
+        alarm = 'BEGIN:VALARM\r\nACTION:DISPLAY\r\nDESCRIPTION:' + escapeICalText(task.getSummary()) + '\r\nTRIGGER:' + trigger + '\r\nEND:VALARM\r\n';
+      }
+    }
+
     event += '' +
       'SUMMARY:' + prependSummary + task.getSummary() + '\r\n' +
       (settings.isIncludeLinkInDescription ? 'DESCRIPTION:' + escapeICalText(location) + '\r\n' : '') +
       (settings.isIncludeLocation ? 'LOCATION;ALTREP="' + location + '":' + escapeICalText(location) + '\r\n' : '') +
+      alarm +
       'END:VEVENT\r\n';
 
     return event;
