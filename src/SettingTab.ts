@@ -161,6 +161,27 @@ export class SettingTab extends PluginSettingTab {
       })
     });
 
+    new Setting(containerEl)
+      .setName('Save now')
+      .setDesc('Saves the calendar right now.')
+      .addButton((button: ButtonComponent) =>
+        button
+          .setButtonText('Save now')
+          .setCta()
+          .onClick(async () => {
+            button.setDisabled(true).setButtonText('Saving\u2026');
+            try {
+              await this.plugin.main.start();
+              new Notice('iCal: save complete');
+            } catch (error) {
+              new Notice('iCal: save failed \u2014 see console for details');
+              console.error('iCal save failed:', error);
+            } finally {
+              button.setDisabled(false).setButtonText('Save now');
+            }
+          })
+      );
+
     new Setting(containerEl).setName('Quick start & essentials').setHeading();
 
     const directories = this.getAllDirectories();

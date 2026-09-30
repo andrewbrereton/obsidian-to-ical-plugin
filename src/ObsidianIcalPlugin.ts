@@ -44,6 +44,25 @@ export default class ObsidianIcalPlugin extends Plugin {
     // Status bar item (no-op on mobile, where addStatusBarItem returns an element that doesn't render)
     this.statusBar = new StatusBar(this.addStatusBarItem());
 
+    this.addCommand({
+      id: 'save-now',
+      name: 'Save now',
+      callback: async () => {
+        if (!this.main) {
+          new Notice('iCal: plugin is still starting up, try again in a moment');
+          return;
+        }
+        new Notice('iCal: save started');
+        try {
+          await this.main.start();
+          new Notice('iCal: save complete');
+        } catch (error) {
+          new Notice('iCal: save failed \u2014 see console for details');
+          console.error('iCal save failed:', error);
+        }
+      },
+    });
+
     // // This adds a simple command that can be triggered anywhere
     // this.addCommand({
     //   id: "open-sample-modal-simple",
